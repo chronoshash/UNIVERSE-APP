@@ -1,0 +1,10 @@
+{
+  "name": "UNIVERSE",
+  "description": "A simple, searchable offline video library with categorized direct downloads and local playback.",
+  "version": "0.3.0",
+  "icon": "globe",
+  "color": "#7C5CFF",
+  "entry": "index.tsx",
+  "runInApp": true,
+  "permissions": null
+}
