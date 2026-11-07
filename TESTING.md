@@ -8,7 +8,8 @@ Statische Prüfungen ersetzen keinen Import- oder Laufzeittest in der installier
 
 - Paket nach Änderungen an Script oder Paket-README neu mit `python3 tools/build_scripting_package.py` gebaut.
 - ZIP-CRC, Root-Dateiliste (`script.json`, `index.tsx`, `README.md`), Manifest-Version, Byte-Parität und reproduzierbarer Doppelbuild geprüft.
-- Statische Assertions: Capability-Gates für Entity-Liste, Suche, Feed und Details, lokaler Demo-Provider, kein `DownloadManager`, kein `AVPlayer` und keine Netzwerkquelle.
+- `python3 tools/validate_scripting_foundation.py` bestanden: statische Manifest-/App-Versions-Parität, Capability-Union und Gates, Provider-Operationen, eindeutige IDs, Fixture-Provenienz/ISO-Daten sowie Paketparität. Das ist ein Quelltextvertragstest, kein App-Runtime-Test.
+- Statische Assertions: kein `DownloadManager`, kein `AVPlayer` und keine Netzwerkquelle.
 - TypeScript 5.8.3 `tsc --noEmit` mit temporären Scripting-Platzhalterdeklarationen bestanden. Das prüft Syntax/TSX, nicht die echten Scripting-API-Typen oder das App-Runtime.
 - Finales Paket 0.4.0: 5.298 Byte, SHA-256 `b7a3b23595918bccb97eb7109a419b226af5b820d745956e1b0e28abeae41d6f`.
 - Keine Scripting-App-Import-, iPhone-, Bedienbarkeits- oder Laufzeittests ausgeführt.

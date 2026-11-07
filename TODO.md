@@ -25,7 +25,7 @@ Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2
 - [x] Statisch gebündelter Demo-Provider mit expliziter Capability-Liste; Suche, Feed und Details werden über diese Liste geroutet. Keine dynamischen Imports oder Netzwerkabfragen.
 - [x] Lokale Fixture-Entities für Medien, Artikel und Termine mit sichtbarer Quellenherkunft; Suche über mehrere Typen und einfache Filter.
 - [x] Merkliste als sitzungsgebundener UI-State; keine falsche Zusage persistenter Speicherung.
-- [ ] `manifest.json`-/Capability-Validierung und Provider-Vertragstests ergänzen, bevor ein zweiter Provider eingebaut wird.
+- [x] Statische `script.json`-/Capability-/Provider-Fixture-Validierung ergänzt (`python3 tools/validate_scripting_foundation.py`); sie prüft Quelltextverträge, nicht Provider-Runtime oder App-Kompatibilität.
 - [ ] Storage-Grenze und persistentes lokales Repository anhand der offiziellen API-Dokumentation und anschließend auf dem Gerät prüfen.
 - [ ] Modell für `Entity`, `SourceRecord`, FeedItem und Relations festlegen; Provenienz und Datenaufbewahrung in Tests absichern.
 - [ ] Providerfehler-/Lade-/Offlinezustände und Telemetrie-/Logpolicy definieren; partielle Ergebnisse dürfen erfolgreiche Provider nicht verdecken.
