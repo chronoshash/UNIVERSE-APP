@@ -1,8 +1,10 @@
-# UNIVERSE Scripting foundation · 0.5.5
+# UNIVERSE Scripting foundation · 0.5.6
 
-The user reports that the full UI still overflows horizontally after 0.5.4. The 0.5.4 `GeometryReader` was nested inside `NavigationStack`; 0.5.5 moves the reader to the presented root so it measures the presentation bounds first, then gives that exact width to `NavigationStack`, the vertical `ScrollView`, and root content. Scroll clipping is also explicitly kept enabled. Horizontal catalogue rails remain intentionally scrollable. This is another targeted correction attempt, not a verified device fix; import and iPhone rendering still need to be checked.
+The user continues to report full-screen horizontal overflow after 0.5.3, 0.5.4, and 0.5.5. Version 0.5.6 takes a stricter layout approach: it floors the width measured by the root `GeometryReader`, uses an explicit content width after the 18-point side gutters, removes unbounded `maxWidth: infinity` frames, assigns that content width to every horizontal scroller and full-width card, and clips both `NavigationStack` and scroll views. The navigation is now a compact horizontal chip rail rather than a three-row grid. The Info screen exposes the measured viewport and content widths so an on-device import can confirm the package and measurement.
 
-The two-column navigation, twelve local demo entries, null-safe optional JSX children, and literal-preserving gradient colors are retained. The interface uses a statically bundled fixture provider and an original local hero image in `assets/hero.jpg`, loaded from `Script.directory`. It makes no live provider calls or network requests.
+This is another targeted correction and diagnostic build, not a verified device fix. Import and rendering in Scripting on the target iPhone still need to be checked. The twelve local demo entries, null-safe optional JSX children, literal-preserving gradient colors, local-only provider, and disabled AniWorld scaffold are retained.
+
+The interface uses an original local hero image in `assets/hero.jpg`, loaded from `Script.directory`. It makes no live provider calls or network requests.
 
 ## Included
 
