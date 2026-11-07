@@ -62,7 +62,7 @@ type StaticProvider = {
   getEntity: (id: string) => UniverseEntity | undefined
 }
 
-const APP_VERSION = "0.5.13"
+const APP_VERSION = "0.5.14"
 const LIBRARY_STORAGE_KEY = "universe.library.entity-ids.v1"
 const MAX_STORED_LIBRARY_ITEMS = 500
 const MAX_STORED_LIBRARY_ID_LENGTH = 256
@@ -281,20 +281,24 @@ function UniverseApp() {
   const [settingsReturnTab, setSettingsReturnTab] = useState<RootScreen>("home")
   const [searchText, setSearchText] = useState("")
   const [searchFilterIndex, setSearchFilterIndex] = useState(0)
+  const [exploreFilterIndex, setExploreFilterIndex] = useState(0)
   const [feedFilterIndex, setFeedFilterIndex] = useState(0)
   const [libraryFilterIndex, setLibraryFilterIndex] = useState(0)
   const [libraryState, setLibraryState] = useState<LibraryState>(initialLibraryState)
   const [selectedEntityId, setSelectedEntityId] = useState("")
 
-  const currentFilter = CONTENT_FILTERS[searchFilterIndex]
+  const searchFilter = CONTENT_FILTERS[searchFilterIndex]
+  const exploreFilter = CONTENT_FILTERS[exploreFilterIndex]
   const feedFilter = CONTENT_FILTERS[feedFilterIndex]
   const query = searchText.trim().toLowerCase()
   const listedEntities = PROVIDERS
     .filter(provider => provider.capabilities.includes("entity.list"))
     .flatMap(provider => provider.listEntities())
+  const exploreResults = listedEntities.filter(entity => matchesFilter(entity, exploreFilter))
+  const exploreFilterCounts = CONTENT_FILTERS.map(filter => listedEntities.filter(entity => matchesFilter(entity, filter)).length)
   const searchResults = PROVIDERS
     .filter(provider => provider.capabilities.includes("search.local"))
-    .flatMap(provider => provider.search(query, currentFilter))
+    .flatMap(provider => provider.search(query, searchFilter))
   const feedItems = PROVIDERS
     .filter(provider => provider.capabilities.includes("feed.local"))
     .flatMap(provider => provider.listFeed())
@@ -555,14 +559,25 @@ function UniverseApp() {
                     <LazyHStack spacing={8}>
                       {CONTENT_FILTERS.map((filter, index) => <Button
                         key={filter}
-                        title={filter}
-                        buttonStyle={searchFilterIndex === index ? "borderedProminent" : "bordered"}
-                        action={() => setSearchFilterIndex(index)}
+                        title={`${filter} · ${exploreFilterCounts[index]}`}
+                        buttonStyle={exploreFilterIndex === index ? "borderedProminent" : "bordered"}
+                        action={() => setExploreFilterIndex(index)}
                       />)}
                     </LazyHStack>
                   </ScrollView>
-                  {contentRail("Beliebt im Demo-Katalog", listedEntities.filter(entity => matchesFilter(entity, currentFilter)), contentWidth, "Ausgewählt")}
-                  {contentRail("Alle Inhalte", listedEntities, contentWidth, "Die ganze Sammlung")}
+                  <Text font="caption" foregroundStyle="#999BAD">{exploreResults.length} Einträge im ausgewählten Bereich · lokale Demo-Inhalte</Text>
+                  {exploreResults.length === 0
+                    ? <VStack alignment="leading" spacing={10} padding={20} frame={{ width: contentWidth }} background={
+                        <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
+                      }>
+                        <Image systemName="square.grid.2x2" frame={{ width: 34, height: 34 }} foregroundStyle="#9C8BFF" />
+                        <Text font="headline" fontWeight="bold" foregroundStyle="white">Keine Inhalte in „{exploreFilter}“</Text>
+                        <Text font="subheadline" foregroundStyle="#B7B8C5">Wähle einen anderen Inhaltstyp oder setze den Filter zurück.</Text>
+                        <Button title="Alle Inhalte anzeigen" systemImage="line.3.horizontal.decrease.circle" buttonStyle="borderedProminent" action={() => setExploreFilterIndex(0)} />
+                      </VStack>
+                    : <VStack alignment="leading" spacing={10}>
+                        {exploreResults.map((entity, index) => compactCard(entity, index, contentWidth))}
+                      </VStack>}
                 </>}
 
                 {pageScreen === "search" && <>
