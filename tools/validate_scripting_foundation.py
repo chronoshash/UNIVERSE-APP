@@ -80,12 +80,12 @@ def validate_sources() -> tuple[dict, str, bytes]:
             "outer vertical scroll view must be width-bound to and clipped at the measured viewport")
     require('padding={{ horizontal: 18, top: 14, bottom: 34 }} frame={{ width: viewportWidth }}' in code,
             "root content must use the measured viewport width with its padding inside that frame")
-    require('const selectedTab = useObservable<RootScreen>("home")' in code
+    require('const selectedTab = useObservable("home" as RootScreen)' in code
             and '<TabView selection={selectedTab} frame={{ width: viewportWidth, height: viewportHeight }}>' in code
             and 'NAV_ITEMS.map(item => <Tab' in code
             and 'title={item.label}' in code and 'systemImage={item.symbol}' in code and 'value={item.id}' in code,
             "primary destinations must use the documented native TabView/Tab selection binding")
-    nav_items = code.split('const NAV_ITEMS: { id: RootScreen; label: string; symbol: string }[] = [', 1)[1].split('] as const', 1)[0]
+    nav_items = code.split('const NAV_ITEMS: { id: RootScreen; label: string; symbol: string }[] = [', 1)[1].split(']\nconst POSTER_THEMES =', 1)[0]
     require(nav_items.count('{ id:') == 5 and 'settings' not in nav_items,
             "native bottom bar must keep five primary tabs; Info stays available as a separate action")
     require('Button title="Info" systemImage="info.circle"' in code,
@@ -104,6 +104,10 @@ def validate_sources() -> tuple[dict, str, bytes]:
             and 'const visibleFeedItems = feedItems.filter(entity => matchesFilter(entity, feedFilter))' in code
             and 'visibleFeedItems.map((entity, index) => compactCard(entity, index, contentWidth))' in code,
             "chronological feed must apply the selected local content-type filter")
+    require('savedEntities.map((entity, index) => <VStack key={entity.id}' in code
+            and 'Button title="Aus Merkliste entfernen"' in code
+            and 'action={() => toggleSaved(entity.id)}' in code,
+            "session-only saved items must be removable directly from the Library tab")
     require(code.count('CONTENT_FILTERS.map((filter, index) => <Button') == 3,
             "Explore, Search, and Feeds must each expose the shared content-type filters")
     require('entity.id !== selectedEntity.id && (entity.category === selectedEntity.category || entity.typeId === selectedEntity.typeId)' in code

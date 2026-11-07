@@ -1,7 +1,7 @@
 {
   "name": "UNIVERSE",
-  "description": "A local-first content discovery shell with native five-tab navigation, capability-gated demo content, and cross-type feeds.",
-  "version": "0.5.8",
+  "description": "A local-first content hub with native five-tab navigation, a session library, and capability-gated cross-type discovery.",
+  "version": "0.5.9",
   "icon": "globe",
   "color": "#7C5CFF",
   "entry": "index.tsx",
