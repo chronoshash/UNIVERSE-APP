@@ -23,13 +23,19 @@ import {
 
 type ContentType = "media.video" | "news.article" | "event.release"
 type ContentFilter = "Alle" | "Medien" | "Artikel" | "Termine"
-type RootScreen = "home" | "explore" | "search" | "feeds" | "library"
+const ROOT_SCREENS = ["home", "explore", "search", "feeds", "library"] as const
+type RootScreen = typeof ROOT_SCREENS[number]
 type AppScreen = RootScreen | "settings" | "detail"
 
 type SourceRecord = {
   providerId: string
   providerName: string
   retrievedAt: string
+}
+
+type SessionLibraryState = {
+  scope: "session"
+  entityIds: string[]
 }
 
 type UniverseEntity = {
@@ -55,7 +61,7 @@ type StaticProvider = {
   getEntity: (id: string) => UniverseEntity | undefined
 }
 
-const APP_VERSION = "0.5.10"
+const APP_VERSION = "0.5.11"
 const CONTENT_FILTERS: ContentFilter[] = ["Alle", "Medien", "Artikel", "Termine"]
 const POSTER_THEMES = [
   { top: "#4C1D95", bottom: "#111827", symbol: "sparkles" },
@@ -228,15 +234,19 @@ function formatDate(value: string): string {
   return value.slice(0, 10)
 }
 
+function asRootScreen(value: RootScreen): RootScreen {
+  return value
+}
+
 function UniverseApp() {
-  const selectedTab = useObservable<RootScreen>("home" as RootScreen)
+  const selectedTab = useObservable(asRootScreen(ROOT_SCREENS[0]))
   const [screen, setScreen] = useState<AppScreen>("home")
   const [returnScreen, setReturnScreen] = useState<RootScreen>("home")
   const [settingsReturnTab, setSettingsReturnTab] = useState<RootScreen>("home")
   const [searchText, setSearchText] = useState("")
   const [searchFilterIndex, setSearchFilterIndex] = useState(0)
   const [feedFilterIndex, setFeedFilterIndex] = useState(0)
-  const [savedIds, setSavedIds] = useState<string[]>([])
+  const [libraryState, setLibraryState] = useState<SessionLibraryState>({ scope: "session", entityIds: [] })
   const [selectedEntityId, setSelectedEntityId] = useState("")
 
   const currentFilter = CONTENT_FILTERS[searchFilterIndex]
@@ -253,7 +263,9 @@ function UniverseApp() {
     .flatMap(provider => provider.listFeed())
     .sort((left, right) => right.publishedAt.localeCompare(left.publishedAt))
   const visibleFeedItems = feedItems.filter(entity => matchesFilter(entity, feedFilter))
-  const savedEntities = listedEntities.filter(entity => savedIds.includes(entity.id))
+  const savedEntities = libraryState.entityIds
+    .map(id => listedEntities.find(entity => entity.id === id))
+    .filter((entity): entity is UniverseEntity => entity !== undefined)
   const selectedEntity = PROVIDERS
     .filter(provider => provider.capabilities.includes("entity.details"))
     .map(provider => provider.getEntity(selectedEntityId))
@@ -284,10 +296,12 @@ function UniverseApp() {
   }
 
   function toggleSaved(entityId: string) {
-    setSavedIds(current => current.includes(entityId)
-      ? current.filter(id => id !== entityId)
-      : [...current, entityId]
-    )
+    setLibraryState(current => ({
+      scope: current.scope,
+      entityIds: current.entityIds.includes(entityId)
+        ? current.entityIds.filter(id => id !== entityId)
+        : [...current.entityIds, entityId],
+    }))
   }
 
   function selectContentFilter(index: number) {
@@ -554,7 +568,7 @@ function UniverseApp() {
 
                 {pageScreen === "library" && <>
                   {sectionHeading("Deine Merkliste", "Für später")}
-                  <Text font="subheadline" foregroundStyle="#B7B8C5">Gespeichert wird nur für die aktuelle Script-Sitzung.</Text>
+                  <Text font="subheadline" foregroundStyle="#B7B8C5">{savedEntities.length} Einträge · Reihenfolge nach dem Merken · nur für diese Script-Sitzung.</Text>
                   {savedEntities.length === 0
                     ? <VStack alignment="leading" spacing={10} padding={20} frame={{ width: contentWidth }} background={
                         <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
@@ -630,8 +644,8 @@ function UniverseApp() {
                   <Text font="caption" foregroundStyle="#A6A7B6">Vorschläge beruhen nur auf Kategorie oder Inhaltstyp in lokalen Demo-Daten.</Text>
                   {contentRail("Ähnliche Demo-Inhalte", relatedItems, contentWidth, "Gleiche Kategorie oder Medienart")}
                   <Button
-                    title={savedIds.includes(selectedEntity.id) ? "Aus Merkliste entfernen" : "Für später merken"}
-                    systemImage={savedIds.includes(selectedEntity.id) ? "bookmark.fill" : "bookmark"}
+                    title={libraryState.entityIds.includes(selectedEntity.id) ? "Aus Merkliste entfernen" : "Für später merken"}
+                    systemImage={libraryState.entityIds.includes(selectedEntity.id) ? "bookmark.fill" : "bookmark"}
                     buttonStyle="borderedProminent"
                     action={() => toggleSaved(selectedEntity.id)}
                   />
