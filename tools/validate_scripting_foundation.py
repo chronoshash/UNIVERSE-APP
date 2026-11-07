@@ -67,10 +67,12 @@ def validate_sources() -> tuple[dict, str, bytes]:
     require(manifest.get("permissions") is None, "foundation manifest must not request permissions")
     require(manifest.get("version") is not None, "manifest version is required")
     require(f'const APP_VERSION = "{manifest["version"]}"' in code, "manifest and app versions differ")
-    require("<GeometryReader>" in code and "Math.max(1, proxy.size.width)" in code,
-            "root layout must derive its width from the available GeometryReader viewport")
+    require("<GeometryReader>" in code and "Math.max(1, Math.floor(proxy.size.width))" in code,
+            "root layout must floor the available GeometryReader presentation width")
+    require("Math.max(1, viewportWidth - 36)" in code,
+            "root content width must reserve both 18-point horizontal gutters")
     geometry_position = code.index("<GeometryReader>")
-    navigation_position = code.find('<NavigationStack frame={{ width: viewportWidth }}>')
+    navigation_position = code.find('<NavigationStack frame={{ width: viewportWidth }} clipped>')
     scroll_position = code.find('<ScrollView navigationTitle=', navigation_position)
     require(geometry_position < navigation_position < scroll_position,
             "GeometryReader must measure the presentation before NavigationStack and ScrollView are laid out")
@@ -78,10 +80,20 @@ def validate_sources() -> tuple[dict, str, bytes]:
             "outer vertical scroll view must be width-bound to and clipped at the measured viewport")
     require('padding={{ horizontal: 18, top: 14, bottom: 34 }} frame={{ width: viewportWidth }}' in code,
             "root content must use the measured viewport width with its padding inside that frame")
-    require('padding={{ horizontal: 13, vertical: 9 }} frame={{ maxWidth: "infinity" }}' in code,
-            "navigation-chip padding must remain inside its maximum-width frame")
-    require('padding={12} frame={{ maxWidth: "infinity" }}' in code,
-            "compact-card padding must remain inside its maximum-width frame")
+    require('NAV_ITEMS.map(navigationChip)' in code,
+            "primary destinations must use the compact horizontally scrolling navigation rail")
+    require('padding={{ horizontal: 13, vertical: 9 }} background={' in code,
+            "navigation chips must size to their labels instead of expanding to infinite width")
+    require('padding={12} frame={{ width: contentWidth }}' in code and 'const textWidth = Math.max(1, contentWidth - 113)' in code,
+            "compact cards must keep thumbnail, spacing, padding, and text inside their measured row width")
+    horizontal_scrolls = code.count('<ScrollView axes="horizontal"')
+    bounded_horizontal_scrolls = code.count('frame={{ width: contentWidth }} clipped scrollClipDisabled={false}>')
+    require(horizontal_scrolls == bounded_horizontal_scrolls,
+            "every horizontal scroll region must use the measured content width and remain clipped")
+    require('Viewport: {viewportWidth} · Inhaltsrahmen: {contentWidth}' in code,
+            "Info screen must expose the measured widths for on-device overflow diagnosis")
+    require('maxWidth: "infinity"' not in code,
+            "layout must not contain unbounded max-width frames")
 
     for token in FORBIDDEN_SOURCE_TOKENS:
         require(token not in code, f"deferred/network token present in app source: {token}")

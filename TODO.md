@@ -1,6 +1,6 @@
 # UNIVERSE — TODO
 
-Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. Der aktuelle Produktstand ist `.scripting` 0.5.5: visuell ausgebaute Katalog-Shell mit einem am Präsentations-Root gemessenen Breitenversuch; mehrere Layoutkorrekturen wurden laut Nutzer noch nicht bestätigt, weiterhin kein Download-Manager.
+Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. Der aktuelle Produktstand ist `.scripting` 0.5.6: visuell ausgebaute Katalog-Shell mit expliziten Viewport-/Inhaltsbreiten, horizontaler Chip-Navigation und Diagnosewerten; frühere Layoutkorrekturen beseitigten den vom Nutzer gemeldeten Überlauf nicht, und auch 0.5.6 ist noch nicht am Gerät geprüft. Weiterhin kein Download-Manager.
 
 ## Verbindliches Qualitätsgate vor jeder Verifizierung und Dokumentation
 
@@ -14,16 +14,17 @@ Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2
 ## P0 — Scripting-Kompatibilität und aktueller Shell-Import
 
 - [ ] Auf dem Ziel-iPhone Scripting-App-/iOS-Version und tatsächlich verfügbaren Funktionsumfang der Shell-APIs protokollieren. API-Doku oder App-Store-Preis beweisen keinen kostenlosen Zugriff.
-- [ ] Version 0.5.5 `UNIVERSE.scripting` importieren und Home, Hero-Asset, Katalog-Rails, Suche, Feeds, Merkliste, Info, Detailnavigation sowie die Gesamtbreite auf einem schmalen iPhone prüfen; gezielt bestätigen, ob das vollständige UI noch links/rechts ausbricht.
+- [ ] Version 0.5.6 `UNIVERSE.scripting` importieren und Home, Hero-Asset, Katalog-Rails, Suche, Feeds, Merkliste, Info, Detailnavigation sowie die Gesamtbreite auf einem schmalen iPhone prüfen; gezielt bestätigen, ob das vollständige UI noch links/rechts ausbricht.
 - [ ] Dark Mode, VoiceOver, Dynamic Type, Safe Areas, Tastatur, Touch-Ziele und Lifecycle prüfen.
 - [x] 0.5.3-Paket lokal gebaut: ZIP-CRC, Manifest/Dateiliste, Asset- und Byte-Parität, deterministischer Doppelbuild, Validator und TSX-Quelltextcheck mit temporären Scripting-Stubs bestanden. Das ersetzt keinen App-Import- oder Laufzeittest; Details in `TESTING.md`.
 - [x] 0.5.4-Paket lokal gebaut: GeometryReader-Viewport-Assertions, ZIP-/Manifest-/Quellenparität, deterministischer Doppelbuild, Validator, Python-Kompilierung, `git diff --check` und TypeScript 5.8.3 mit temporären, nicht offiziellen Scripting-Stubs bestanden. Import, Rendering und iPhone-Breite bleiben offen; Details in `TESTING.md`.
-- [x] 0.5.5-Paket lokal gebaut: Root-GeometryReader-/NavigationStack-/ScrollView-Breitenassertions, explizites Scroll-Clipping, ZIP-/Manifest-/Quellenparität, deterministischer Doppelbuild, Validator, Python-Kompilierung, `git diff --check` und TypeScript 5.8.3 mit temporären, nicht offiziellen Scripting-Stubs bestanden. Gerätetest bleibt offen; Details in `TESTING.md`.
+- [x] 0.5.5-Paket lokal gebaut: Root-GeometryReader-/NavigationStack-/ScrollView-Breitenassertions, explizites Scroll-Clipping, ZIP-/Manifest-/Quellenparität, deterministischer Doppelbuild, Validator, Python-Kompilierung, `git diff --check` und TypeScript 5.8.3 mit temporären, nicht offiziellen Scripting-Stubs bestanden. Gerätetest blieb offen; Details in `TESTING.md`.
+- [x] 0.5.6-Paket lokal gebaut: Viewport-/Content-Width-, horizontale Scroll-Clipping-, Chip-Navigation- und kompakte Kartenassertions, ZIP-/Manifest-/Quellenparität, deterministischer Doppelbuild, Validator, Python-Kompilierung, `git diff --check` und TypeScript 5.8.3 mit temporären Stubs bestanden. Import und Gerätetest bleiben offen; Details in `TESTING.md`.
 - [ ] Alle vier erzeugten Scripting-`llms.txt`-/`llms-full.txt`-Dokumente vollständig lesen. Offizielle Quellarchive und relevante API-Seiten sind geprüft; vollständige Chunk-Lektüre bleibt offen.
 
 ## P1 — Foundation zuerst
 
-- [x] App-Shell 0.5.5: Home, Entdecken, Suche, Feeds, Merkliste, Info und Detailansicht; lokales Hero-Motiv, zweispaltige Navigation, zwölf Demo-Fixtures, Katalog-Rails und Poster-Karten. Der Root-Viewport-Breitenversuch benötigt weiterhin einen iPhone-Test.
+- [x] App-Shell 0.5.6: Home, Entdecken, Suche, Feeds, Merkliste, Info und Detailansicht; lokales Hero-Motiv, horizontale Chip-Navigation, zwölf Demo-Fixtures, Katalog-Rails, Poster-Karten und sichtbare Viewport-/Inhaltsbreiten. Der strengere Layoutversuch benötigt weiterhin einen iPhone-Test.
 - [x] Statisch gebündelter Demo-Provider mit expliziter Capability-Liste; Suche, Feed und Details werden über diese Liste geroutet. Keine dynamischen Imports oder Netzwerkabfragen.
 - [x] Lokale Fixture-Entities für Medien, Artikel und Termine mit sichtbarer Quellenherkunft; Suche über mehrere Typen und einfache Filter.
 - [x] Merkliste als sitzungsgebundener UI-State; keine falsche Zusage persistenter Speicherung.
@@ -56,7 +57,7 @@ Danach darf separat geplant werden: nur nutzerbereitgestellte direkte HTTP(S)-Da
 ## Sora-Referenz — nur UX, keine Codeübernahme
 
 - Die Analyse von [Sora, Commit `28f55f3d273b0dd32338e564324054287e500ff9`](https://github.com/cranci1/Sora/tree/28f55f3d273b0dd32338e564324054287e500ff9) steht in `SORA_RESEARCH.md`.
-- 0.5.5 nutzt allgemeine Content-Discovery- und Katalog-UX-Muster. Kein Sora-Code, Sora-Asset, Markenbestandteil, Lizenztext oder Abhängigkeit wurde übertragen.
+- 0.5.6 nutzt allgemeine Content-Discovery- und Katalog-UX-Muster. Kein Sora-Code, Sora-Asset, Markenbestandteil, Lizenztext oder Abhängigkeit wurde übertragen.
 - Sora-Module, HLS-/Streamlogik, Tracking, Custom Player und Background-Download-Verhalten sind nicht Teil von UNIVERSE.
 
 ## REA-Referenz
