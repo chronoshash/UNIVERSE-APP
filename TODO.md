@@ -1,6 +1,6 @@
 # UNIVERSE — TODO
 
-Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. UNIVERSE 0.5.9 ist als GitHub-Prerelease veröffentlicht und unabhängig geprüft (PR #13, Merge-Commit `62b085e2c5c1828687bd69fcfc3a219555b8234f`). Die Version reagiert auf den vom Nutzer gemeldeten `RootScreen`-Typfehler und ergänzt direktes Entfernen aus der sitzungsgebundenen Merkliste. Die Cross-Type-Foundation bleibt erhalten. Keine Live-Provider, Downloads oder Wiedergabe; Scripting-App-Import und Gerätetest sind offen.
+Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. UNIVERSE 0.5.10 ist als GitHub-Prerelease veröffentlicht und unabhängig geprüft (PR #15, Merge-Commit `219197575f06a5ea425d0e89303263be3a225488`). Die Version verwendet fünf literal-typisierte native Tab-Ziele und blendet den Tab-Bar-Hintergrund über die dokumentierte API aus. Keine Live-Provider, Downloads oder Wiedergabe; Scripting-App-Import und Gerätetest sind offen.
 
 ## Verbindliches Qualitätsgate vor jeder Verifizierung und Dokumentation
 
@@ -14,7 +14,7 @@ Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2
 ## P0 — Scripting-Kompatibilität und aktueller Shell-Import
 
 - [ ] Auf dem Ziel-iPhone Scripting-App-/iOS-Version und tatsächlich verfügbaren Funktionsumfang der Shell-APIs protokollieren. API-Doku oder App-Store-Preis beweisen keinen kostenlosen Zugriff.
-- [ ] Version 0.5.9 `UNIVERSE.scripting` nach Veröffentlichung auf dem Ziel-iPhone importieren; native fünf Tabs, Info-Zugang, Tab-/Detail-Rücknavigation, Merkliste-Entfernen, Feedfilter, Detailvorschläge, Accessibility und Lifecycle am Gerät prüfen. Der Nutzer bestätigt die 0.5.6-Breite; Regressionstest bleibt sinnvoll.
+- [ ] Veröffentlichtes Version-0.5.10-`UNIVERSE.scripting` auf dem Ziel-iPhone importieren; fünf native Tabs, transparente Tab-Bar, Info-Zugang, Tab-/Detail-Rücknavigation, Merkliste-Entfernen, Feedfilter, Detailvorschläge, Accessibility und Lifecycle am Gerät prüfen. Der Nutzer bestätigt die 0.5.6-Breite; Regressionstest bleibt sinnvoll.
 - [ ] Dark Mode, VoiceOver, Dynamic Type, Safe Areas, Tastatur, Touch-Ziele und Lifecycle prüfen.
 - [x] 0.5.3-Paket lokal gebaut: ZIP-CRC, Manifest/Dateiliste, Asset- und Byte-Parität, deterministischer Doppelbuild, Validator und TSX-Quelltextcheck mit temporären Scripting-Stubs bestanden. Das ersetzt keinen App-Import- oder Laufzeittest; Details in `TESTING.md`.
 - [x] 0.5.4-Paket lokal gebaut: GeometryReader-Viewport-Assertions, ZIP-/Manifest-/Quellenparität, deterministischer Doppelbuild, Validator, Python-Kompilierung, `git diff --check` und TypeScript 5.8.3 mit temporären, nicht offiziellen Scripting-Stubs bestanden. Import, Rendering und iPhone-Breite bleiben offen; Details in `TESTING.md`.
@@ -24,6 +24,8 @@ Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2
 - [ ] Alle vier erzeugten Scripting-`llms.txt`-/`llms-full.txt`-Dokumente vollständig lesen. Offizielle Quellarchive und relevante API-Seiten sind geprüft; vollständige Chunk-Lektüre bleibt offen.
 
 - [x] 0.5.8 lokal geprüft und veröffentlicht: dokumentiertes `TabView`/`Tab` mit `useObservable`, fünf primäre Ziele, separater Info-Zugang; Validator, Paketbyte-Parität, deterministischer Doppelbuild, TypeScript 5.8.3 mit temporären Stubs, Python-Kompilierung und `git diff --check` bestanden. PR #11 ist in `main` gemergt; Release v0.5.8 veröffentlicht. Remote-Paketbytes, SHA-256, Manifest, ZIP-CRC und native Navigation-Marker unabhängig geprüft. Release hat keinen Asset-Anhang; die Notizen verlinken zum geprüften Paket auf `main`. Dies belegt keine Scripting-App-/iPhone-Kompatibilität.
+
+- [x] 0.5.10 lokal geprüft und veröffentlicht: fünf literal-typisierte native Tab-Ziele, explizit generisches `useObservable<RootScreen>`, dokumentiertes Ausblenden des `tabBar`-Hintergrunds; Validator, deterministischer Doppelbuild, ZIP-/Manifest-/Quellenparität, TypeScript 5.8.3 mit temporären Stubs, Python-Syntax und `git diff --check` bestanden. PR #15 gemergt, Release v0.5.10 veröffentlicht, Paket auf GitHub `main` bytegleich verifiziert. Kein Scripting-App-/iPhone-Test.
 
 ## P1 — Foundation zuerst
 
