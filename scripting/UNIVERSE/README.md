@@ -1,16 +1,18 @@
-# UNIVERSE Scripting foundation · 0.5.6
+# UNIVERSE Scripting foundation · 0.5.7
 
-The user continues to report full-screen horizontal overflow after 0.5.3, 0.5.4, and 0.5.5. Version 0.5.6 takes a stricter layout approach: it floors the width measured by the root `GeometryReader`, uses an explicit content width after the 18-point side gutters, removes unbounded `maxWidth: infinity` frames, assigns that content width to every horizontal scroller and full-width card, and clips both `NavigationStack` and scroll views. The navigation is now a compact horizontal chip rail rather than a three-row grid. The Info screen exposes the measured viewport and content widths so an on-device import can confirm the package and measurement.
+Version 0.5.7 builds on the viewport/content-width layout in 0.5.6. The user reports that the width now works; this is user feedback, not an independent Scripting-app/iPhone runtime test by the project. This release focuses on cross-type discovery: the chronological feed now has its own media/article/event filters, and detail pages show local related-content suggestions based on matching category or content type.
 
-This is another targeted correction and diagnostic build, not a verified device fix. Import and rendering in Scripting on the target iPhone still need to be checked. The twelve local demo entries, null-safe optional JSX children, literal-preserving gradient colors, local-only provider, and disabled AniWorld scaffold are retained.
+All feed entries and suggestions are derived only from the bundled demo fixtures. Recommendation criteria are disclosed in the UI; no live data, ranking service, or network request is involved. The 0.5.6 clipping, measured widths, compact horizontal navigation, and Info diagnostics are retained.
 
-The interface uses an original local hero image in `assets/hero.jpg`, loaded from `Script.directory`. It makes no live provider calls or network requests.
+The interface uses an original local hero image in `assets/hero.jpg`, loaded from `Script.directory`.
 
 ## Included
 
 - Home, Explore, Search, Feeds, a session-only Library, Info, and content details.
 - Local demo media, articles, and events with visible source attribution.
 - Capability-gated entity listing, cross-type search, feed listing, and detail lookup.
+- Separate content-type filters in Explore, Search, and Feeds.
+- Related demo-content rails on detail pages, based only on category or content type.
 - A disabled AniWorld plugin scaffold at `plugins/aniworld/plugin.json`, also disclosed in Info. It declares no capabilities and has network access, stream resolution, and downloads disabled. It is not a functional AniWorld integration.
 - A session-only saved-items list; it is not presented as persistent storage.
 - No accounts, database, downloads, video playback, dynamic plugins, or live AniWorld access.
@@ -30,4 +32,4 @@ python3 tools/build_scripting_package.py
 python3 tools/validate_scripting_foundation.py
 ```
 
-The generated `UNIVERSE.scripting` ZIP contains `script.json`, `index.tsx`, this README, `assets/hero.jpg`, and the disabled AniWorld plugin descriptor. Package structure and byte parity can be checked locally; import, UI rendering, and runtime in Scripting on a target iPhone have not been verified.
+The generated `UNIVERSE.scripting` ZIP contains `script.json`, `index.tsx`, this README, `assets/hero.jpg`, and the disabled AniWorld plugin descriptor. Package structure and byte parity can be checked locally; import, UI rendering, and runtime in Scripting on a target iPhone have not been verified by the project.

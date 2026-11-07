@@ -52,7 +52,7 @@ type StaticProvider = {
   getEntity: (id: string) => UniverseEntity | undefined
 }
 
-const APP_VERSION = "0.5.6"
+const APP_VERSION = "0.5.7"
 const CONTENT_FILTERS: ContentFilter[] = ["Alle", "Medien", "Artikel", "Termine"]
 const NAV_ITEMS: { id: RootScreen; label: string; symbol: string }[] = [
   { id: "home", label: "Start", symbol: "house.fill" },
@@ -238,10 +238,12 @@ function UniverseApp() {
   const [returnScreen, setReturnScreen] = useState<RootScreen>("home")
   const [searchText, setSearchText] = useState("")
   const [searchFilterIndex, setSearchFilterIndex] = useState(0)
+  const [feedFilterIndex, setFeedFilterIndex] = useState(0)
   const [savedIds, setSavedIds] = useState<string[]>([])
   const [selectedEntityId, setSelectedEntityId] = useState("")
 
   const currentFilter = CONTENT_FILTERS[searchFilterIndex]
+  const feedFilter = CONTENT_FILTERS[feedFilterIndex]
   const query = searchText.trim().toLowerCase()
   const listedEntities = PROVIDERS
     .filter(provider => provider.capabilities.includes("entity.list"))
@@ -253,11 +255,15 @@ function UniverseApp() {
     .filter(provider => provider.capabilities.includes("feed.local"))
     .flatMap(provider => provider.listFeed())
     .sort((left, right) => right.publishedAt.localeCompare(left.publishedAt))
+  const visibleFeedItems = feedItems.filter(entity => matchesFilter(entity, feedFilter))
   const savedEntities = listedEntities.filter(entity => savedIds.includes(entity.id))
   const selectedEntity = PROVIDERS
     .filter(provider => provider.capabilities.includes("entity.details"))
     .map(provider => provider.getEntity(selectedEntityId))
     .find(entity => entity !== undefined)
+  const relatedItems = selectedEntity
+    ? listedEntities.filter(entity => entity.id !== selectedEntity.id && (entity.category === selectedEntity.category || entity.typeId === selectedEntity.typeId)).slice(0, 6)
+    : []
 
   function navigateTo(nextScreen: RootScreen) {
     setScreen(nextScreen)
@@ -525,7 +531,26 @@ function UniverseApp() {
                 {screen === "feeds" && <>
                   {sectionHeading("Neu im Hub", "Chronologischer Überblick")}
                   <Text font="subheadline" foregroundStyle="#B7B8C5">Ein gemeinsamer Zeitstrahl für unterschiedliche Inhaltstypen.</Text>
-                  {feedItems.map((entity, index) => compactCard(entity, index, contentWidth))}
+                  <ScrollView axes="horizontal" scrollIndicator="never" frame={{ width: contentWidth }} clipped scrollClipDisabled={false}>
+                    <LazyHStack spacing={8}>
+                      {CONTENT_FILTERS.map((filter, index) => <Button
+                        key={filter}
+                        title={filter}
+                        buttonStyle={feedFilterIndex === index ? "borderedProminent" : "bordered"}
+                        action={() => setFeedFilterIndex(index)}
+                      />)}
+                    </LazyHStack>
+                  </ScrollView>
+                  <Text font="caption" foregroundStyle="#999BAD">{visibleFeedItems.length} Einträge · neueste zuerst</Text>
+                  {visibleFeedItems.length === 0
+                    ? <VStack alignment="leading" spacing={10} padding={20} frame={{ width: contentWidth }} background={
+                        <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
+                      }>
+                        <Image systemName="clock" frame={{ width: 34, height: 34 }} foregroundStyle="#9C8BFF" />
+                        <Text font="headline" fontWeight="bold" foregroundStyle="white">Noch nichts in diesem Filter</Text>
+                        <Text font="subheadline" foregroundStyle="#B7B8C5">Wähle einen anderen Inhaltstyp, um mehr Demo-Einträge zu sehen.</Text>
+                      </VStack>
+                    : visibleFeedItems.map((entity, index) => compactCard(entity, index, contentWidth))}
                 </>}
 
                 {screen === "library" && <>
@@ -599,6 +624,8 @@ function UniverseApp() {
                     <Text font="subheadline" foregroundStyle="#C1C2D0">{selectedEntity.source.providerName} · {selectedEntity.source.providerId}</Text>
                     <Text font="caption" foregroundStyle="#999BAD">Veröffentlicht: {formatDate(selectedEntity.publishedAt)} · Abgerufen: {formatDate(selectedEntity.source.retrievedAt)}</Text>
                   </VStack>
+                  <Text font="caption" foregroundStyle="#A6A7B6">Vorschläge beruhen nur auf Kategorie oder Inhaltstyp in lokalen Demo-Daten.</Text>
+                  {contentRail("Ähnliche Demo-Inhalte", relatedItems, contentWidth, "Gleiche Kategorie oder Medienart")}
                   <Button
                     title={savedIds.includes(selectedEntity.id) ? "Aus Merkliste entfernen" : "Für später merken"}
                     systemImage={savedIds.includes(selectedEntity.id) ? "bookmark.fill" : "bookmark"}

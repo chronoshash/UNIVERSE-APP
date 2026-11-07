@@ -1,14 +1,14 @@
 # UNIVERSE — Scripting-Kompatibilität
 
-**Stand: 2026-11-07 · aktuelle Basis: `.scripting` 0.5.6.** Version 0.5.6 ist eine lokale Katalog-Shell mit Demo-Fixtures, statischer Capability-Registry, gebündeltem Hero-Artwork und strikten Viewport-/Inhaltsbreiten. Sie wurde lokal gebaut, aber nicht in die Scripting-App importiert oder auf einem iPhone ausgeführt. Verfügbarkeit der UI-APIs im installierten Build, Pro-Zugriff, Darstellung und Lifecycle sind offen.
+**Stand: 2026-11-07 · aktuelle Basis: `.scripting` 0.5.7.** Version 0.5.7 baut auf der lokalen Katalog-Shell mit statischer Capability-Registry und gebündeltem Hero-Artwork auf. Der Nutzer bestätigt, dass die Breite funktioniert. Das neue Paket ist lokal geprüft, wurde vom Projekt aber nicht unabhängig in die Scripting-App importiert oder auf einem iPhone ausgeführt. Verfügbarkeit der UI-APIs im installierten Build, Pro-Zugriff, Detail-/Feed-Interaktionen und Lifecycle sind offen.
 
 ## Aktueller Funktionsumfang und Grenzen
 
 - Home, Entdecken, Suche, Feeds, Merkliste und Detailansicht zeigen lokale Beispieldaten und das mitgelieferte illustrative Hero-Artwork.
 - Entity-Liste, Suche, Feed und Detailzugriff werden nur aufgerufen, wenn der statisch eingetragene Demo-Provider die jeweilige Capability deklariert.
 - Merkliste ist ausschließlich UI-State der aktuellen Script-Sitzung; es wird keine Persistenz behauptet.
-- Version 0.5.6 enthält weder `DownloadManager`, `AVPlayer`, Netzwerkzugriffe, einen echten Provider noch dynamische Plugins; das Hero-Bild wird lokal aus dem Paket geladen.
-- Der Nutzer meldete nach den 0.5.3-, 0.5.4- und 0.5.5-Versuchen weiterhin Überlauf. 0.5.6 bindet Root-Navigation, Karten und alle horizontalen Scrollbereiche an eine abgerundete Viewportbreite mit definierten Seitenrändern, entfernt unbeschränkte Maximalbreiten und aktiviert Clipping. Die Info-Seite zeigt beide Messwerte. Auch dieser Versuch ist bis zum Import-/iPhone-Test unbestätigt.
+- Version 0.5.7 enthält weder `DownloadManager`, `AVPlayer`, Netzwerkzugriffe, einen echten Provider noch dynamische Plugins; das Hero-Bild wird lokal aus dem Paket geladen.
+- 0.5.6 bindet Root-Navigation, Karten und alle horizontalen Scrollbereiche an eine abgerundete Viewportbreite und aktiviert Clipping; der Nutzer bestätigt nun, dass die Breite funktioniert. 0.5.7 ergänzt unabhängige Inhaltstypfilter im Feed und lokale Ähnlichkeitsvorschläge auf Detailseiten. Diese neuen Flows sind vom Projekt nicht auf dem iPhone verifiziert.
 - Der Downloader aus Version 0.3.0 ist historisch und wurde aus der aktuellen Basis entfernt. Er kommt erst nach App-Shell-, Datenmodell-, Provider-, Storage- und Geräte-Gates zurück.
 - Keine Scripting-Pro-Funktion als Voraussetzung oder Fallback; kein Xcode-Projekt, Backend, Background-Worker oder dynamischer Fremdcode.
 
@@ -25,7 +25,7 @@ Die Quellenarchive liefern die Markdown-Ausgangsseiten. **Alle vier generierten 
 
 ## APIs der Foundation — dokumentiert, aber nicht auf dem Gerät bestätigt
 
-| API | Verwendung in 0.5.6 | Offener Nachweis |
+| API | Verwendung in 0.5.7 | Offener Nachweis |
 |---|---|---|
 | `Navigation.present`, `NavigationStack`, `ScrollView`, `LazyHStack` | Script-Präsentation, vertikaler Screen und horizontale Katalog-Rails | Import, Scrollverhalten, Lifecycle auf iPhone |
 | `Button`, `Text`, `TextField`, `HStack`, `VStack`, `ZStack`, `Spacer` | Navigation, Filter, Karten, Suche und Inhaltshierarchie | Rendern, Touch-Ziele, Barrierefreiheit, Tastatur |
@@ -42,9 +42,9 @@ TypeScript 5.8.3 hat `index.tsx` mit lokalen, temporären Platzhalterdeklaration
 
 Das Paket wird von `tools/build_scripting_package.py` erstellt und enthält `script.json`, `index.tsx`, `README.md`, `assets/hero.jpg` sowie das inaktive `plugins/aniworld/plugin.json`. Es ist lokal auf CRC, Dateiliste, Manifest, Byte-Parität und deterministischen Build geprüft. Das `.scripting`-ZIP-Format ist hier eine Paketkonvention, keine durch einen erfolgreichen Scripting-Import bestätigte Kompatibilitätszusage.
 
-## Zurückgestellte Download-/Player-APIs (nicht Teil von 0.5.6)
+## Zurückgestellte Download-/Player-APIs (nicht Teil von 0.5.7)
 
-In der offiziellen `DownloadManager`-Doku steht, dass diese globale API für Main-App-Scripts vorgesehen ist; explizite Ziele müssen lokale absolute Pfade sein, fehlende Elternordner werden beim Veröffentlichen angelegt und vorhandene Dateien werden nicht überschrieben. Die Seiten für `FileManager`, `AVPlayer` und `VideoPlayer` wurden für den früheren 0.3.0-Versuch gelesen. Das belegt weder Pro-Freiheit noch den API-Stand des installierten iPhones. Keine dieser APIs ist in der aktuellen Version 0.5.6 aufgerufen.
+In der offiziellen `DownloadManager`-Doku steht, dass diese globale API für Main-App-Scripts vorgesehen ist; explizite Ziele müssen lokale absolute Pfade sein, fehlende Elternordner werden beim Veröffentlichen angelegt und vorhandene Dateien werden nicht überschrieben. Die Seiten für `FileManager`, `AVPlayer` und `VideoPlayer` wurden für den früheren 0.3.0-Versuch gelesen. Das belegt weder Pro-Freiheit noch den API-Stand des installierten iPhones. Keine dieser APIs ist in der aktuellen Version 0.5.7 aufgerufen.
 
 Falls ein Manager später nach Abschluss der Foundation-Gates wieder gebaut wird, gelten weiterhin nur nutzerbereitgestellte direkte HTTP(S)-Dateilinks, Rechte-/Token-Hinweise und explizite Nutzeraktionen. Keine Webseiten-/Playlist-/Stream-Extraktion, kein DRM-/Login-/CAPTCHA-Bypass. Dateiendung beweist weder Videoinhalt noch Codec.
 
@@ -53,7 +53,7 @@ Falls ein Manager später nach Abschluss der Foundation-Gates wieder gebaut wird
 | Frage | Nachweis | Status |
 |---|---|---|
 | installierte Scripting- und iOS-Version / kostenloser UI-API-Zugriff | App-Version, Geräte-Einstellungen und Test auf Ziel-iPhone | Offen |
-| 0.5.6-Paket importierbar und startfähig | Import und Shell-/Navigationstest | Offen |
+| 0.5.7-Paket importierbar und startfähig | Import und Shell-/Navigationstest | Offen |
 | Merkliste-/Storage-Verhalten | Persistenz bleibt absichtlich nicht implementiert; Storage API vor Nutzung testen | Offen |
 | Suche, Typfilter, Demo-Feed und Detailnavigation | manuelle iPhone-Prüfung, Tastatur-/Lifecycle-Fälle | Offen |
 | Dark Mode, VoiceOver, Dynamic Type, Safe Areas | iPhone-Testprotokoll/Screenshots | Offen |
