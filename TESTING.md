@@ -2,16 +2,16 @@
 
 ## Grundsatz
 
-Statische Prüfungen ersetzen keinen Import- oder Laufzeittest in der installierten Scripting-App auf dem iPhone. API-/Pro-Verfügbarkeit wird nur nach Gerätetest bestätigt. Aktueller Scope: lokale Foundation 0.5.2 mit gebündeltem Hero-Artwork und deaktiviertem AniWorld-Plugin-Skelett; der DownloadManager ist zurückgestellt.
+Statische Prüfungen ersetzen keinen Import- oder Laufzeittest in der installierten Scripting-App auf dem iPhone. API-/Pro-Verfügbarkeit wird nur nach Gerätetest bestätigt. Aktueller Scope: lokale Foundation 0.5.3 mit gebündeltem Hero-Artwork und deaktiviertem AniWorld-Plugin-Skelett; der DownloadManager ist zurückgestellt.
 
-## Lokale Checks — Foundation 0.5.2
+## Lokale Checks — Foundation 0.5.3
 
 - Paket nach Änderungen an Script oder Paket-README neu mit `python3 tools/build_scripting_package.py` gebaut.
 - ZIP-CRC, Dateiliste (`script.json`, `index.tsx`, `README.md`, `assets/hero.jpg`, `plugins/aniworld/plugin.json`), Manifest-Version, Byte-Parität einschließlich Artwork und Plugin-Manifest sowie reproduzierbarer Doppelbuild geprüft.
 - `python3 tools/validate_scripting_foundation.py` bestanden: statische Manifest-/App-Versions-Parität, Capability-Union und Gates, Provider-Operationen, eindeutige IDs, Fixture-Provenienz/ISO-Daten, deaktivierte AniWorld-Plugin-Sicherheitsflags sowie Paketparität. Das ist ein Quelltextvertragstest, kein App-Runtime-Test.
 - Statische Assertions: kein `DownloadManager`, kein `AVPlayer` und keine Netzwerkquelle.
 - TypeScript 5.8.3 `tsc --noEmit` mit selbst angelegten, temporären UI-Stubs für `Color`-Werte und `VirtualNode`-Kinder bestanden. Die Stubs bilden die gemeldeten Typmuster nach; sie sind nicht die echten Scripting-Typdeklarationen und belegen weder App-Import noch Runtime.
-- Finales Paket 0.5.2: 156.806 Byte, SHA-256 `36b76d93fb827eca8400787756c97f169553bdc5959643204cc9e212c49dbf6f`. Der Build lief zweimal deterministisch durch; die Foundation-Validierung und ZIP-CRC-/Paketparitätschecks bestanden.
+- Finales Paket 0.5.3: 156.871 Byte, SHA-256 `61f0a8f0ee466e6e5f7b5e62b63c42ed86301fc1747915c05b0ef635f29bb38c`. Der Build lief zweimal deterministisch durch. Der Validator prüft nun zusätzlich, dass Root-, Navigations- und Karten-Padding innerhalb des Max-Width-Frames liegt.
 - Keine Scripting-App-Import-, iPhone-, Bedienbarkeits- oder Laufzeittests ausgeführt.
 
 Diese Checks beweisen weder Scripting-Kompatibilität noch API-Freigabe im kostenlosen Build oder tatsächliche Gerätefunktion.
@@ -33,7 +33,7 @@ Vor Live-Provider oder persistenter Speicherung: statische Registry-/Manifestval
 
 ## Download-/Offline-Tests — erst nach Foundation-Gates
 
-Der Manager ist **nicht** Teil der aktuellen Version 0.5.2. Diese Tests sind nur für eine spätere, separat freigegebene Version vorgesehen: direkte erlaubte HTTPS-Testdatei, Eingabevalidierung, WLAN/Foreground-Lifecycle, Queue-Wiederaufnahme, Speicherfehler, Dateilöschung, Flugmodus-Playback und Codec-/Tonverhalten. Keine DRM-, Login-, CAPTCHA-, Playlist- oder Zugriffsbeschränkungen umgehen.
+Der Manager ist **nicht** Teil der aktuellen Version 0.5.3. Diese Tests sind nur für eine spätere, separat freigegebene Version vorgesehen: direkte erlaubte HTTPS-Testdatei, Eingabevalidierung, WLAN/Foreground-Lifecycle, Queue-Wiederaufnahme, Speicherfehler, Dateilöschung, Flugmodus-Playback und Codec-/Tonverhalten. Keine DRM-, Login-, CAPTCHA-, Playlist- oder Zugriffsbeschränkungen umgehen.
 
 ## Release-Blocker
 

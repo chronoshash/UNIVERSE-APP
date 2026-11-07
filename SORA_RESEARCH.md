@@ -20,13 +20,13 @@ Das Referenz-Repository weist im Root eine GPL-3.0-Lizenz aus; die README nennt 
 
 ## Was UNIVERSE davon übernimmt — nur als UX-Idee
 
-Die Korrektur der Umsetzungsreihenfolge ist wichtig: Downloads/Player sind in UNIVERSE nicht die Basis. Version 0.4.0 legte zuerst kleine, risikoarme Shell-Grundlagen; 0.5.2 baut die Katalogdarstellung weiter aus:
+Die Korrektur der Umsetzungsreihenfolge ist wichtig: Downloads/Player sind in UNIVERSE nicht die Basis. Version 0.4.0 legte zuerst kleine, risikoarme Shell-Grundlagen; 0.5.3 adressiert den gemeldeten Viewport-Überlauf in der Katalogdarstellung:
 
 1. Eine stets sichtbare, reduzierte Navigation macht Home, Entdecken, Suche, Feeds, Merkliste und Info erreichbar.
 2. Eine einzige Suche filtert mehrere Fixture-Inhaltstypen; Ergebnisse zeigen Quelle und Abrufdatum.
 3. Ein gemeinsamer chronologischer Feed und eine Detailansicht verwenden dieselben Entities.
 4. Ein statischer capability-gesteuerter Demo-Provider zeigt den späteren Integrationspunkt, ohne dynamischen Code, Netzwerk oder Plugin-Installation.
 
-Die frühere 0.3.0-Version experimentierte vorzeitig mit einer Downloadwarteschlange. Sie ist historisch, wurde aus der 0.4.0-Basis entfernt und ist auch in 0.5.2 kein Architekturfundament. Ein DownloadManager kommt erst nach App-Shell-, Entity-/Source-Vertrags-, Provider-Registry-, Storage- und Scripting-Geräte-Gates auf die Roadmap.
+Die frühere 0.3.0-Version experimentierte vorzeitig mit einer Downloadwarteschlange. Sie ist historisch, wurde aus der 0.4.0-Basis entfernt und ist auch in 0.5.3 kein Architekturfundament. Ein DownloadManager kommt erst nach App-Shell-, Entity-/Source-Vertrags-, Provider-Registry-, Storage- und Scripting-Geräte-Gates auf die Roadmap.
 
 Bewusst **nicht** übernommen wurden Soras Modul-/Plugin-Ausführung, HLS-/Stream-Auflösung, Tracker-/Metadaten-Integrationen, Custom Player, Background-Download-Versprechen oder weitreichende Netzwerkfreigaben. „Continue Watching“ bleibt ebenfalls später: verlässliche Fortschritts-/Resume-Persistenz ist nicht nachgewiesen. Auch die neue Basis ist bisher nur statisch geprüft; Import, iPhone-UI und Laufzeit fehlen.

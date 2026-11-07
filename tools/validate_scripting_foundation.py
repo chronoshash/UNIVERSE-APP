@@ -67,6 +67,12 @@ def validate_sources() -> tuple[dict, str, bytes]:
     require(manifest.get("permissions") is None, "foundation manifest must not request permissions")
     require(manifest.get("version") is not None, "manifest version is required")
     require(f'const APP_VERSION = "{manifest["version"]}"' in code, "manifest and app versions differ")
+    require('padding={{ horizontal: 18, top: 14, bottom: 34 }} frame={{ maxWidth: "infinity" }}' in code,
+            "root content padding must remain inside its maximum-width frame")
+    require('padding={{ horizontal: 13, vertical: 9 }} frame={{ maxWidth: "infinity" }}' in code,
+            "navigation-chip padding must remain inside its maximum-width frame")
+    require('padding={12} frame={{ maxWidth: "infinity" }}' in code,
+            "compact-card padding must remain inside its maximum-width frame")
 
     for token in FORBIDDEN_SOURCE_TOKENS:
         require(token not in code, f"deferred/network token present in app source: {token}")

@@ -1,6 +1,6 @@
-# UNIVERSE Scripting foundation · 0.5.2
+# UNIVERSE Scripting foundation · 0.5.3
 
-Version 0.5.2 replaces the top horizontal navigation strip with a two-column navigation grid, expands the local showcase to twelve demo entries, and retains the null-safe child and literal-preserving gradient color fixes. The UI uses a dark featured story, constrained horizontal content rails, illustrated poster cards, search, and content details. The narrower navigation layout reduces one source of horizontal overflow, but visual fit still requires an on-device check.
+Version 0.5.3 fixes a width-ordering bug visible on device: horizontal padding had been added after the maximum-width frame, making the padded root and cards wider than their viewport. Padding now sits inside the width constraint on the root, navigation chips, compact cards, featured overlay, and information panels. The top navigation remains a two-column grid, the local showcase has twelve demo entries, and the null-safe child and literal-preserving gradient color fixes are retained. Device layout still needs rechecking.
 
 The interface uses a statically bundled fixture provider and an original local hero image in `assets/hero.jpg`, loaded from `Script.directory`. It makes no live provider calls or network requests.
 
