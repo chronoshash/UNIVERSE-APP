@@ -1,6 +1,6 @@
 # UNIVERSE — TODO
 
-Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. UNIVERSE 0.5.11 ist als GitHub-Prerelease veröffentlicht und unabhängig geprüft (PR #17, Merge-Commit `7398d8e28c39ed816ec50f31caa8dd26c498eba5`). Die fünf nativen Tab-Ziele werden aus einem gemeinsamen Screen-Union abgeleitet; die Tab-Bar-Transparenz ist über die dokumentierte API angefordert. Die Sitzungs-Merkliste erhält Merkreihenfolge und zeigt ihre Anzahl. Keine Live-Provider, Downloads oder Wiedergabe; Scripting-App-Import und Gerätetest sind offen.
+Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. Die Version 0.5.12 ergänzt die fünf nativen Tabs um eine kleine, über den dokumentierten privaten `Storage`-Bereich gespeicherte Merkliste (Entity-IDs in Merkreihenfolge). Die Tab-Bar-Transparenz ist über die dokumentierte API angefordert. Keine Live-Provider, Downloads oder Wiedergabe. Scripting-App-Import, Persistenz und Geräteverhalten bleiben offen; die GitHub-Veröffentlichung der 0.5.12-Änderungen ist in Arbeit.
 
 ## Verbindliches Qualitätsgate vor jeder Verifizierung und Dokumentation
 
@@ -14,7 +14,7 @@ Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2
 ## P0 — Scripting-Kompatibilität und aktueller Shell-Import
 
 - [ ] Auf dem Ziel-iPhone Scripting-App-/iOS-Version und tatsächlich verfügbaren Funktionsumfang der Shell-APIs protokollieren. API-Doku oder App-Store-Preis beweisen keinen kostenlosen Zugriff.
-- [ ] Veröffentlichtes Version-0.5.11-`UNIVERSE.scripting` auf dem Ziel-iPhone importieren; fünf native Tabs, transparente Tab-Bar, Info-Zugang, Tab-/Detail-Rücknavigation, Merkliste-Merkreihenfolge, Anzahl und direktes Entfernen, Feedfilter, Detailvorschläge, Accessibility und Lifecycle am Gerät prüfen. Der Nutzer bestätigt die 0.5.6-Breite; Regressionstest bleibt sinnvoll.
+- [ ] Version-0.5.12-`UNIVERSE.scripting` auf dem Ziel-iPhone importieren; fünf native Tabs, transparente Tab-Bar, Info-Zugang, Tab-/Detail-Rücknavigation, Merkliste-Merkreihenfolge, Anzahl und direktes Entfernen, Feedfilter, Detailvorschläge, Accessibility und Lifecycle am Gerät prüfen. Merken/Entfernen über einen Script-Neustart prüfen, außerdem Storage-Ausfall/ungültige Werte und sichtbaren Session-Fallback. Der Nutzer bestätigt die 0.5.6-Breite; Regressionstest bleibt sinnvoll.
 - [ ] Dark Mode, VoiceOver, Dynamic Type, Safe Areas, Tastatur, Touch-Ziele und Lifecycle prüfen.
 - [x] 0.5.3-Paket lokal gebaut: ZIP-CRC, Manifest/Dateiliste, Asset- und Byte-Parität, deterministischer Doppelbuild, Validator und TSX-Quelltextcheck mit temporären Scripting-Stubs bestanden. Das ersetzt keinen App-Import- oder Laufzeittest; Details in `TESTING.md`.
 - [x] 0.5.4-Paket lokal gebaut: GeometryReader-Viewport-Assertions, ZIP-/Manifest-/Quellenparität, deterministischer Doppelbuild, Validator, Python-Kompilierung, `git diff --check` und TypeScript 5.8.3 mit temporären, nicht offiziellen Scripting-Stubs bestanden. Import, Rendering und iPhone-Breite bleiben offen; Details in `TESTING.md`.
@@ -26,7 +26,8 @@ Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2
 - [x] 0.5.8 lokal geprüft und veröffentlicht: dokumentiertes `TabView`/`Tab` mit `useObservable`, fünf primäre Ziele, separater Info-Zugang; Validator, Paketbyte-Parität, deterministischer Doppelbuild, TypeScript 5.8.3 mit temporären Stubs, Python-Kompilierung und `git diff --check` bestanden. PR #11 ist in `main` gemergt; Release v0.5.8 veröffentlicht. Remote-Paketbytes, SHA-256, Manifest, ZIP-CRC und native Navigation-Marker unabhängig geprüft. Release hat keinen Asset-Anhang; die Notizen verlinken zum geprüften Paket auf `main`. Dies belegt keine Scripting-App-/iPhone-Kompatibilität.
 
 - [x] 0.5.10 lokal geprüft und veröffentlicht: fünf literal-typisierte native Tab-Ziele, explizit generisches `useObservable<RootScreen>`, dokumentiertes Ausblenden des `tabBar`-Hintergrunds; Validator, deterministischer Doppelbuild, ZIP-/Manifest-/Quellenparität, TypeScript 5.8.3 mit temporären Stubs, Python-Syntax und `git diff --check` bestanden. PR #15 gemergt, Release v0.5.10 veröffentlicht, Paket auf GitHub `main` bytegleich verifiziert. Kein Scripting-App-/iPhone-Test.
-- [x] 0.5.11 lokal geprüft und veröffentlicht: `RootScreen` aus gemeinsamem Literal-Tupel abgeleitet; `asRootScreen` liefert die volle Union für `useObservable` und verhindert ein Narrowing auf `"home"`; native fünf Tabs und dokumentierter transparenter Tab-Bar-Hintergrund bleiben. Die Merkliste hat explizite Session-Scope-Daten, stabile Merkreihenfolge, sichtbare Anzahl und direkten Entfernungsweg. Validator, deterministischer Paketbau, ZIP-/Manifest-/Quellenparität und TypeScript 5.8.3 mit temporären, nicht offiziellen Scripting-Stubs bestanden. PR #17 gemergt, Release v0.5.11 veröffentlicht, Remote-Paket bytegleich geprüft. Kein Scripting-App-/iPhone-Test.
+- [x] 0.5.11 lokal geprüft und veröffentlicht: `RootScreen` aus gemeinsamem Literal-Tupel abgeleitet; `asRootScreen` liefert die volle Union für `useObservable` und verhindert ein Narrowing auf `"home"`; native fünf Tabs und dokumentierter transparenter Tab-Bar-Hintergrund bleiben. Die Merkliste hatte explizite Session-Scope-Daten, stabile Merkreihenfolge, sichtbare Anzahl und direkten Entfernungsweg. Validator, deterministischer Paketbau, ZIP-/Manifest-/Quellenparität und TypeScript 5.8.3 mit temporären, nicht offiziellen Scripting-Stubs bestanden. PR #17 gemergt, Release v0.5.11 veröffentlicht, Remote-Paket bytegleich geprüft. Kein Scripting-App-/iPhone-Test.
+- [x] 0.5.12 Foundation lokal geprüft: offizielle Scripting-Dokumentation am gepinnten Repository-Commit ausgewertet; `Storage.get/set` bleibt im standardmäßigen privaten Script-Bereich. Die Merkliste speichert nur begrenzte, validierte und deduplizierte Entity-IDs; Fehler führen sichtbar zum Session-Fallback bzw. lassen die bisherige Liste bei fehlgeschlagenem Schreiben stehen. Validator, ZIP-/Manifest-/Quellenparität, deterministischer Doppelbuild, Python-Syntax und TypeScript 5.8.3 mit temporären, nicht offiziellen Scripting-Stubs bestanden. Paket: 158.771 Byte, SHA-256 `0517c9a77a404dd4d45575ed226a264308097199607cf105d1c9768fc236a5ff`. GitHub-Veröffentlichung und App-/Gerätetest sind noch offen.
 
 ## P1 — Foundation zuerst
 
@@ -35,9 +36,11 @@ Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2
 - [x] Statisch gebündelter Demo-Provider mit expliziter Capability-Liste; Suche, Feed und Details werden über diese Liste geroutet. Keine dynamischen Imports oder Netzwerkabfragen.
 - [x] Discovery-Ausbau 0.5.7: unabhängige Typfilter im chronologischen Feed und lokale Detailvorschläge nach gleicher Kategorie oder gleichem Typ; Demo-Regel in der UI offengelegt.
 - [x] Lokale Fixture-Entities für Medien, Artikel und Termine mit sichtbarer Quellenherkunft; Suche über mehrere Typen und einfache Filter.
-- [x] Merkliste als explizit typisierter sitzungsgebundener UI-State; Einträge werden in Merkreihenfolge angezeigt, Anzahl ist sichtbar, keine falsche Zusage persistenter Speicherung.
+- [x] 0.5.11: Merkliste als explizit typisierter sitzungsgebundener UI-State; Einträge werden in Merkreihenfolge angezeigt, Anzahl ist sichtbar, keine falsche Zusage persistenter Speicherung.
+- [x] 0.5.12: kleine geordnete Entity-ID-Merkliste im dokumentierten privaten Scripting-Storage; bounded/validierte Lese- und Schreibgrenze sowie sichtbarer Session-Fallback. Keine vollständigen Entity-/Media-Daten im Storage.
 - [x] Statische `script.json`-/Capability-/Provider-Fixture-Validierung ergänzt (`python3 tools/validate_scripting_foundation.py`); sie prüft Quelltextverträge, nicht Provider-Runtime oder App-Kompatibilität.
-- [ ] Storage-Grenze und persistentes lokales Repository anhand der offiziellen API-Dokumentation und anschließend auf dem Gerät prüfen.
+- [x] Offizielle Storage-API-Grenze dokumentiert; 0.5.12 verwendet privaten Key-Value-Storage nur für die kleine Merkliste.
+- [ ] Privates Storage-Verhalten, Persistenz über Script-Neustarts, Fehler-/Fallback-UI und Erhalt der Merkreihenfolge in der installierten App auf dem Zielgerät verifizieren.
 - [ ] Modell für `Entity`, `SourceRecord`, FeedItem und Relations festlegen; Provenienz und Datenaufbewahrung in Tests absichern.
 - [ ] Providerfehler-/Lade-/Offlinezustände und Telemetrie-/Logpolicy definieren; partielle Ergebnisse dürfen erfolgreiche Provider nicht verdecken.
 - [ ] Nach Foundation- und Gerätegates einen lokalen RSS/Atom-Fixture-Provider als ersten realen Adapter ergänzen; Netzwerk-/Domainregeln vorher festlegen.
@@ -49,7 +52,7 @@ Version 0.3.0 war ein vorzeitiger Downloader-Prototyp. Sie bleibt als historisch
 Erst wieder anfangen, wenn alle folgenden Gates erfüllt sind:
 
 - [ ] App-Shell auf dem Ziel-iPhone importiert und navigierbar getestet.
-- [ ] Entity-/Source-/Library-Verträge und bestätigte Storage-Grenze vorhanden.
+- [ ] Entity-/Source-Verträge festlegen und die dokumentierte Storage-Grenze sowie Merkliste-Persistenz auf dem Zielgerät bestätigen.
 - [ ] Capability-/Provider-Verträge und Fehlerzustände getestet.
 - [ ] Download-/Datei-/Player-APIs im tatsächlichen Scripting-Build und ohne unbestätigte Pro-Annahme verifiziert.
 - [ ] Rechte-, Token-, Speicher-, Lösch- und Lifecycle-Verhalten für direkte Dateien spezifiziert.

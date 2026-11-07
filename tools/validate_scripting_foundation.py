@@ -106,16 +106,27 @@ def validate_sources() -> tuple[dict, str, bytes]:
             and 'const visibleFeedItems = feedItems.filter(entity => matchesFilter(entity, feedFilter))' in code
             and 'visibleFeedItems.map((entity, index) => compactCard(entity, index, contentWidth))' in code,
             "chronological feed must apply the selected local content-type filter")
-    require('type SessionLibraryState = {' in code
-            and 'scope: "session"' in code
+    require('type LibraryState = {' in code
+            and 'scope: "private" | "session"' in code
             and 'entityIds: string[]' in code
-            and 'const [libraryState, setLibraryState] = useState<SessionLibraryState>({ scope: "session", entityIds: [] })' in code,
-            "Library state must declare an explicit session-only storage boundary")
+            and 'const [libraryState, setLibraryState] = useState<LibraryState>(initialLibraryState)' in code
+            and 'const storedValue = Storage.get<unknown>(LIBRARY_STORAGE_KEY)' in code
+            and 'initialLibraryState = loadLibraryState()' in code,
+            "Library must load a validated private-storage state with an explicit session fallback")
+    require('const LIBRARY_STORAGE_KEY = "universe.library.entity-ids.v1"' in code
+            and 'value.length > MAX_STORED_LIBRARY_ITEMS' in code
+            and 'item.length <= MAX_STORED_LIBRARY_ID_LENGTH' in code
+            and 'const validatedEntityIds = parseStoredLibraryIds(nextEntityIds)' in code
+            and 'Storage.set(LIBRARY_STORAGE_KEY, validatedEntityIds)' in code
+            and 'if (libraryState.scope === "private")' in code
+            and 'shared: true' not in code,
+            "Library persistence must validate bounded IDs and remain in the script-private storage domain")
     require('const savedEntities = libraryState.entityIds\n    .map(id => listedEntities.find(entity => entity.id === id))' in code
             and 'Reihenfolge nach dem Merken' in code
+            and 'privater Scripting-Speicher' in code
             and 'Button title="Aus Merkliste entfernen"' in code
             and 'action={() => toggleSaved(entity.id)}' in code,
-            "session Library must retain save order, expose its count/scope, and support direct removal")
+            "Library must retain save order, disclose storage scope, and support direct removal")
     require(code.count('CONTENT_FILTERS.map((filter, index) => <Button') == 3,
             "Explore, Search, and Feeds must each expose the shared content-type filters")
     require('entity.id !== selectedEntity.id && (entity.category === selectedEntity.category || entity.typeId === selectedEntity.typeId)' in code

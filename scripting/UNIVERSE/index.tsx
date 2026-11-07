@@ -33,9 +33,10 @@ type SourceRecord = {
   retrievedAt: string
 }
 
-type SessionLibraryState = {
-  scope: "session"
+type LibraryState = {
+  scope: "private" | "session"
   entityIds: string[]
+  storageError?: string
 }
 
 type UniverseEntity = {
@@ -61,7 +62,11 @@ type StaticProvider = {
   getEntity: (id: string) => UniverseEntity | undefined
 }
 
-const APP_VERSION = "0.5.11"
+const APP_VERSION = "0.5.12"
+const LIBRARY_STORAGE_KEY = "universe.library.entity-ids.v1"
+const MAX_STORED_LIBRARY_ITEMS = 500
+const MAX_STORED_LIBRARY_ID_LENGTH = 256
+let initialLibraryState: LibraryState = { scope: "session", entityIds: [] }
 const CONTENT_FILTERS: ContentFilter[] = ["Alle", "Medien", "Artikel", "Termine"]
 const POSTER_THEMES = [
   { top: "#4C1D95", bottom: "#111827", symbol: "sparkles" },
@@ -238,6 +243,37 @@ function asRootScreen(value: RootScreen): RootScreen {
   return value
 }
 
+function parseStoredLibraryIds(value: unknown): string[] | undefined {
+  if (!Array.isArray(value) || value.length > MAX_STORED_LIBRARY_ITEMS) return undefined
+  const entityIds = value.filter((item): item is string =>
+    typeof item === "string" && item.trim().length > 0 && item.length <= MAX_STORED_LIBRARY_ID_LENGTH
+  )
+  if (entityIds.length !== value.length) return undefined
+  return Array.from(new Set(entityIds))
+}
+
+function loadLibraryState(): LibraryState {
+  try {
+    const storedValue = Storage.get<unknown>(LIBRARY_STORAGE_KEY)
+    if (storedValue === null || storedValue === undefined) return { scope: "private", entityIds: [] }
+    const entityIds = parseStoredLibraryIds(storedValue)
+    if (entityIds === undefined) {
+      return {
+        scope: "session",
+        entityIds: [],
+        storageError: "Die gespeicherte Merkliste ist ungültig; Änderungen gelten nur für diese Sitzung.",
+      }
+    }
+    return { scope: "private", entityIds }
+  } catch {
+    return {
+      scope: "session",
+      entityIds: [],
+      storageError: "Der private Scripting-Speicher ist nicht verfügbar; Änderungen gelten nur für diese Sitzung.",
+    }
+  }
+}
+
 function UniverseApp() {
   const selectedTab = useObservable(asRootScreen(ROOT_SCREENS[0]))
   const [screen, setScreen] = useState<AppScreen>("home")
@@ -246,7 +282,7 @@ function UniverseApp() {
   const [searchText, setSearchText] = useState("")
   const [searchFilterIndex, setSearchFilterIndex] = useState(0)
   const [feedFilterIndex, setFeedFilterIndex] = useState(0)
-  const [libraryState, setLibraryState] = useState<SessionLibraryState>({ scope: "session", entityIds: [] })
+  const [libraryState, setLibraryState] = useState<LibraryState>(initialLibraryState)
   const [selectedEntityId, setSelectedEntityId] = useState("")
 
   const currentFilter = CONTENT_FILTERS[searchFilterIndex]
@@ -296,12 +332,29 @@ function UniverseApp() {
   }
 
   function toggleSaved(entityId: string) {
-    setLibraryState(current => ({
-      scope: current.scope,
-      entityIds: current.entityIds.includes(entityId)
-        ? current.entityIds.filter(id => id !== entityId)
-        : [...current.entityIds, entityId],
-    }))
+    const nextEntityIds = libraryState.entityIds.includes(entityId)
+      ? libraryState.entityIds.filter(id => id !== entityId)
+      : [...libraryState.entityIds, entityId]
+    const validatedEntityIds = parseStoredLibraryIds(nextEntityIds)
+    if (validatedEntityIds === undefined) {
+      setLibraryState({ ...libraryState, storageError: "Die Merkliste ist auf gültige IDs und höchstens 500 Einträge begrenzt." })
+      return
+    }
+
+    if (libraryState.scope === "private") {
+      try {
+        if (!Storage.set(LIBRARY_STORAGE_KEY, validatedEntityIds)) {
+          setLibraryState({ ...libraryState, storageError: "Die Änderung konnte nicht im privaten Scripting-Speicher abgelegt werden." })
+          return
+        }
+        setLibraryState({ ...libraryState, entityIds: validatedEntityIds, storageError: undefined })
+      } catch {
+        setLibraryState({ ...libraryState, storageError: "Die Änderung konnte nicht im privaten Scripting-Speicher abgelegt werden." })
+      }
+      return
+    }
+
+    setLibraryState({ ...libraryState, entityIds: validatedEntityIds })
   }
 
   function selectContentFilter(index: number) {
@@ -568,7 +621,8 @@ function UniverseApp() {
 
                 {pageScreen === "library" && <>
                   {sectionHeading("Deine Merkliste", "Für später")}
-                  <Text font="subheadline" foregroundStyle="#B7B8C5">{savedEntities.length} Einträge · Reihenfolge nach dem Merken · nur für diese Script-Sitzung.</Text>
+                  <Text font="subheadline" foregroundStyle="#B7B8C5">{savedEntities.length} Einträge · Reihenfolge nach dem Merken · {libraryState.scope === "private" ? "privater Scripting-Speicher" : "nur für diese Script-Sitzung"}.</Text>
+                  {libraryState.storageError && <Text font="caption" foregroundStyle="#FDBA74">{libraryState.storageError}</Text>}
                   {savedEntities.length === 0
                     ? <VStack alignment="leading" spacing={10} padding={20} frame={{ width: contentWidth }} background={
                         <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
@@ -592,7 +646,7 @@ function UniverseApp() {
                   }>
                     <Text font="headline" fontWeight="bold" foregroundStyle="white">Aktive Basis · {APP_VERSION}</Text>
                     <Text font="caption" foregroundStyle="#A6A7B6">Viewport: {viewportWidth} · Inhaltsrahmen: {contentWidth}</Text>
-                    <Text font="caption" foregroundStyle="#A6A7B6">Nur statische Registry und lokale Fixtures. Keine Netzwerkabfragen und keine dauerhafte Speicherung.</Text>
+                    <Text font="caption" foregroundStyle="#A6A7B6">Nur statische Registry und lokale Fixtures. Keine Netzwerkabfragen. Merkliste: {libraryState.scope === "private" ? "privater Scripting-Speicher" : "nur diese Sitzung"}.</Text>
                     {PROVIDERS.map(provider => <VStack key={provider.id} alignment="leading" spacing={4} padding={{ top: 8 }} frame={{ width: contentWidth }}>
                       <Text font="subheadline" fontWeight="semibold" foregroundStyle="white">{provider.name}</Text>
                       <Text font="caption" foregroundStyle="#A6A7B6">ID: {provider.id} · Typ: {provider.kind}</Text>
@@ -603,7 +657,7 @@ function UniverseApp() {
                     <RoundedRectangle cornerRadius={20} fill="rgba(112,71,235,0.14)" />
                   }>
                     <Text font="headline" fontWeight="bold" foregroundStyle="white">Foundation vor Features</Text>
-                    <Text font="subheadline" foregroundStyle="#C6C2D8">Echte Provider, Konten, dauerhafte Bibliothek und Wiedergabe werden erst nach den Daten-, Storage- und Geräteprüfungen ergänzt.</Text>
+                    <Text font="subheadline" foregroundStyle="#C6C2D8">Echte Provider, Konten und Wiedergabe werden erst nach den Daten-, Storage- und Geräteprüfungen ergänzt.</Text>
                   </VStack>
                   <VStack alignment="leading" spacing={8} padding={16} frame={{ width: contentWidth }} background={
                     <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
@@ -686,6 +740,7 @@ function UniverseApp() {
 }
 
 async function main() {
+  initialLibraryState = loadLibraryState()
   await Navigation.present({ element: <UniverseApp /> })
   Script.exit()
 }
