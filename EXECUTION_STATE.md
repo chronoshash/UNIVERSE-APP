@@ -31,4 +31,4 @@ Continue UNIVERSE development by correcting Explore filtering in `scripting/UNIV
 - No Scripting-app or iPhone test has been performed.
 
 ## Next concrete action
-Inspect the final diff/status, verify the v0.5.14 release record, then commit the documentation/validator/state follow-up on the active Arena branch and open a PR from that branch. Do not claim native UI/runtime compatibility; it still requires a real Scripting-app/iPhone test.
+Follow-up PR #24 (`https://github.com/chronoshash/UNIVERSE-APP/pull/24`) is open from the active Arena branch and reports `CLEAN` with no checks configured. Merge PR #24 and verify its final merged state. The only remaining acceptance check after that is external: import v0.5.14 in the real Scripting app and exercise the Explore/Search filters, empty-state recovery, accessibility, and runtime on an iPhone. Until that device test occurs, do not claim native UI/API/Storage compatibility.
