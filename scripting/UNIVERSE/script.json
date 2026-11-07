@@ -1,7 +1,7 @@
 {
   "name": "UNIVERSE",
-  "description": "A local-first content hub with native five-tab navigation, a private persistent Library, and capability-gated cross-type discovery.",
-  "version": "0.5.12",
+  "description": "A local-first content hub with native five-tab navigation, a private persistent Library with type filters, and capability-gated cross-type discovery.",
+  "version": "0.5.13",
   "icon": "globe",
   "color": "#7C5CFF",
   "entry": "index.tsx",
