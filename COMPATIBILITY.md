@@ -1,6 +1,6 @@
 # UNIVERSE — Scripting-Kompatibilität
 
-**Stand: 2026-11-06.** Das Repository enthält ein eigenständiges TSX-Prototypprojekt, aber kein Xcode-Projekt. Das `.scripting`-Paket wurde lokal gebaut und auf ZIP-Struktur/Quellenparität geprüft. Import, API-Zugriff, kostenloser Funktionsumfang und Laufzeit auf dem Ziel-iPhone wurden **nicht** verifiziert.
+**Stand: 2026-11-07.** Das Repository enthält ein eigenständiges TSX-Prototypprojekt, aber kein Xcode-Projekt. Paket 0.3.0 wurde lokal gebaut und auf ZIP-Struktur/Quellenparität geprüft. Import, API-Zugriff, kostenloser Funktionsumfang und Laufzeit auf dem Ziel-iPhone wurden **nicht** verifiziert.
 
 ## Harte Einschränkungen
 
@@ -13,7 +13,7 @@
 
 ## Dokumentationsrecherche und Paketformat
 
-Die offiziellen Scripting-Dokumentationskataloge und relevanten Seiten für Import, `DownloadManager`, `FileManager`, `TextField`, `Button`, `ProgressView`, `NavigationStack`, `AVPlayer` und `VideoPlayer` wurden geprüft. Die sehr großen `llms-full.txt`-Exporte wurden nicht vollständig seitenweise ausgewertet; Schlussfolgerungen beschränken sich deshalb auf die unten verlinkten konkreten API-Seiten. App Store und TestFlight-Dokumentation können unterschiedliche Versionen beschreiben.
+Die offiziellen Scripting-Dokumentationskataloge und relevante App-Store-/TestFlight-Seiten für Import, `DownloadManager`, `FileManager`, `TextField`, `Button`, `ProgressView`, `NavigationStack`, `AVPlayer` und `VideoPlayer` wurden geprüft. Zusätzlich wurden die beiden offiziellen Dokumentationsarchive aus dem GitHub-Repository [ScriptingApp/ScriptingApp.github.io, Commit `ed46a8eed3dde08d15c752e26aecfbcf250060e2`](https://github.com/ScriptingApp/ScriptingApp.github.io/tree/ed46a8eed3dde08d15c752e26aecfbcf250060e2) herangezogen: App Store ZIP SHA-256 `b603daa0415cf8a0c265670698349be80ef3257e9c679459b113bc408cf1c749`, TestFlight ZIP SHA-256 `0e829584b48194800ad1da2f3671314044b9c8031f3b7bb3c70f8c393362fbc7`. Die konkreten englischen API-Seiten in beiden Archiven stimmen für die hier verwendeten Download-/Datei-/TextField-Verträge überein. Die vier erzeugten `llms.txt`-/`llms-full.txt`-Dokumente sind weiterhin **nicht vollständig chunkweise gelesen**; diese Akzeptanzbedingung bleibt offen. App Store und TestFlight können sich in anderen Funktionen und Laufzeitständen unterscheiden.
 
 Quellen:
 
@@ -35,12 +35,14 @@ Das Paket ist ein ZIP mit Root-Einträgen `script.json`, `index.tsx` und `README
 | API | Verwendung im Prototyp | Offener Nachweis |
 |---|---|---|
 | `DownloadManager` (global) | stabile Queue-ID, foreground-only, zwei parallele Aufgaben, WLAN-only; URL-basierte Duplikatprüfung, persistente Task-Snapshots, Status/Progress, Pause/Fortsetzen/Abbrechen/Entfernen und eigenes Ziel pro Kategorie | Vorhandensein in installierter Version, kostenfreier Zugriff, Lifecycle und persistente Wiederaufnahme auf iPhone |
+
+Die offizielle API-Seite bestätigt: `DownloadManager` ist global und für Main-App-Scripts vorgesehen; explizite Ziele müssen absolute lokale Pfade sein, fehlende Elternordner werden beim Veröffentlichen angelegt, vorhandene Dateien werden nicht überschrieben. Das reduziert ein Risiko des bisherigen Zielpfads, ersetzt aber keinen kontrollierten Gerätetest.
 | `FileManager` | `documentsDirectory`; prüft, ob der Queue-Zielpfad noch existiert | tatsächlicher Speicherort und Verhalten nach App-Update/-Löschung auf Zielgerät |
 | `AVPlayer` / `VideoPlayer` | setzt den verifizierten lokalen Pfad als Playerquelle; eigener Play/Pause-Button und Fehleranzeige | iOS-Version, Codec/Audio-Session, Offline-Wiedergabe, Speicherzugriff und Geräteverhalten |
 | `TextField`, `Button`, `ProgressView`, `List`, `Section`, `NavigationStack` | Eingabe, Steuerung, Fortschritt und App-Navigation | Import/Rendern, Accessibility, Dark Mode, Dynamic Type und Lifecycle |
 | `Link` | öffnet die externe AniWorld-Website | Ziel-App-/Website-Verhalten auf iPhone |
 
-Die konkreten Seiten dokumentieren diese APIs; sie bestätigen nicht den Pro-Status oder ihre Verfügbarkeit im installierten App-Build. Eine Websuche bzw. Dokumentation konnte keinen verbindlichen kostenlosen Zugriff auf `DownloadManager` bestätigen. Keine Pro-Freiheit behaupten, bevor der Nutzer-Build auf dem Gerät geprüft wurde. Der aktuelle Workspace hat keinen TypeScript-Compiler installiert, daher wurde auch kein TSX-Compile-Check ausgeführt.
+Die konkreten Seiten dokumentieren diese APIs; sie bestätigen nicht den Pro-Status oder ihre Verfügbarkeit im installierten App-Build. Eine Dokumentations-/Store-Recherche konnte keinen verbindlichen kostenlosen Zugriff auf `DownloadManager` bestätigen. Keine Pro-Freiheit behaupten, bevor der Nutzer-Build auf dem Gerät geprüft wurde. TypeScript 5.8.3 hat `index.tsx` mit lokalen Platzhalterdeklarationen erfolgreich geprüft; das ist kein Compile gegen echte Scripting-Typen und bestätigt weder Scripting-Import noch App-Runtime (siehe `TESTING.md`).
 
 ## Laufzeitgrenzen des Offline-Prototyps
 
@@ -73,6 +75,6 @@ Nach jeder Script-Quelländerung ausführen: `python3 tools/build_scripting_pack
 | Datei liegt korrekt im Kategorienordner und fehlt korrekt bei manueller Löschung | Files-App-/App-Dateitest | Offen |
 | echte lokale Offline-Wiedergabe inkl. Ton | Flugmodus, lokale Datei, unterstützter Codec, Audio-Session und iOS-Version | Offen |
 | UI/Navigation, Dark Mode, VoiceOver, Dynamic Type, Safe Areas | iPhone-Testprotokoll/Screenshots | Offen |
-| Vollständige Lektüre aller `llms-full.txt`-Abschnitte | alle 534/568 Volltext-Chunks seitenweise lesen (App Store/TestFlight) | Offen; relevante konkrete API-Seiten wurden gelesen |
+| Vollständige Lektüre aller `llms.txt`-/`llms-full.txt`-Dokumente | alle vier generierten Dokumente vollständig lesen; die offiziellen ZIP-Quellarchive wurden inzwischen geladen, relevante API-Seiten verglichen | Weiterhin offen; nicht als vollständig gelesen ausgeben |
 
 REA wurde nicht installiert oder ausgeführt: für den aktuellen Source-/Dokumentationsstand gibt es kein autorisiertes Binärartefakt, das REA benötigt.

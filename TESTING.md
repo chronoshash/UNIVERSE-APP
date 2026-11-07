@@ -4,13 +4,18 @@
 
 Statische Prüfungen ersetzen keinen Import- oder Laufzeittest in der installierten Scripting-App auf dem iPhone. Kein Test wird als bestanden dokumentiert, ohne tatsächlichen Nachweis. Keine Scripting-Pro-Abhängigkeit behaupten oder voraussetzen. Aktueller Stand: [COMPATIBILITY.md](COMPATIBILITY.md).
 
-## Tatsächlich ausgeführte lokale Checks (2026-11-06, Paket 0.3.0)
+## Tatsächlich ausgeführte lokale Checks
+
+**2026-11-06, Paket 0.3.0:**
 
 - `python3 tools/build_scripting_package.py` zweimal; beide Builds erzeugten dieselbe SHA-256-Datei: `cc1ac8d065d578df74167f677f21312d3a6950fe7911824a0633cc3f874b1585` (7.595 Byte).
 - Python `zipfile`: CRC-Test, exakte Root-Dateiliste und Reihenfolge (`script.json`, `index.tsx`, `README.md`), Manifest-JSON/Entry/Version 0.3.0 und Byte-Parität aller Paketdateien mit den Quellen bestanden.
 - Statische Quelltext-Assertions für Suchfelder, Kategorienfilter, direkte HTTPS-URL-Grenze, Foreground-/WLAN-Konfiguration und fehlende Sora-Runtime bestanden. Das ist kein Ausführungs- oder Verhaltenstest.
 - `git diff --check` bestanden.
-- TypeScript/TSX-Compile-Check nicht ausgeführt: `tsc` ist in der Umgebung nicht installiert; es wurde keine Compiler-Abhängigkeit installiert.
+
+**2026-11-07, TSX-Quelltext:**
+
+- TypeScript 5.8.3 wurde temporär außerhalb des Repositories installiert. `tsc --noEmit` auf `index.tsx` mit lokalen Platzhalterdeklarationen für `scripting`, `DownloadManager`, `FileManager` und `AVPlayer` war erfolgreich. Das prüft TSX-Syntax und den Quelltext gegen diese Platzhalter, nicht gegen die echten Scripting-Typen oder das installierte Scripting-App-Runtime.
 - Keine Scripting-App-Import-, iPhone-, Download-, Bedienbarkeits- oder Playback-Laufzeittests ausgeführt.
 
 Diese Checks beweisen weder Scripting-Kompatibilität noch API-Freigabe im kostenlosen Build oder tatsächliche Gerätefunktion.
