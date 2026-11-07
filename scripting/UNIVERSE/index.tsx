@@ -7,12 +7,15 @@ import {
   Navigation,
   NavigationStack,
   Path,
+  Tab,
+  TabView,
   RoundedRectangle,
   Script,
   ScrollView,
   Spacer,
   Text,
   TextField,
+  useObservable,
   useState,
   VStack,
   ZStack,
@@ -21,7 +24,7 @@ import {
 type ContentType = "media.video" | "news.article" | "event.release"
 type ContentFilter = "Alle" | "Medien" | "Artikel" | "Termine"
 type AppScreen = "home" | "explore" | "search" | "feeds" | "library" | "settings" | "detail"
-type RootScreen = Exclude<AppScreen, "detail">
+type RootScreen = Exclude<AppScreen, "settings" | "detail">
 
 type SourceRecord = {
   providerId: string
@@ -52,7 +55,7 @@ type StaticProvider = {
   getEntity: (id: string) => UniverseEntity | undefined
 }
 
-const APP_VERSION = "0.5.7"
+const APP_VERSION = "0.5.8"
 const CONTENT_FILTERS: ContentFilter[] = ["Alle", "Medien", "Artikel", "Termine"]
 const NAV_ITEMS: { id: RootScreen; label: string; symbol: string }[] = [
   { id: "home", label: "Start", symbol: "house.fill" },
@@ -60,7 +63,6 @@ const NAV_ITEMS: { id: RootScreen; label: string; symbol: string }[] = [
   { id: "search", label: "Suche", symbol: "magnifyingglass" },
   { id: "feeds", label: "Neu", symbol: "clock.arrow.circlepath" },
   { id: "library", label: "Merkliste", symbol: "bookmark.fill" },
-  { id: "settings", label: "Info", symbol: "info.circle.fill" },
 ]
 const POSTER_THEMES = [
   { top: "#4C1D95", bottom: "#111827", symbol: "sparkles" },
@@ -234,8 +236,10 @@ function formatDate(value: string): string {
 }
 
 function UniverseApp() {
+  const selectedTab = useObservable<RootScreen>("home")
   const [screen, setScreen] = useState<AppScreen>("home")
   const [returnScreen, setReturnScreen] = useState<RootScreen>("home")
+  const [settingsReturnTab, setSettingsReturnTab] = useState<RootScreen>("home")
   const [searchText, setSearchText] = useState("")
   const [searchFilterIndex, setSearchFilterIndex] = useState(0)
   const [feedFilterIndex, setFeedFilterIndex] = useState(0)
@@ -266,11 +270,22 @@ function UniverseApp() {
     : []
 
   function navigateTo(nextScreen: RootScreen) {
+    selectedTab.value = nextScreen
     setScreen(nextScreen)
   }
 
+  function openSettings() {
+    setSettingsReturnTab(selectedTab.value)
+    setScreen("settings")
+  }
+
+  function closeSettings() {
+    selectedTab.value = settingsReturnTab
+    setScreen(settingsReturnTab)
+  }
+
   function openEntity(entity: UniverseEntity) {
-    if (screen !== "detail") setReturnScreen(screen)
+    if (screen !== "detail" || returnScreen !== selectedTab.value) setReturnScreen(selectedTab.value)
     setSelectedEntityId(entity.id)
     setScreen("detail")
   }
@@ -285,19 +300,7 @@ function UniverseApp() {
   function selectContentFilter(index: number) {
     setSearchFilterIndex(index)
     setSearchText("")
-    setScreen("search")
-  }
-
-  function navigationChip(item: { id: RootScreen; label: string; symbol: string }) {
-    const selected = screen === item.id || (screen === "detail" && returnScreen === item.id)
-    return <Button key={item.id} buttonStyle="plain" action={() => navigateTo(item.id)}>
-      <HStack spacing={7} padding={{ horizontal: 13, vertical: 9 }} background={
-        <RoundedRectangle cornerRadius={18} fill={selected ? "#7047EB" : "rgba(255,255,255,0.07)"} />
-      }>
-        <Image systemName={item.symbol} frame={{ width: 15, height: 15 }} foregroundStyle={selected ? "white" : "#B5B6C6"} />
-        <Text font="caption" fontWeight={selected ? "semibold" : "medium"} foregroundStyle={selected ? "white" : "#B5B6C6"}>{item.label}</Text>
-      </HStack>
-    </Button>
+    navigateTo("search")
   }
 
   function sectionHeading(title: string, eyebrow?: string) {
@@ -421,20 +424,28 @@ function UniverseApp() {
   const mediaItems = listedEntities.filter(entity => entity.typeId.startsWith("media."))
   const articleItems = listedEntities.filter(entity => entity.typeId.startsWith("news."))
   const eventItems = listedEntities.filter(entity => entity.typeId.startsWith("event."))
-  const pageTitle = screen === "home" ? "UNIVERSE"
-    : screen === "explore" ? "Entdecken"
-    : screen === "search" ? "Suche"
-    : screen === "feeds" ? "Neu im Hub"
-    : screen === "library" ? "Merkliste"
-    : screen === "settings" ? "Über UNIVERSE"
-    : "Details"
-
   return (
     <GeometryReader>
       {(proxy) => {
         const viewportWidth = Math.max(1, Math.floor(proxy.size.width))
+        const viewportHeight = Math.max(1, Math.floor(proxy.size.height))
         const contentWidth = Math.max(1, viewportWidth - 36)
-        return (
+
+        function renderTabPage(tab: RootScreen) {
+          const pageScreen: AppScreen = screen === "detail" && returnScreen === tab
+            ? "detail"
+            : screen === "settings" && settingsReturnTab === tab
+              ? "settings"
+              : tab
+          const pageTitle = pageScreen === "home" ? "UNIVERSE"
+            : pageScreen === "explore" ? "Entdecken"
+            : pageScreen === "search" ? "Suche"
+            : pageScreen === "feeds" ? "Neu im Hub"
+            : pageScreen === "library" ? "Merkliste"
+            : pageScreen === "settings" ? "Über UNIVERSE"
+            : "Details"
+
+          return (
           <NavigationStack frame={{ width: viewportWidth }} clipped>
             <ScrollView navigationTitle={pageTitle} navigationBarTitleDisplayMode="inline" background="#080A12" frame={{ width: viewportWidth }} clipped scrollClipDisabled={false}>
               <VStack alignment="leading" spacing={22} padding={{ horizontal: 18, top: 14, bottom: 34 }} frame={{ width: viewportWidth }} background="#080A12">
@@ -455,16 +466,11 @@ function UniverseApp() {
                     <Text font="caption2" fontWeight="medium" foregroundStyle="#999BAD" kerning={1.1}>DEIN CONTENT-HUB</Text>
                   </VStack>
                   <Spacer />
-                  <Button title="Suchen" systemImage="magnifyingglass" buttonStyle="bordered" buttonBorderShape="circle" action={() => navigateTo("search")} />
+                  <Button title="Info" systemImage="info.circle" buttonStyle="bordered" buttonBorderShape="circle" action={openSettings} />
                 </HStack>
 
-                <ScrollView axes="horizontal" scrollIndicator="never" frame={{ width: contentWidth }} clipped scrollClipDisabled={false}>
-                  <LazyHStack spacing={8}>
-                    {NAV_ITEMS.map(navigationChip)}
-                  </LazyHStack>
-                </ScrollView>
 
-                {screen === "home" && <>
+                {pageScreen === "home" && <>
                   {heroEntity && featuredCard(heroEntity, contentWidth)}
                   {contentRail("Weiter entdecken", mediaItems, contentWidth, "Dein nächstes Kapitel")}
                   {contentRail("Lesestoff & Perspektiven", articleItems, contentWidth, "Aus dem Wissensstrom")}
@@ -478,7 +484,7 @@ function UniverseApp() {
                   </VStack>
                 </>}
 
-                {screen === "explore" && <>
+                {pageScreen === "explore" && <>
                   {sectionHeading("Finde deine nächste Welt", "Der Katalog")}
                   <Text font="subheadline" foregroundStyle="#B7B8C5">Stöbere durch gemischte Inhalte. Alle Einträge sind Beispiele, keine Live-Empfehlungen.</Text>
                   <ScrollView axes="horizontal" scrollIndicator="never" frame={{ width: contentWidth }} clipped scrollClipDisabled={false}>
@@ -495,7 +501,7 @@ function UniverseApp() {
                   {contentRail("Alle Inhalte", listedEntities, contentWidth, "Die ganze Sammlung")}
                 </>}
 
-                {screen === "search" && <>
+                {pageScreen === "search" && <>
                   {sectionHeading("Wonach suchst du?", "Die Suche")}
                   <TextField
                     title="Inhalte suchen"
@@ -528,7 +534,7 @@ function UniverseApp() {
                       </VStack>}
                 </>}
 
-                {screen === "feeds" && <>
+                {pageScreen === "feeds" && <>
                   {sectionHeading("Neu im Hub", "Chronologischer Überblick")}
                   <Text font="subheadline" foregroundStyle="#B7B8C5">Ein gemeinsamer Zeitstrahl für unterschiedliche Inhaltstypen.</Text>
                   <ScrollView axes="horizontal" scrollIndicator="never" frame={{ width: contentWidth }} clipped scrollClipDisabled={false}>
@@ -553,7 +559,7 @@ function UniverseApp() {
                     : visibleFeedItems.map((entity, index) => compactCard(entity, index, contentWidth))}
                 </>}
 
-                {screen === "library" && <>
+                {pageScreen === "library" && <>
                   {sectionHeading("Deine Merkliste", "Für später")}
                   <Text font="subheadline" foregroundStyle="#B7B8C5">Gespeichert wird nur für die aktuelle Script-Sitzung.</Text>
                   {savedEntities.length === 0
@@ -568,7 +574,7 @@ function UniverseApp() {
                     : <VStack alignment="leading" spacing={10}>{savedEntities.map((entity, index) => compactCard(entity, index, contentWidth))}</VStack>}
                 </>}
 
-                {screen === "settings" && <>
+                {pageScreen === "settings" && <>
                   {sectionHeading("Ein Hub. Viele Quellen.", "Über das Projekt")}
                   <Text font="subheadline" foregroundStyle="#B7B8C5">UNIVERSE sortiert unterschiedliche Inhaltstypen in einer gemeinsamen, nachvollziehbaren Oberfläche.</Text>
                   <VStack alignment="leading" spacing={12} padding={16} frame={{ width: contentWidth }} background={
@@ -597,9 +603,10 @@ function UniverseApp() {
                     <Text font="caption" foregroundStyle="#A6A7B6">{ANIWORLD_PLUGIN.host} · keine aktiven Capabilities</Text>
                     <Text font="caption" foregroundStyle="#A6A7B6">{ANIWORLD_PLUGIN.description}</Text>
                   </VStack>
+                  <Button title="Zurück zum Inhalt" systemImage="arrow.left" buttonStyle="plain" action={closeSettings} />
                 </>}
 
-                {screen === "detail" && selectedEntity && <>
+                {pageScreen === "detail" && selectedEntity && <>
                   <ZStack alignment="bottomLeading" frame={{ width: contentWidth, height: 260 }}>
                     <RoundedRectangle cornerRadius={22} frame={{ width: contentWidth, height: 260 }} fill={{
                       gradient: [
@@ -632,11 +639,25 @@ function UniverseApp() {
                     buttonStyle="borderedProminent"
                     action={() => toggleSaved(selectedEntity.id)}
                   />
-                  <Button title="Zur vorherigen Ansicht" systemImage="arrow.left" buttonStyle="plain" action={() => setScreen(returnScreen)} />
+                  <Button title="Zur vorherigen Ansicht" systemImage="arrow.left" buttonStyle="plain" action={() => { selectedTab.value = returnScreen; setScreen(returnScreen) }} />
                 </>}
               </VStack>
             </ScrollView>
           </NavigationStack>
+          )
+        }
+
+        return (
+          <TabView selection={selectedTab} frame={{ width: viewportWidth, height: viewportHeight }}>
+            {NAV_ITEMS.map(item => <Tab
+              key={item.id}
+              title={item.label}
+              systemImage={item.symbol}
+              value={item.id}
+            >
+              {renderTabPage(item.id)}
+            </Tab>)}
+          </TabView>
         )
       }}
     </GeometryReader>

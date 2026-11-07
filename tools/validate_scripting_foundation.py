@@ -80,10 +80,16 @@ def validate_sources() -> tuple[dict, str, bytes]:
             "outer vertical scroll view must be width-bound to and clipped at the measured viewport")
     require('padding={{ horizontal: 18, top: 14, bottom: 34 }} frame={{ width: viewportWidth }}' in code,
             "root content must use the measured viewport width with its padding inside that frame")
-    require('NAV_ITEMS.map(navigationChip)' in code,
-            "primary destinations must use the compact horizontally scrolling navigation rail")
-    require('padding={{ horizontal: 13, vertical: 9 }} background={' in code,
-            "navigation chips must size to their labels instead of expanding to infinite width")
+    require('const selectedTab = useObservable<RootScreen>("home")' in code
+            and '<TabView selection={selectedTab} frame={{ width: viewportWidth, height: viewportHeight }}>' in code
+            and 'NAV_ITEMS.map(item => <Tab' in code
+            and 'title={item.label}' in code and 'systemImage={item.symbol}' in code and 'value={item.id}' in code,
+            "primary destinations must use the documented native TabView/Tab selection binding")
+    nav_items = code.split('const NAV_ITEMS: { id: RootScreen; label: string; symbol: string }[] = [', 1)[1].split('] as const', 1)[0]
+    require(nav_items.count('{ id:') == 5 and 'settings' not in nav_items,
+            "native bottom bar must keep five primary tabs; Info stays available as a separate action")
+    require('Button title="Info" systemImage="info.circle"' in code,
+            "Info/settings must remain reachable outside the five-item native tab bar")
     require('padding={12} frame={{ width: contentWidth }}' in code and 'const textWidth = Math.max(1, contentWidth - 113)' in code,
             "compact cards must keep thumbnail, spacing, padding, and text inside their measured row width")
     horizontal_scrolls = code.count('<ScrollView axes="horizontal"')
