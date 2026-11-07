@@ -2,16 +2,16 @@
 
 ## Grundsatz
 
-Statische Prüfungen ersetzen keinen Import- oder Laufzeittest in der installierten Scripting-App auf dem iPhone. API-/Pro-Verfügbarkeit wird nur nach Gerätetest bestätigt. Aktueller Scope: lokale Foundation 0.5.0 mit gebündeltem Hero-Artwork; der DownloadManager ist zurückgestellt.
+Statische Prüfungen ersetzen keinen Import- oder Laufzeittest in der installierten Scripting-App auf dem iPhone. API-/Pro-Verfügbarkeit wird nur nach Gerätetest bestätigt. Aktueller Scope: lokale Foundation 0.5.1 mit gebündeltem Hero-Artwork und deaktiviertem AniWorld-Plugin-Skelett; der DownloadManager ist zurückgestellt.
 
-## Lokale Checks — Foundation 0.5.0
+## Lokale Checks — Foundation 0.5.1
 
 - Paket nach Änderungen an Script oder Paket-README neu mit `python3 tools/build_scripting_package.py` gebaut.
-- ZIP-CRC, Dateiliste (`script.json`, `index.tsx`, `README.md`, `assets/hero.jpg`), Manifest-Version, Byte-Parität einschließlich Artwork und reproduzierbarer Doppelbuild geprüft.
-- `python3 tools/validate_scripting_foundation.py` bestanden: statische Manifest-/App-Versions-Parität, Capability-Union und Gates, Provider-Operationen, eindeutige IDs, Fixture-Provenienz/ISO-Daten sowie Paketparität. Das ist ein Quelltextvertragstest, kein App-Runtime-Test.
+- ZIP-CRC, Dateiliste (`script.json`, `index.tsx`, `README.md`, `assets/hero.jpg`, `plugins/aniworld/plugin.json`), Manifest-Version, Byte-Parität einschließlich Artwork und Plugin-Manifest sowie reproduzierbarer Doppelbuild geprüft.
+- `python3 tools/validate_scripting_foundation.py` bestanden: statische Manifest-/App-Versions-Parität, Capability-Union und Gates, Provider-Operationen, eindeutige IDs, Fixture-Provenienz/ISO-Daten, deaktivierte AniWorld-Plugin-Sicherheitsflags sowie Paketparität. Das ist ein Quelltextvertragstest, kein App-Runtime-Test.
 - Statische Assertions: kein `DownloadManager`, kein `AVPlayer` und keine Netzwerkquelle.
-- TypeScript 5.8.3 `tsc --noEmit` mit temporären Scripting-Platzhalterdeklarationen bestanden. Das prüft Syntax/TSX, nicht die echten Scripting-API-Typen oder das App-Runtime.
-- Finales Paket 0.5.0: 155.503 Byte, SHA-256 `e2d27f9753290b725cbd207109fd4fdc17582766f376749e752c37933344d1c4`.
+- TypeScript 5.8.3 `tsc --noEmit` mit temporären UI-Stubs bestanden, die `Color`- und `VirtualNode`-Kinder wie in den Scripting-Dokumenten typisieren. Das prüft die TSX-Quellform und die gemeldeten Typmuster, nicht die echten App-Typdeklarationen oder den Runtime.
+- Finales Paket 0.5.1: 156.135 Byte, SHA-256 `d0efbf3bff322789a54ed2a0a060f721867813a596683eefc19d0909735e8e71`.
 - Keine Scripting-App-Import-, iPhone-, Bedienbarkeits- oder Laufzeittests ausgeführt.
 
 Diese Checks beweisen weder Scripting-Kompatibilität noch API-Freigabe im kostenlosen Build oder tatsächliche Gerätefunktion.
@@ -32,7 +32,7 @@ Vor Live-Provider oder persistenter Speicherung: statische Registry-/Manifestval
 
 ## Download-/Offline-Tests — erst nach Foundation-Gates
 
-Der Manager ist **nicht** Teil der aktuellen Version 0.5.0. Diese Tests sind nur für eine spätere, separat freigegebene Version vorgesehen: direkte erlaubte HTTPS-Testdatei, Eingabevalidierung, WLAN/Foreground-Lifecycle, Queue-Wiederaufnahme, Speicherfehler, Dateilöschung, Flugmodus-Playback und Codec-/Tonverhalten. Keine DRM-, Login-, CAPTCHA-, Playlist- oder Zugriffsbeschränkungen umgehen.
+Der Manager ist **nicht** Teil der aktuellen Version 0.5.1. Diese Tests sind nur für eine spätere, separat freigegebene Version vorgesehen: direkte erlaubte HTTPS-Testdatei, Eingabevalidierung, WLAN/Foreground-Lifecycle, Queue-Wiederaufnahme, Speicherfehler, Dateilöschung, Flugmodus-Playback und Codec-/Tonverhalten. Keine DRM-, Login-, CAPTCHA-, Playlist- oder Zugriffsbeschränkungen umgehen.
 
 ## Release-Blocker
 
