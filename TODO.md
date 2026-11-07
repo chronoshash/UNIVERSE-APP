@@ -1,6 +1,6 @@
 # UNIVERSE — TODO
 
-Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. Auf dem aktiven Arbeitszweig ist UNIVERSE 0.5.8 mit nativer Fünf-Tab-Navigation und separatem Info-Zugang in Entwicklung. Die lokale Cross-Type-Foundation aus 0.5.7 (Suche, typgefilterter Feed, Detailvorschläge) bleibt erhalten. Keine Live-Provider, Downloads oder Wiedergabe; App-Import und Gerätetest sind offen.
+Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. UNIVERSE 0.5.8 ist als GitHub-Prerelease veröffentlicht; PR #11 wurde am 2026-11-07 bei `959321b362eee3d9eb40a2c99dc6098dc6cf69b9` in `main` gemergt. Das dortige Paket wurde nach dem Merge unabhängig heruntergeladen und bytegeprüft. Die lokale Cross-Type-Foundation aus 0.5.7 (Suche, typgefilterter Feed, Detailvorschläge) bleibt erhalten. Keine Live-Provider, Downloads oder Wiedergabe; App-Import und Gerätetest sind offen.
 
 ## Verbindliches Qualitätsgate vor jeder Verifizierung und Dokumentation
 
@@ -23,7 +23,7 @@ Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2
 - [x] 0.5.7-Paket lokal gebaut: Filter-/Recommendation-Assertions, dreifache Typfilter in Explore/Search/Feed, Manifest-/Quellen-/ZIP-Parität, deterministischer Doppelbuild, Validator, TypeScript 5.8.3 mit temporären Stubs, Python-Kompilierung und `git diff --check` bestanden. PR #9, Main-Commit und Remote-Paket separat geprüft; Release v0.5.7 veröffentlicht. GitHub-Anhang-Upload scheiterte mit EOF, daher verweist der Release auf das bytegeprüfte Paket in `main`. Unabhängiger Gerätetest bleibt offen; Details in `TESTING.md`.
 - [ ] Alle vier erzeugten Scripting-`llms.txt`-/`llms-full.txt`-Dokumente vollständig lesen. Offizielle Quellarchive und relevante API-Seiten sind geprüft; vollständige Chunk-Lektüre bleibt offen.
 
-- [x] 0.5.8-Arbeitsstand lokal geprüft: dokumentiertes `TabView`/`Tab` mit `useObservable`, fünf primäre Ziele, separater Info-Zugang; Validator, Paketbyte-Parität, deterministischer Doppelbuild, TypeScript 5.8.3 mit temporären Stubs, Python-Kompilierung und `git diff --check` bestanden. Dies belegt keine Scripting-App-/iPhone-Kompatibilität. Veröffentlichung und unabhängige Remote-Prüfung sind noch offen.
+- [x] 0.5.8 lokal geprüft und veröffentlicht: dokumentiertes `TabView`/`Tab` mit `useObservable`, fünf primäre Ziele, separater Info-Zugang; Validator, Paketbyte-Parität, deterministischer Doppelbuild, TypeScript 5.8.3 mit temporären Stubs, Python-Kompilierung und `git diff --check` bestanden. PR #11 ist in `main` gemergt; Release v0.5.8 veröffentlicht. Remote-Paketbytes, SHA-256, Manifest, ZIP-CRC und native Navigation-Marker unabhängig geprüft. Release hat keinen Asset-Anhang; die Notizen verlinken zum geprüften Paket auf `main`. Dies belegt keine Scripting-App-/iPhone-Kompatibilität.
 
 ## P1 — Foundation zuerst
 

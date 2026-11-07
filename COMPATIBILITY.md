@@ -1,6 +1,6 @@
 # UNIVERSE — Scripting-Kompatibilität
 
-**Stand: 2026-11-07 · Entwicklungsstand: `.scripting` 0.5.8 (noch nicht veröffentlicht).** Der Arbeitsstand nutzt die dokumentierte native TabView-/Tab-API mit `useObservable`, fünf Primärbereichen und separatem Info-Zugang. Cross-Type-Discovery aus 0.5.7 bleibt erhalten. Die 0.5.6-Breitenlösung wurde vom Nutzer als funktionierend bestätigt. Statische lokale Checks bestanden; Scripting-App-Import, iPhone-Runtime, verfügbare APIs im installierten Build und möglicher Pro-Zugriff bleiben offen.
+**Stand: 2026-11-07 · aktuelle Version: `.scripting` 0.5.8 (GitHub-Prerelease).** Der Arbeitsstand nutzt die dokumentierte native TabView-/Tab-API mit `useObservable`, fünf Primärbereichen und separatem Info-Zugang. Cross-Type-Discovery aus 0.5.7 bleibt erhalten. Die 0.5.6-Breitenlösung wurde vom Nutzer als funktionierend bestätigt. Statische lokale Checks bestanden; Scripting-App-Import, iPhone-Runtime, verfügbare APIs im installierten Build und möglicher Pro-Zugriff bleiben offen.
 
 ## Aktueller Funktionsumfang und Grenzen
 
