@@ -1,0 +1,11 @@
+{
+  "id": "aniworld",
+  "name": "AniWorld",
+  "host": "aniworld.to",
+  "status": "disabled",
+  "capabilities": [],
+  "networkEnabled": false,
+  "streamResolutionEnabled": false,
+  "downloadsEnabled": false,
+  "description": "Inaktives Plugin-Skelett. Erst für zulässige Metadatenadapter vorgesehen; keine Netzwerkabfragen, Stream-Auflösung oder Downloads."
+}

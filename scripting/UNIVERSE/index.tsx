@@ -51,7 +51,7 @@ type StaticProvider = {
   getEntity: (id: string) => UniverseEntity | undefined
 }
 
-const APP_VERSION = "0.5.0"
+const APP_VERSION = "0.5.1"
 const CONTENT_FILTERS: ContentFilter[] = ["Alle", "Medien", "Artikel", "Termine"]
 const NAV_ITEMS: { id: RootScreen; label: string; symbol: string }[] = [
   { id: "home", label: "Start", symbol: "house.fill" },
@@ -67,7 +67,14 @@ const POSTER_THEMES = [
   { top: "#9A3412", bottom: "#1C1917", symbol: "text.book.closed.fill" },
   { top: "#164E63", bottom: "#0F172A", symbol: "globe.americas.fill" },
   { top: "#831843", bottom: "#1F1235", symbol: "moon.stars.fill" },
-]
+] as const
+const ANIWORLD_PLUGIN = {
+  name: "AniWorld",
+  host: "aniworld.to",
+  status: "deaktiviert",
+  capabilities: [] as string[],
+  description: "Sicheres Plugin-Skelett. Kein Netzwerkzugriff, keine Stream-Auflösung und keine Downloads.",
+}
 const HERO_ART_PATH = Path.join(Script.directory, "assets/hero.jpg")
 
 const PROVIDERS: StaticProvider[] = [
@@ -225,7 +232,7 @@ function UniverseApp() {
 
   function sectionHeading(title: string, eyebrow?: string) {
     return <VStack alignment="leading" spacing={3}>
-      {eyebrow && <Text font="caption" fontWeight="semibold" foregroundStyle="#9C8BFF" kerning={1.1}>{eyebrow.toUpperCase()}</Text>}
+      {eyebrow ? <Text font="caption" fontWeight="semibold" foregroundStyle="#9C8BFF" kerning={1.1}>{eyebrow.toUpperCase()}</Text> : null}
       <Text font="title" fontWeight="bold" foregroundStyle="white">{title}</Text>
     </VStack>
   }
@@ -257,13 +264,13 @@ function UniverseApp() {
 
   function contentRail(title: string, items: UniverseEntity[], eyebrow?: string) {
     if (items.length === 0) return null
-    return <VStack alignment="leading" spacing={12}>
+    return <VStack alignment="leading" spacing={12} frame={{ maxWidth: "infinity" }}>
       <HStack alignment="bottom">
         {sectionHeading(title, eyebrow)}
         <Spacer />
         <Text font="caption" foregroundStyle="#999BAD">{items.length} TITEL</Text>
       </HStack>
-      <ScrollView axes="horizontal" scrollIndicator="never">
+      <ScrollView axes="horizontal" scrollIndicator="never" frame={{ maxWidth: "infinity" }}>
         <LazyHStack spacing={13}>
           {items.map((entity, index) => posterCard(entity, index))}
         </LazyHStack>
@@ -315,7 +322,7 @@ function UniverseApp() {
   function compactCard(entity: UniverseEntity, index: number) {
     const theme = POSTER_THEMES[index % POSTER_THEMES.length]
     return <Button key={entity.id} buttonStyle="plain" action={() => openEntity(entity)}>
-      <HStack alignment="top" spacing={13} padding={12} background={
+      <HStack alignment="top" spacing={13} frame={{ maxWidth: "infinity" }} padding={12} background={
         <RoundedRectangle cornerRadius={18} fill="rgba(255,255,255,0.065)" />
       }>
         <ZStack frame={{ width: 76, height: 94 }}>
@@ -329,7 +336,7 @@ function UniverseApp() {
           }} />
           <Image systemName={contentSymbol(entity)} frame={{ width: 30, height: 30 }} foregroundStyle="rgba(255,255,255,0.85)" />
         </ZStack>
-        <VStack alignment="leading" spacing={6}>
+        <VStack alignment="leading" spacing={6} frame={{ maxWidth: "infinity", alignment: "leading" }}>
           <Text font="caption" fontWeight="semibold" foregroundStyle="#A996FF">{typeLabel(entity.typeId).toUpperCase()} · {entity.category.toUpperCase()}</Text>
           <Text font="headline" fontWeight="bold" foregroundStyle="white" lineLimit={2}>{entity.title}</Text>
           <Text font="caption" foregroundStyle="#B7B8C5" lineLimit={2}>{entity.summary}</Text>
@@ -353,8 +360,8 @@ function UniverseApp() {
 
   return (
     <NavigationStack>
-      <ScrollView navigationTitle={pageTitle} navigationBarTitleDisplayMode="inline" background="#080A12">
-        <VStack alignment="leading" spacing={22} padding={{ horizontal: 18, top: 14, bottom: 34 }} background="#080A12">
+      <ScrollView navigationTitle={pageTitle} navigationBarTitleDisplayMode="inline" background="#080A12" frame={{ maxWidth: "infinity" }}>
+        <VStack alignment="leading" spacing={22} frame={{ maxWidth: "infinity" }} padding={{ horizontal: 18, top: 14, bottom: 34 }} background="#080A12">
           <HStack alignment="center" spacing={10}>
             <ZStack frame={{ width: 42, height: 42 }}>
               <RoundedRectangle cornerRadius={14} frame={{ width: 42, height: 42 }} fill={{
@@ -369,13 +376,13 @@ function UniverseApp() {
             </ZStack>
             <VStack alignment="leading" spacing={1}>
               <Text font="title" fontWeight="black" foregroundStyle="white" kerning={1.2}>UNIVERSE</Text>
-              <Text font="caption2" fontWeight="medium" foregroundStyle="#999BAD" kerning={1.1}>DEIN CONTENT-UNIVERSUM</Text>
+              <Text font="caption2" fontWeight="medium" foregroundStyle="#999BAD" kerning={1.1}>DEIN CONTENT-HUB</Text>
             </VStack>
             <Spacer />
             <Button title="Suchen" systemImage="magnifyingglass" buttonStyle="bordered" buttonBorderShape="circle" action={() => navigateTo("search")} />
           </HStack>
 
-          <ScrollView axes="horizontal" scrollIndicator="never">
+          <ScrollView axes="horizontal" scrollIndicator="never" frame={{ maxWidth: "infinity" }}>
             <LazyHStack spacing={8}>
               {NAV_ITEMS.map(navigationChip)}
             </LazyHStack>
@@ -398,7 +405,7 @@ function UniverseApp() {
           {screen === "explore" && <>
             {sectionHeading("Finde deine nächste Welt", "Der Katalog")}
             <Text font="subheadline" foregroundStyle="#B7B8C5">Stöbere durch gemischte Inhalte. Alle Einträge sind Beispiele, keine Live-Empfehlungen.</Text>
-            <ScrollView axes="horizontal" scrollIndicator="never">
+            <ScrollView axes="horizontal" scrollIndicator="never" frame={{ maxWidth: "infinity" }}>
               <LazyHStack spacing={8}>
                 {CONTENT_FILTERS.map((filter, index) => <Button
                   key={filter}
@@ -420,7 +427,7 @@ function UniverseApp() {
               onChanged={setSearchText}
               prompt="Titel, Thema oder Quelle"
             />
-            <ScrollView axes="horizontal" scrollIndicator="never">
+            <ScrollView axes="horizontal" scrollIndicator="never" frame={{ maxWidth: "infinity" }}>
               <LazyHStack spacing={8}>
                 {CONTENT_FILTERS.map((filter, index) => <Button
                   key={filter}
@@ -485,6 +492,14 @@ function UniverseApp() {
             }>
               <Text font="headline" fontWeight="bold" foregroundStyle="white">Foundation vor Features</Text>
               <Text font="subheadline" foregroundStyle="#C6C2D8">Echte Provider, Konten, dauerhafte Bibliothek und Wiedergabe werden erst nach den Daten-, Storage- und Geräteprüfungen ergänzt.</Text>
+            </VStack>
+            <VStack alignment="leading" spacing={8} padding={16} background={
+              <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
+            }>
+              <Text font="headline" fontWeight="bold" foregroundStyle="white">Plugin-Verbindungen</Text>
+              <Text font="subheadline" fontWeight="semibold" foregroundStyle="white">{ANIWORLD_PLUGIN.name} · {ANIWORLD_PLUGIN.status}</Text>
+              <Text font="caption" foregroundStyle="#A6A7B6">{ANIWORLD_PLUGIN.host} · keine aktiven Capabilities</Text>
+              <Text font="caption" foregroundStyle="#A6A7B6">{ANIWORLD_PLUGIN.description}</Text>
             </VStack>
           </>}
 

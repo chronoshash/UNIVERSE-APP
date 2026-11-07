@@ -12,7 +12,7 @@ from zipfile import ZipFile
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "scripting" / "UNIVERSE"
 PACKAGE = ROOT / "UNIVERSE.scripting"
-PACKAGE_FILES = ("script.json", "index.tsx", "README.md", "assets/hero.jpg")
+PACKAGE_FILES = ("script.json", "index.tsx", "README.md", "assets/hero.jpg", "plugins/aniworld/plugin.json")
 CAPABILITY_OPERATIONS = {
     "entity.list": "listEntities",
     "search.local": "search",
@@ -47,8 +47,19 @@ def validate_sources() -> tuple[dict, str, bytes]:
     code = code_bytes.decode("utf-8")
     readme_bytes = (SOURCE / "README.md").read_bytes()
     hero_art = SOURCE / "assets" / "hero.jpg"
+    plugin_path = SOURCE / "plugins" / "aniworld" / "plugin.json"
+    plugin_bytes = plugin_path.read_bytes()
+    aniworld_plugin = json.loads(plugin_bytes)
 
     require(hero_art.is_file(), "local hero artwork is required")
+    require(aniworld_plugin.get("id") == "aniworld", "AniWorld plugin scaffold ID is required")
+    require(aniworld_plugin.get("host") == "aniworld.to", "AniWorld plugin host must be explicit")
+    require(aniworld_plugin.get("status") == "disabled", "AniWorld plugin scaffold must remain disabled")
+    require(aniworld_plugin.get("capabilities") == [], "disabled AniWorld scaffold must declare no active capabilities")
+    require(aniworld_plugin.get("networkEnabled") is False, "AniWorld scaffold must not enable network access")
+    require(aniworld_plugin.get("streamResolutionEnabled") is False, "AniWorld scaffold must not resolve streams")
+    require(aniworld_plugin.get("downloadsEnabled") is False, "AniWorld scaffold must not enable downloads")
+    require('"aniworld.to"' in code and '"deaktiviert"' in code, "disabled AniWorld scaffold must be disclosed in the app")
     require('Path.join(Script.directory, "assets/hero.jpg")' in code, "hero artwork must be loaded from the packaged local asset")
     require(manifest.get("name") == "UNIVERSE", "manifest name must be UNIVERSE")
     require(manifest.get("entry") == "index.tsx", "manifest entry must be index.tsx")
@@ -122,6 +133,7 @@ def validate_package(manifest: dict, code: str, readme_bytes: bytes) -> None:
         "index.tsx": code.encode("utf-8"),
         "README.md": readme_bytes,
         "assets/hero.jpg": (SOURCE / "assets" / "hero.jpg").read_bytes(),
+        "plugins/aniworld/plugin.json": (SOURCE / "plugins" / "aniworld" / "plugin.json").read_bytes(),
     }
     with ZipFile(PACKAGE) as archive:
         require(archive.testzip() is None, "package ZIP CRC check failed")

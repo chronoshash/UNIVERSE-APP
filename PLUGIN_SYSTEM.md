@@ -101,9 +101,9 @@ Beispiel einer deklarativen Contribution:
 
 ## Aktuelle Foundation und Download-Reihenfolge
 
-Version 0.5.0 enthält weiterhin eine einzige statische Fixture-Quelle mit expliziten Capabilities für Entity-Liste, lokale Suche, Feed und Detailzugriff. Diese Registry ist noch kein Manifest-Validator und kein Drittanbieter-Plugin-System; Providerfunktionen sind fest im App-Code gebündelt.
+Version 0.5.1 enthält weiterhin eine einzige statische Fixture-Quelle mit expliziten Capabilities für Entity-Liste, lokale Suche, Feed und Detailzugriff. Diese Registry ist noch kein Manifest-Validator und kein Drittanbieter-Plugin-System; Providerfunktionen sind fest im App-Code gebündelt.
 
-Der frühere 0.3.0-Direktdatei-DownloadManager war ein eigenständiger Vorgriff, kein Plugin und kein implementierter `media.open`-Adapter. Er ist nicht Teil der aktuellen 0.5.0-Basis. Eine Download-Integration darf erst wieder beginnen, nachdem Shell, Datenverträge, statische Providerprüfung, Storage-Grenzen und Scripting-Gerätekompatibilität stehen. Weiterhin keine Webseiten-/Playlist-Extraktion oder Zugriffsschutzumgehung.
+Der frühere 0.3.0-Direktdatei-DownloadManager war ein eigenständiger Vorgriff, kein Plugin und kein implementierter `media.open`-Adapter. Er ist nicht Teil der aktuellen 0.5.1-Basis. Eine Download-Integration darf erst wieder beginnen, nachdem Shell, Datenverträge, statische Providerprüfung, Storage-Grenzen und Scripting-Gerätekompatibilität stehen. Weiterhin keine Webseiten-/Playlist-Extraktion oder Zugriffsschutzumgehung.
 
 ## Sicherheitsgrenze und späteres SDK
 

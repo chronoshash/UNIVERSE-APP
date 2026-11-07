@@ -2,9 +2,9 @@
 
 **Eine Oberfläche. Viele Inhaltstypen.**
 
-UNIVERSE ist ein persönlicher Hub für unterschiedliche Webinhalte. **Die aktuelle Basis ist zuerst die App-Shell, nicht der Download-Manager.** Version 0.5.0 ergänzt eine dunkle, kinematische Katalogoberfläche: großes lokales Titelmotiv, horizontale Inhaltsschienen, gestaltete Karten und eine klare Detailansicht. Home, Entdecken, Suche, Feeds, Merkliste und Info verwenden weiterhin lokale Fixture-Inhalte für Medien, Artikel und Termine; Entity-Liste, Suche, Feed und Details laufen über Capability-Prüfungen. Es gibt keine Live-Abfragen. Merklisteinträge gelten nur während der Script-Sitzung.
+UNIVERSE ist ein persönlicher Hub für unterschiedliche Webinhalte. **Die aktuelle Basis ist zuerst die App-Shell, nicht der Download-Manager.** Version 0.5.1 ergänzt eine dunkle, kinematische Katalogoberfläche: großes lokales Titelmotiv, horizontale Inhaltsschienen, gestaltete Karten und eine klare Detailansicht. Home, Entdecken, Suche, Feeds, Merkliste und Info verwenden weiterhin lokale Fixture-Inhalte für Medien, Artikel und Termine; Entity-Liste, Suche, Feed und Details laufen über Capability-Prüfungen. Das AniWorld-Plugin ist als sichtbares, deaktiviertes Skelett enthalten; es gibt keine Live-Abfragen. Merklisteinträge gelten nur während der Script-Sitzung.
 
-Downloads, Offline-Wiedergabe, echte Provider, dauerhafte Speicherung und dynamische Plugins sind in 0.5.0 bewusst nicht enthalten. Der frühere 0.3.0-Download-Prototyp war ein Vorgriff auf spätere Arbeit; die Download-Manager-Integration kommt erst nach dem Aufbau und Testen der App-Shell, Datenverträge, statischen Registry und Storage-Grenzen wieder auf die Roadmap.
+Downloads, Offline-Wiedergabe, echte Provider, dauerhafte Speicherung und dynamische Plugins sind in 0.5.1 bewusst nicht enthalten. Der frühere 0.3.0-Download-Prototyp war ein Vorgriff auf spätere Arbeit; die Download-Manager-Integration kommt erst nach dem Aufbau und Testen der App-Shell, Datenverträge, statischen Registry und Storage-Grenzen wieder auf die Roadmap.
 
 Das Script ist **noch nicht in der Scripting-App importiert oder auf einem iPhone ausgeführt**. API-Zugriff im installierten Build, ein mögliches Pro-Erfordernis, Darstellung, Lifecycle und Laufzeit sind unbestätigt. Die UI nutzt nur lokale Beispieldaten und behauptet keine echten Provider-Ergebnisse. Es gibt keinen AniWorld-Resolver und keine Webseiten-/Playlist-Extraktion oder Umgehung von Zugriffsbeschränkungen.
 
@@ -28,6 +28,6 @@ Quellcode liegt in `scripting/UNIVERSE/`; das Paket ist `UNIVERSE.scripting`. Na
 python3 tools/build_scripting_package.py
 ```
 
-Das Paket enthält `script.json`, `index.tsx`, `README.md` und `assets/hero.jpg`. Lokale ZIP-, Asset-/Quellenparitäts-, Manifest-, Capability- und TSX-Stummeltyp-Prüfungen sind in [TESTING.md](TESTING.md) dokumentiert. Statische Prüfungen ersetzen keinen Import-/iPhone-Test.
+Das Paket enthält `script.json`, `index.tsx`, `README.md`, `assets/hero.jpg` und `plugins/aniworld/plugin.json`. Lokale ZIP-, Asset-/Quellenparitäts-, Manifest-, Capability- und TSX-Stummeltyp-Prüfungen sind in [TESTING.md](TESTING.md) dokumentiert. Statische Prüfungen ersetzen keinen Import-/iPhone-Test.
 
 Sora inspirierte allgemeine Navigation-/Suchideen, nicht die Implementierung. Kein Sora-Code, keine Assets und keine Sora-Abhängigkeit sind enthalten. Scripting-Pro-Zugang, Xcode, Backend, dynamische Fremdcodeausführung und Hintergrund-Dauerprozesse werden nicht vorausgesetzt.
