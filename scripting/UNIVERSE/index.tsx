@@ -55,15 +55,8 @@ type StaticProvider = {
   getEntity: (id: string) => UniverseEntity | undefined
 }
 
-const APP_VERSION = "0.5.9"
+const APP_VERSION = "0.5.10"
 const CONTENT_FILTERS: ContentFilter[] = ["Alle", "Medien", "Artikel", "Termine"]
-const NAV_ITEMS: { id: RootScreen; label: string; symbol: string }[] = [
-  { id: "home", label: "Start", symbol: "house.fill" },
-  { id: "explore", label: "Entdecken", symbol: "sparkles" },
-  { id: "search", label: "Suche", symbol: "magnifyingglass" },
-  { id: "feeds", label: "Neu", symbol: "clock.arrow.circlepath" },
-  { id: "library", label: "Merkliste", symbol: "bookmark.fill" },
-]
 const POSTER_THEMES = [
   { top: "#4C1D95", bottom: "#111827", symbol: "sparkles" },
   { top: "#075985", bottom: "#111827", symbol: "waveform" },
@@ -236,7 +229,7 @@ function formatDate(value: string): string {
 }
 
 function UniverseApp() {
-  const selectedTab = useObservable("home" as RootScreen)
+  const selectedTab = useObservable<RootScreen>("home" as RootScreen)
   const [screen, setScreen] = useState<AppScreen>("home")
   const [returnScreen, setReturnScreen] = useState<RootScreen>("home")
   const [settingsReturnTab, setSettingsReturnTab] = useState<RootScreen>("home")
@@ -651,15 +644,26 @@ function UniverseApp() {
         }
 
         return (
-          <TabView selection={selectedTab} frame={{ width: viewportWidth, height: viewportHeight }}>
-            {NAV_ITEMS.map(item => <Tab
-              key={item.id}
-              title={item.label}
-              systemImage={item.symbol}
-              value={item.id}
-            >
-              {renderTabPage(item.id)}
-            </Tab>)}
+          <TabView
+            selection={selectedTab}
+            toolbarBackgroundVisibility={{ visibility: "hidden", bars: ["tabBar"] }}
+            frame={{ width: viewportWidth, height: viewportHeight }}
+          >
+            <Tab title="Start" systemImage="house.fill" value="home">
+              {renderTabPage("home")}
+            </Tab>
+            <Tab title="Entdecken" systemImage="sparkles" value="explore">
+              {renderTabPage("explore")}
+            </Tab>
+            <Tab title="Suche" systemImage="magnifyingglass" value="search">
+              {renderTabPage("search")}
+            </Tab>
+            <Tab title="Neu" systemImage="clock.arrow.circlepath" value="feeds">
+              {renderTabPage("feeds")}
+            </Tab>
+            <Tab title="Merkliste" systemImage="bookmark.fill" value="library">
+              {renderTabPage("library")}
+            </Tab>
           </TabView>
         )
       }}

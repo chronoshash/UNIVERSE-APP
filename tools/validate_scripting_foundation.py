@@ -80,16 +80,15 @@ def validate_sources() -> tuple[dict, str, bytes]:
             "outer vertical scroll view must be width-bound to and clipped at the measured viewport")
     require('padding={{ horizontal: 18, top: 14, bottom: 34 }} frame={{ width: viewportWidth }}' in code,
             "root content must use the measured viewport width with its padding inside that frame")
-    require('const selectedTab = useObservable("home" as RootScreen)' in code
-            and '<TabView selection={selectedTab} frame={{ width: viewportWidth, height: viewportHeight }}>' in code
-            and 'NAV_ITEMS.map(item => <Tab' in code
-            and 'title={item.label}' in code and 'systemImage={item.symbol}' in code and 'value={item.id}' in code,
-            "primary destinations must use the documented native TabView/Tab selection binding")
-    nav_items = code.split('const NAV_ITEMS: { id: RootScreen; label: string; symbol: string }[] = [', 1)[1].split(']\nconst POSTER_THEMES =', 1)[0]
-    require(nav_items.count('{ id:') == 5 and 'settings' not in nav_items,
-            "native bottom bar must keep five primary tabs; Info stays available as a separate action")
+    require('const selectedTab = useObservable<RootScreen>("home" as RootScreen)' in code
+            and '<TabView\n            selection={selectedTab}\n            toolbarBackgroundVisibility={{ visibility: "hidden", bars: ["tabBar"] }}' in code,
+            "native TabView must use a RootScreen observable and hide the tab-bar background")
+    tab_values = re.findall(r'<Tab title="[^"]+" systemImage="[^"]+" value="([^"]+)">', code)
+    require(tab_values == ["home", "explore", "search", "feeds", "library"]
+            and all(f'renderTabPage("{tab}")' in code for tab in tab_values),
+            "native bottom bar must use five literal, type-safe destinations and matching pages")
     require('Button title="Info" systemImage="info.circle"' in code,
-            "Info/settings must remain reachable outside the five-item native tab bar")
+            "Info/settings must remain available outside the five-item native tab bar")
     require('padding={12} frame={{ width: contentWidth }}' in code and 'const textWidth = Math.max(1, contentWidth - 113)' in code,
             "compact cards must keep thumbnail, spacing, padding, and text inside their measured row width")
     horizontal_scrolls = code.count('<ScrollView axes="horizontal"')

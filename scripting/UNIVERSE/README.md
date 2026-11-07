@@ -1,16 +1,20 @@
-# UNIVERSE Scripting foundation · 0.5.9
+# UNIVERSE Scripting foundation · 0.5.10
 
-Version 0.5.9 is a small Foundation follow-up to the published 0.5.8 native five-tab navigation. It makes the primary screen union explicit and seeds the observable selection with that exact type to address the user's reported Scripting type error at the `TabView` selection binding. This is a source-level correction; it has not been independently reproduced in the Scripting app or verified on an iPhone.
+Version 0.5.10 continues the Foundation work from 0.5.9. It keeps the native five-tab navigation and now declares each `<Tab>` with a literal, type-safe destination instead of mapping a generic navigation array into native tabs. Together with the explicitly typed `useObservable<RootScreen>` selection, this is the source-level correction for the reported TypeScript error at the `TabView` selection binding. The error has not been independently reproduced in the installed Scripting app.
 
-The session-only Library now offers a direct remove action on each saved item, in addition to removing it from its detail page. Saved items still do not persist across script sessions.
+The native tab bar keeps its five destinations while applying the documented `toolbarBackgroundVisibility` modifier to hide the `tabBar` background, so the background is transparent rather than an opaque system panel. This requests the documented appearance; actual rendering remains unverified in the Scripting app and on an iPhone.
 
-The 0.5.6 viewport/content-width layout (which the user reports now works), native tabs, 0.5.7 cross-type feed filters, and local detail suggestions are retained. The Scripting UI API and iPhone runtime remain unverified by the project.
+The session-only Library still offers a direct remove action on each saved item, in addition to removing it from its detail page. Saved items do not persist across script sessions.
+
+The 0.5.6 viewport/content-width layout (which the user reports now works), cross-type foundation, native tabs, 0.5.7 feed filters, and local detail suggestions are retained. The Scripting UI API and iPhone runtime remain unverified by the project.
 
 All content remains bundled demo fixtures. There are no live providers, network requests, dynamic plugins, downloads, or video playback. AniWorld remains a disabled scaffold.
 
 ## Included
 
 - Five native tabs: Start, Explore, Search, Feeds, and a session-only Library.
+- Type-safe literal tab destinations and an explicitly typed selection observable.
+- Transparent native tab-bar background using the documented `toolbarBackgroundVisibility` modifier.
 - Info/settings reachable from a top-level button.
 - Remove saved items directly from the Library, without implying persistence.
 - Local demo media, articles, and events with visible source attribution.
