@@ -103,12 +103,18 @@ def validate_sources() -> tuple[dict, str, bytes]:
     require('maxWidth: "infinity"' not in code,
             "layout must not contain unbounded max-width frames")
     require('const [exploreFilterIndex, setExploreFilterIndex] = useState(0)' in code
+            and 'const [searchFilterIndex, setSearchFilterIndex] = useState(0)' in code
+            and 'const exploreFilter = CONTENT_FILTERS[exploreFilterIndex]' in code
+            and 'const searchFilter = CONTENT_FILTERS[searchFilterIndex]' in code
             and 'const exploreResults = listedEntities.filter(entity => matchesFilter(entity, exploreFilter))' in code
             and 'const exploreFilterCounts = CONTENT_FILTERS.map(filter => listedEntities.filter(entity => matchesFilter(entity, filter)).length)' in code
             and 'exploreResults.map((entity, index) => compactCard(entity, index, contentWidth))' in code
             and 'Keine Inhalte in „{exploreFilter}“' in code
+            and 'action={() => setExploreFilterIndex(index)}' in code
+            and 'action={() => setSearchFilterIndex(index)}' in code
+            and '.flatMap(provider => provider.search(query, searchFilter))' in code
             and 'action={() => setExploreFilterIndex(0)}' in code,
-            "Explore must apply its independent type filter to the complete catalog and recover from empty results")
+            "Explore must filter the complete catalog, count/recover results, and remain independent from Search state")
     require('const [feedFilterIndex, setFeedFilterIndex] = useState(0)' in code
             and 'const visibleFeedItems = feedItems.filter(entity => matchesFilter(entity, feedFilter))' in code
             and 'visibleFeedItems.map((entity, index) => compactCard(entity, index, contentWidth))' in code,
