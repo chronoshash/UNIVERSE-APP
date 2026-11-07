@@ -1,14 +1,14 @@
 # UNIVERSE — Scripting-Kompatibilität
 
-**Stand: 2026-11-07 · aktuelle Basis: `.scripting` 0.5.7.** Version 0.5.7 baut auf der lokalen Katalog-Shell mit statischer Capability-Registry und gebündeltem Hero-Artwork auf. Der Nutzer bestätigt, dass die Breite funktioniert. Das neue Paket ist lokal geprüft, wurde vom Projekt aber nicht unabhängig in die Scripting-App importiert oder auf einem iPhone ausgeführt. Verfügbarkeit der UI-APIs im installierten Build, Pro-Zugriff, Detail-/Feed-Interaktionen und Lifecycle sind offen.
+**Stand: 2026-11-07 · Entwicklungsstand: `.scripting` 0.5.8 (noch nicht veröffentlicht).** Der Arbeitsstand nutzt die dokumentierte native TabView-/Tab-API mit `useObservable`, fünf Primärbereichen und separatem Info-Zugang. Cross-Type-Discovery aus 0.5.7 bleibt erhalten. Die 0.5.6-Breitenlösung wurde vom Nutzer als funktionierend bestätigt. Statische lokale Checks bestanden; Scripting-App-Import, iPhone-Runtime, verfügbare APIs im installierten Build und möglicher Pro-Zugriff bleiben offen.
 
 ## Aktueller Funktionsumfang und Grenzen
 
 - Home, Entdecken, Suche, Feeds, Merkliste und Detailansicht zeigen lokale Beispieldaten und das mitgelieferte illustrative Hero-Artwork.
 - Entity-Liste, Suche, Feed und Detailzugriff werden nur aufgerufen, wenn der statisch eingetragene Demo-Provider die jeweilige Capability deklariert.
 - Merkliste ist ausschließlich UI-State der aktuellen Script-Sitzung; es wird keine Persistenz behauptet.
-- Version 0.5.7 enthält weder `DownloadManager`, `AVPlayer`, Netzwerkzugriffe, einen echten Provider noch dynamische Plugins; das Hero-Bild wird lokal aus dem Paket geladen.
-- 0.5.6 bindet Root-Navigation, Karten und alle horizontalen Scrollbereiche an eine abgerundete Viewportbreite und aktiviert Clipping; der Nutzer bestätigt nun, dass die Breite funktioniert. 0.5.7 ergänzt unabhängige Inhaltstypfilter im Feed und lokale Ähnlichkeitsvorschläge auf Detailseiten. Diese neuen Flows sind vom Projekt nicht auf dem iPhone verifiziert.
+- Der 0.5.8-Arbeitsstand enthält weder `DownloadManager`, `AVPlayer`, Netzwerkzugriffe, einen echten Provider noch dynamische Plugins; das Hero-Bild wird lokal aus dem Paket geladen.
+- 0.5.6 bindet Root-Navigation, Karten und alle horizontalen Scrollbereiche an eine abgerundete Viewportbreite und aktiviert Clipping; der Nutzer bestätigt nun, dass die Breite funktioniert. 0.5.7 ergänzte unabhängige Inhaltstypfilter im Feed und lokale Ähnlichkeitsvorschläge auf Detailseiten. 0.5.8 behält diese Cross-Type-Flows bei und ersetzt die Chip-Hauptnavigation durch native Tabs; diese Flows sind vom Projekt nicht auf dem iPhone verifiziert.
 - Der Downloader aus Version 0.3.0 ist historisch und wurde aus der aktuellen Basis entfernt. Er kommt erst nach App-Shell-, Datenmodell-, Provider-, Storage- und Geräte-Gates zurück.
 - Keine Scripting-Pro-Funktion als Voraussetzung oder Fallback; kein Xcode-Projekt, Backend, Background-Worker oder dynamischer Fremdcode.
 
@@ -21,18 +21,19 @@ Die offiziellen Scripting-Dokumentationskataloge und relevante Seiten für Impor
 - [App-Store-Index](https://scriptingapp.github.io/llms.txt) / [Volltext](https://scriptingapp.github.io/llms-full.txt)
 - [TestFlight-Index](https://scriptingapp.github.io/TestFlight/llms.txt) / [Volltext](https://scriptingapp.github.io/TestFlight/llms-full.txt)
 
-Die Quellenarchive liefern die Markdown-Ausgangsseiten. **Alle vier generierten `llms.txt`-/`llms-full.txt`-Dokumente wurden weiterhin nicht vollständig chunkweise gelesen.** Diese offene Anforderung wird nicht als erledigt ausgegeben. App Store und TestFlight können zudem unterschiedliche API-Stände enthalten.
+Die Quellenarchive liefern die Markdown-Ausgangsseiten. Für die native Navigation wurde zusätzlich das offizielle App-Store-Dokumentationsarchiv im Repository-Stand `9dd44bc276c967f2900ecee2bdd785cf3426a5fa` geprüft: `TabView` mit `selection`/`useObservable` und `<Tab title systemImage value>` ist dort als modernes iOS-18+-Tab-System dokumentiert. Das belegt die dokumentierte Oberfläche, nicht die Verfügbarkeit im installierten Build. **Alle vier generierten `llms.txt`-/`llms-full.txt`-Dokumente wurden weiterhin nicht vollständig chunkweise gelesen.** Diese offene Anforderung wird nicht als erledigt ausgegeben. App Store und TestFlight können zudem unterschiedliche API-Stände enthalten.
 
 ## APIs der Foundation — dokumentiert, aber nicht auf dem Gerät bestätigt
 
-| API | Verwendung in 0.5.7 | Offener Nachweis |
+| API | Verwendung im 0.5.8-Arbeitsstand | Offener Nachweis |
 |---|---|---|
 | `Navigation.present`, `NavigationStack`, `ScrollView`, `LazyHStack` | Script-Präsentation, vertikaler Screen und horizontale Katalog-Rails | Import, Scrollverhalten, Lifecycle auf iPhone |
 | `Button`, `Text`, `TextField`, `HStack`, `VStack`, `ZStack`, `Spacer` | Navigation, Filter, Karten, Suche und Inhaltshierarchie | Rendern, Touch-Ziele, Barrierefreiheit, Tastatur |
 | `Image`, `RoundedRectangle`, `Path` | SF-Symbol-Icons, Kartenflächen und lokales Hero-Bild aus `Script.directory` | gebündelten Asset-Pfad, Zuschnitt und Darstellung am Gerät |
 | `GeometryReader`, `frame` | Viewportbreite direkt am präsentierten Root abrunden; daraus Karten-/Inhaltsbreite nach Seitenrändern berechnen und an Navigation, Scrollbereiche und Karten binden | Typen, Präsentationsgröße, NavigationStack-Layout und Laufzeit auf dem iPhone |
 | `clipped`, `scrollClipDisabled` | äußeren vertikalen ScrollView innerhalb seiner Bounds halten | Bridge-Verhalten und horizontale Rails auf dem iPhone |
-| `useState` | Navigation, Suchfeld, Filter und sitzungsgebundene Merkliste | tatsächlicher Hook-/Runtime-Zugriff in installierter Version |
+| `useState` | Suchfeld, Filter und sitzungsgebundene Merkliste | tatsächlicher Hook-/Runtime-Zugriff in installierter Version |
+| `TabView`, `Tab`, `useObservable` | fünf native Hauptbereiche mit ausgewähltem Tab; Info bleibt ein separater Header-Aktionspunkt | dokumentierte API laut Scripting-Dokumentation, aber Import, iOS-Version, Bar-Verhalten und Hook-/Runtime-Zugriff im installierten Build sind nicht am Gerät bestätigt |
 
 Der Katalogstatus „nicht als Pro markiert“ wäre kein Beweis, dass ein API im kostenlosen Nutzer-Build zugänglich ist. Der aktuelle Shell-Import und tatsächlicher kostenloser Zugriff müssen am Zielgerät geprüft werden.
 
@@ -42,9 +43,9 @@ TypeScript 5.8.3 hat `index.tsx` mit lokalen, temporären Platzhalterdeklaration
 
 Das Paket wird von `tools/build_scripting_package.py` erstellt und enthält `script.json`, `index.tsx`, `README.md`, `assets/hero.jpg` sowie das inaktive `plugins/aniworld/plugin.json`. Es ist lokal auf CRC, Dateiliste, Manifest, Byte-Parität und deterministischen Build geprüft. Das `.scripting`-ZIP-Format ist hier eine Paketkonvention, keine durch einen erfolgreichen Scripting-Import bestätigte Kompatibilitätszusage.
 
-## Zurückgestellte Download-/Player-APIs (nicht Teil von 0.5.7)
+## Zurückgestellte Download-/Player-APIs (nicht Teil des 0.5.8-Arbeitsstands)
 
-In der offiziellen `DownloadManager`-Doku steht, dass diese globale API für Main-App-Scripts vorgesehen ist; explizite Ziele müssen lokale absolute Pfade sein, fehlende Elternordner werden beim Veröffentlichen angelegt und vorhandene Dateien werden nicht überschrieben. Die Seiten für `FileManager`, `AVPlayer` und `VideoPlayer` wurden für den früheren 0.3.0-Versuch gelesen. Das belegt weder Pro-Freiheit noch den API-Stand des installierten iPhones. Keine dieser APIs ist in der aktuellen Version 0.5.7 aufgerufen.
+In der offiziellen `DownloadManager`-Doku steht, dass diese globale API für Main-App-Scripts vorgesehen ist; explizite Ziele müssen lokale absolute Pfade sein, fehlende Elternordner werden beim Veröffentlichen angelegt und vorhandene Dateien werden nicht überschrieben. Die Seiten für `FileManager`, `AVPlayer` und `VideoPlayer` wurden für den früheren 0.3.0-Versuch gelesen. Das belegt weder Pro-Freiheit noch den API-Stand des installierten iPhones. Keine dieser APIs ist im aktuellen 0.5.8-Arbeitsstand aufgerufen.
 
 Falls ein Manager später nach Abschluss der Foundation-Gates wieder gebaut wird, gelten weiterhin nur nutzerbereitgestellte direkte HTTP(S)-Dateilinks, Rechte-/Token-Hinweise und explizite Nutzeraktionen. Keine Webseiten-/Playlist-/Stream-Extraktion, kein DRM-/Login-/CAPTCHA-Bypass. Dateiendung beweist weder Videoinhalt noch Codec.
 
@@ -53,8 +54,8 @@ Falls ein Manager später nach Abschluss der Foundation-Gates wieder gebaut wird
 | Frage | Nachweis | Status |
 |---|---|---|
 | installierte Scripting- und iOS-Version / kostenloser UI-API-Zugriff | App-Version, Geräte-Einstellungen und Test auf Ziel-iPhone | Offen |
-| 0.5.7-Paket importierbar und startfähig | Import und Shell-/Navigationstest | Offen |
+| 0.5.8-Paket importierbar und startfähig | Import und Test der nativen Fünf-Tab-Shell | Offen |
 | Merkliste-/Storage-Verhalten | Persistenz bleibt absichtlich nicht implementiert; Storage API vor Nutzung testen | Offen |
-| Suche, Typfilter, Demo-Feed und Detailnavigation | manuelle iPhone-Prüfung, Tastatur-/Lifecycle-Fälle | Offen |
+| Native Tab-Navigation, Suche, Typfilter, Demo-Feed und Detailnavigation | manuelle iPhone-Prüfung, Tastatur-/Lifecycle-Fälle | Offen |
 | Dark Mode, VoiceOver, Dynamic Type, Safe Areas | iPhone-Testprotokoll/Screenshots | Offen |
 | vollständige Lektüre aller vier `llms.txt`-/`llms-full.txt`-Dokumente | alle Index- und Volltexte chunkweise auswerten | Offen |

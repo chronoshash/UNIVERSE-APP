@@ -2,7 +2,7 @@
 
 ## Produkt und globale Navigation
 
-Langfristiges Ziel von UNIVERSE ist ein persönlicher Web-Content-Hub. Die Foundation 0.5.7 ist eine bewusst begrenzte, lokale Demo-Katalogoberfläche — keine echte Streaming- oder Anime-App. Sie zeigt Medien, Artikel und Termine in einer gemeinsamen, capability-gesteuerten Shell; Live-Provider, Wiedergabe und persistente Daten fehlen weiterhin. Der Nutzer bestätigt, dass die Breite nun funktioniert; der aktuelle Ausbau ergänzt Feed-Filter und lokale, transparent begründete Ähnlichkeitsvorschläge.
+Langfristiges Ziel von UNIVERSE ist ein persönlicher Web-Content-Hub. Der Entwicklungsstand 0.5.8 baut auf einer bewusst begrenzten, lokalen Demo-Katalogoberfläche auf — keine echte Streaming- oder Anime-App. Sie zeigt Medien, Artikel und Termine in einer gemeinsamen, capability-gesteuerten Shell; Live-Provider, Wiedergabe und persistente Daten fehlen weiterhin. Der Nutzer bestätigt, dass die Breite nun funktioniert; 0.5.7 ergänzte Feed-Filter und lokale, transparent begründete Ähnlichkeitsvorschläge; 0.5.8 wechselt zur dokumentierten nativen TabView-Navigation.
 
 | Bereich | Aufgabe |
 |---|---|
@@ -30,9 +30,9 @@ Generische Entity-Detailseite zeigt gemeinsame Attribute plus Quellenprovenienz.
 
 Feeds markieren Herkunft und Aktualisierungszeit. Kalender vereinigt Termine, hält Zeitzone/ganztägig auseinander und verknüpft Events mit Entities. Eine Collection kann beliebige Typen mischen. Providerdaten und persönliche Notizen bleiben getrennt.
 
-## Aktueller Basis-Flow (0.5.7)
+## Aktueller Basis-Flow (Entwicklungsstand 0.5.8)
 
-Home nutzt ein dunkles, kinematisches Layout mit UNIVERSE-Header, horizontaler Chip-Navigation, lokalem Featured-Panel und Inhaltsschienen. Zwölf lokale Fixture-Titel füllen die Poster-Karten; Chips filtern Medien, Artikel und Termine. Explore, Search und jetzt auch der chronologische Feed haben eigene Inhaltstypfilter. Detailseiten schlagen lokal ähnliche Demo-Einträge anhand gleicher Kategorie oder gleichen Inhaltstyps vor und legen diese Regel offen. Suche, Feed und Detailansicht teilen dieselben Entities und zeigen Quellenherkunft. „Merken“ gilt nur für die aktuelle Script-Sitzung. Die vom Nutzer bestätigte Breitenlösung und alle gemessenen Content-Rails bleiben erhalten. Das Design übernimmt allgemeine Katalogmuster, keine Netflix-/Sora-Markenmittel, Assets oder Implementierung.
+Die fünf nativen Tabs Start, Entdecken, Suche, Neu und Merkliste ersetzen die horizontale Hauptnavigation; ein Info-Button im Header hält Projektstatus und Foundation-Hinweise erreichbar, ohne einen sechsten Tab zu belegen. Jeder Primärbereich besitzt einen eigenen NavigationStack; Detail- und Infoansichten kehren zum aufrufenden Tab zurück. Home nutzt ein dunkles, kinematisches Layout mit lokalem Featured-Panel und Inhaltsschienen. Zwölf lokale Fixture-Titel füllen die Poster-Karten. Explore, Search und jetzt auch der chronologische Feed haben eigene Inhaltstypfilter. Detailseiten schlagen lokal ähnliche Demo-Einträge anhand gleicher Kategorie oder gleichen Inhaltstyps vor und legen diese Regel offen. Suche, Feed und Detailansicht teilen dieselben Entities und zeigen Quellenherkunft. „Merken“ gilt nur für die aktuelle Script-Sitzung. Die vom Nutzer bestätigte Breitenlösung und alle gemessenen Content-Rails bleiben erhalten. Das Design übernimmt allgemeine Katalogmuster, keine Netflix-/Sora-Markenmittel, Assets oder Implementierung.
 
 Es gibt keine Netzwerkabfragen oder echten Provider. Der DownloadManager ist nicht Teil dieser Basis; die frühere 0.3.0-Downloader-Version ist historisch und wird erst nach den Core-/Storage-/Device-Gates wieder relevant.
 
@@ -45,4 +45,4 @@ Es gibt keine Netzwerkabfragen oder echten Provider. Der DownloadManager ist nic
 - Veraltete Daten sichtbar kennzeichnen; keine Endlosschleifen bei Laden.
 - Nutzerbestätigung/Undo für Löschen und Zusammenführen.
 
-Die aktuelle `UNIVERSE.scripting`-Datei ist Foundation 0.5.7: lokale Demo-Fixtures mit capability-gesteuerter Entity-Liste, Suche, Feed und Details; separate Typfilter in Explore, Search und Feed; Detailvorschläge aus gleicher Kategorie oder gleichem Typ; deaktiviertes AniWorld-Skelett. Der Nutzer bestätigt, dass die in 0.5.6 eingeführte Viewport-/Inhaltsbreite funktioniert; diese Umgebung hat das nicht selbst am iPhone nachgetestet. Es gibt keine Live-Daten oder persistente Speicherung. DownloadManager, echte Provider und Playback bleiben zurückgestellt. Kein Sora-Code wurde übernommen (siehe `SORA_RESEARCH.md`).
+Der Arbeitsstand `UNIVERSE.scripting` ist 0.5.8 (noch nicht veröffentlicht): lokale Demo-Fixtures mit capability-gesteuerter Entity-Liste, Suche, Feed und Details; separate Typfilter in Explore, Search und Feed; Detailvorschläge aus gleicher Kategorie oder gleichem Typ; deaktiviertes AniWorld-Skelett. Die native TabView-/Tab-API und `useObservable` sind laut offizieller Scripting-Dokumentation beschrieben; Import und Darstellung sind hier nicht auf dem iPhone nachgetestet. Der Nutzer bestätigt, dass die in 0.5.6 eingeführte Viewport-/Inhaltsbreite funktioniert; diese Umgebung hat das nicht selbst am iPhone nachgetestet. Es gibt keine Live-Daten oder persistente Speicherung. DownloadManager, echte Provider und Playback bleiben zurückgestellt. Kein Sora-Code wurde übernommen (siehe `SORA_RESEARCH.md`).
