@@ -2,11 +2,11 @@
 
 ## Ziele und Status
 
-Der Core soll verschiedene Webinhalte repräsentieren, ohne eine feste Anime-/Video-Typenliste vorauszusetzen. Version 0.5.7 führt das in 0.4.0 begonnene kleine lokale Modell aus `Entity`-ähnlichen Fixture-Einträgen, `typeId` und `SourceRecord`-Herkunft hinter einem statischen Provider fort. Plugins registrieren noch keine Typen. Das vollständige Modell bleibt **Entwurf**; konkrete Repository-/SQLite-Tabellen und Migrationen folgen nach dem iPhone-Capability-Test.
+Der Core soll verschiedene Webinhalte repräsentieren, ohne eine feste Anime-/Video-Typenliste vorauszusetzen. Version 0.5.12 führt das kleine lokale Modell aus `Entity`-ähnlichen Fixture-Einträgen, `typeId` und `SourceRecord`-Herkunft hinter einem statischen Provider fort. Plugins registrieren noch keine Typen. Das vollständige Modell bleibt **Entwurf**; konkrete Entity-Repositories/SQLite-Tabellen und Migrationen folgen nach dem iPhone-Capability-Test.
 
 ## Aktuelle Foundation und zurückgestellter Download-Prototyp
 
-Die aktuelle 0.5.7-Basis nutzt lokale Fixture-Entities mit stabilen IDs, Inhaltstypen, Kategorien und einem `SourceRecord`-ähnlichen Quellnachweis. Ein statischer Provider liefert Suche, Feed und Detailzugriff; der Feed filtert die chronologischen Fixture-Einträge nach Typ. Detailvorschläge werden zur Laufzeit aus gleicher Kategorie oder gleichem Typ abgeleitet und sind keine persistierten `EntityRelation`-Datensätze. Die Merkliste lebt nur im UI-State der laufenden Script-Sitzung. Es gibt noch kein persistentes Repository und keine Migrationen.
+Die aktuelle 0.5.12-Basis nutzt lokale Fixture-Entities mit stabilen IDs, Inhaltstypen, Kategorien und einem `SourceRecord`-ähnlichen Quellnachweis. Ein statischer Provider liefert Suche, Feed und Detailzugriff; der Feed filtert die chronologischen Fixture-Einträge nach Typ. Detailvorschläge werden zur Laufzeit aus gleicher Kategorie oder gleichem Typ abgeleitet und sind keine persistierten `EntityRelation`-Datensätze. Die Merkliste speichert geordnete Entity-IDs im dokumentierten privaten `Storage`-Bereich; vollständige Entities, SourceRecords und Medien bleiben nicht persistiert. Bei nicht verfügbarem/ungültigem Storage fällt die UI sichtbar auf Sitzungsspeicherung zurück. Ein dauerhaftes vollständiges Entity-Repository und Migrationen existieren noch nicht; App- und Gerätetest der Storage-Persistenz stehen aus.
 
 Der 0.3.0-Download-Prototyp liegt nur in der Git-Historie/älteren Version. Seine Queue-Snapshots sind nicht das Datenmodell des aktuellen Produkts. Der DownloadManager wird erst nach Shell-, Provider-, Storage- und Geräte-Gates wieder aufgenommen.
 
@@ -117,4 +117,4 @@ RSS-Beitrag, Systemkalendertermin und Releasezeitpunkt sind nicht automatisch di
 
 Collections referenzieren beliebige Entity-IDs. Tags, Bookmarks, Notizen, History und Nutzerbewertung sind getrennt von Provider-Metadaten. Plugin-Deaktivierung löscht keine persönlichen Inhalte. Cache, Providerdaten und Nutzerinhalte haben getrennte Lösch-/Exportpfade.
 
-Zielablage ist SQLite plus versionierte, transaktionale Migrationen, falls der dokumentierte Scripting-Zugriff auf dem Zielgerät verifiziert ist. Große Medien gehören nicht in JSON/Key-Value-Storage. Datenaufbewahrung muss Providerbedingungen/TTL respektieren; Tokens und sensible Header gehören nie in Entity-Datensätze.
+Die kleine Merkliste verwendet derzeit den dokumentierten privaten Key-Value-Storage und enthält nur IDs. Für vollständige Entity-/Source-Daten bleibt SQLite eine zu prüfende Zielablage mit versionierten, transaktionalen Migrationen, falls API und Verhalten auf dem Zielgerät verifiziert werden. Große Medien gehören nicht in JSON/Key-Value-Storage. Datenaufbewahrung muss Providerbedingungen/TTL respektieren; Tokens und sensible Header gehören nie in Entity-Datensätze.
