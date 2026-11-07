@@ -80,9 +80,12 @@ def validate_sources() -> tuple[dict, str, bytes]:
             "outer vertical scroll view must be width-bound to and clipped at the measured viewport")
     require('padding={{ horizontal: 18, top: 14, bottom: 34 }} frame={{ width: viewportWidth }}' in code,
             "root content must use the measured viewport width with its padding inside that frame")
-    require('const selectedTab = useObservable<RootScreen>("home" as RootScreen)' in code
+    require('const ROOT_SCREENS = ["home", "explore", "search", "feeds", "library"] as const' in code
+            and 'type RootScreen = typeof ROOT_SCREENS[number]' in code
+            and 'function asRootScreen(value: RootScreen): RootScreen {' in code
+            and 'const selectedTab = useObservable(asRootScreen(ROOT_SCREENS[0]))' in code
             and '<TabView\n            selection={selectedTab}\n            toolbarBackgroundVisibility={{ visibility: "hidden", bars: ["tabBar"] }}' in code,
-            "native TabView must use a RootScreen observable and hide the tab-bar background")
+            "native TabView selection must infer the explicit five-screen union and hide the tab-bar background")
     tab_values = re.findall(r'<Tab title="[^"]+" systemImage="[^"]+" value="([^"]+)">', code)
     require(tab_values == ["home", "explore", "search", "feeds", "library"]
             and all(f'renderTabPage("{tab}")' in code for tab in tab_values),
@@ -103,10 +106,16 @@ def validate_sources() -> tuple[dict, str, bytes]:
             and 'const visibleFeedItems = feedItems.filter(entity => matchesFilter(entity, feedFilter))' in code
             and 'visibleFeedItems.map((entity, index) => compactCard(entity, index, contentWidth))' in code,
             "chronological feed must apply the selected local content-type filter")
-    require('savedEntities.map((entity, index) => <VStack key={entity.id}' in code
+    require('type SessionLibraryState = {' in code
+            and 'scope: "session"' in code
+            and 'entityIds: string[]' in code
+            and 'const [libraryState, setLibraryState] = useState<SessionLibraryState>({ scope: "session", entityIds: [] })' in code,
+            "Library state must declare an explicit session-only storage boundary")
+    require('const savedEntities = libraryState.entityIds\n    .map(id => listedEntities.find(entity => entity.id === id))' in code
+            and 'Reihenfolge nach dem Merken' in code
             and 'Button title="Aus Merkliste entfernen"' in code
             and 'action={() => toggleSaved(entity.id)}' in code,
-            "session-only saved items must be removable directly from the Library tab")
+            "session Library must retain save order, expose its count/scope, and support direct removal")
     require(code.count('CONTENT_FILTERS.map((filter, index) => <Button') == 3,
             "Explore, Search, and Feeds must each expose the shared content-type filters")
     require('entity.id !== selectedEntity.id && (entity.category === selectedEntity.category || entity.typeId === selectedEntity.typeId)' in code
