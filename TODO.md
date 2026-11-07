@@ -1,6 +1,6 @@
 # UNIVERSE — TODO
 
-Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. UNIVERSE 0.5.8 ist als GitHub-Prerelease veröffentlicht und unabhängig geprüft. Der aktive 0.5.9-Entwicklungsstand reagiert auf den vom Nutzer gemeldeten `RootScreen`-Typfehler und ergänzt direktes Entfernen aus der sitzungsgebundenen Merkliste. Die Cross-Type-Foundation bleibt erhalten. Keine Live-Provider, Downloads oder Wiedergabe; Scripting-App-Import und Gerätetest sind offen.
+Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. UNIVERSE 0.5.9 ist als GitHub-Prerelease veröffentlicht und unabhängig geprüft (PR #13, Merge-Commit `62b085e2c5c1828687bd69fcfc3a219555b8234f`). Die Version reagiert auf den vom Nutzer gemeldeten `RootScreen`-Typfehler und ergänzt direktes Entfernen aus der sitzungsgebundenen Merkliste. Die Cross-Type-Foundation bleibt erhalten. Keine Live-Provider, Downloads oder Wiedergabe; Scripting-App-Import und Gerätetest sind offen.
 
 ## Verbindliches Qualitätsgate vor jeder Verifizierung und Dokumentation
 
@@ -28,7 +28,7 @@ Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2
 ## P1 — Foundation zuerst
 
 - [x] App-Shell 0.5.8 (veröffentlicht): Home, Entdecken, Suche, typgefilterte Feeds, Merkliste, Info und Detailansicht; fünf native Haupttabs, zwölf Demo-Fixtures und lokale Related-Content-Schiene in Details.
-- [x] 0.5.9 Foundation-Folgearbeit lokal umgesetzt und geprüft: explizit typisierte native Tab-Auswahl als Reaktion auf den Nutzerbericht sowie direktes Entfernen gespeicherter Elemente aus der sitzungsgebundenen Merkliste. Validator/Paketparität, deterministischer Doppelbuild, TypeScript 5.8.3 mit temporären API-Stubs, Python-Kompilierung und `git diff --check` bestanden. Noch nicht veröffentlicht; Scripting-App-Import und iPhone-Test bleiben offen.
+- [x] 0.5.9 Foundation-Folgearbeit veröffentlicht: explizit typisierte native Tab-Auswahl als Reaktion auf den Nutzerbericht sowie direktes Entfernen gespeicherter Elemente aus der sitzungsgebundenen Merkliste. Validator/Paketparität, deterministischer Doppelbuild, TypeScript 5.8.3 mit temporären API-Stubs, Python-Kompilierung und `git diff --check` bestanden. PR #13 ist gemergt; Release v0.5.9 veröffentlicht. Remote-Paketbytes, SHA-256, Manifest, ZIP-CRC und Feature-Marker unabhängig geprüft. Release hat keinen Asset-Anhang und verlinkt zum verifizierten `main`-Paket. Scripting-App-Import und iPhone-Test bleiben offen.
 - [x] Statisch gebündelter Demo-Provider mit expliziter Capability-Liste; Suche, Feed und Details werden über diese Liste geroutet. Keine dynamischen Imports oder Netzwerkabfragen.
 - [x] Discovery-Ausbau 0.5.7: unabhängige Typfilter im chronologischen Feed und lokale Detailvorschläge nach gleicher Kategorie oder gleichem Typ; Demo-Regel in der UI offengelegt.
 - [x] Lokale Fixture-Entities für Medien, Artikel und Termine mit sichtbarer Quellenherkunft; Suche über mehrere Typen und einfache Filter.
