@@ -1,7 +1,7 @@
 {
   "name": "UNIVERSE",
-  "description": "A cinematic local-first content discovery shell with capability-gated demo media, articles, and events.",
-  "version": "0.5.0",
+  "description": "A local-first content hub with native five-tab navigation, a filtered and countable local catalog, a private persistent Library, and capability-gated cross-type discovery.",
+  "version": "0.5.14",
   "icon": "globe",
   "color": "#7C5CFF",
   "entry": "index.tsx",

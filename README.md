@@ -2,9 +2,13 @@
 
 **Eine Oberfläche. Viele Inhaltstypen.**
 
-UNIVERSE ist ein persönlicher Hub für unterschiedliche Webinhalte. **Die aktuelle Basis ist zuerst die App-Shell, nicht der Download-Manager.** Version 0.5.0 ergänzt eine dunkle, kinematische Katalogoberfläche: großes lokales Titelmotiv, horizontale Inhaltsschienen, gestaltete Karten und eine klare Detailansicht. Home, Entdecken, Suche, Feeds, Merkliste und Info verwenden weiterhin lokale Fixture-Inhalte für Medien, Artikel und Termine; Entity-Liste, Suche, Feed und Details laufen über Capability-Prüfungen. Es gibt keine Live-Abfragen. Merklisteinträge gelten nur während der Script-Sitzung.
+UNIVERSE ist ein persönlicher Hub für unterschiedliche Webinhalte. **Die aktuelle Basis ist zuerst die App-Shell, nicht der Download-Manager.** Version 0.5.14 behält die dokumentierte native Navigation mit fünf festen Bereichen (Start, Entdecken, Suche, Neu, Merkliste) und separatem Info-Zugang bei. Eine zentrale Literal-Tupeldefinition bildet `RootScreen`; ein explizit typisierter Helper verhindert, dass die Auswahl auf den Initialwert `"home"` verengt wird. Der gemeldete TypeScript-Fehler ist damit auf Quelltextebene adressiert. Die native Tab-Bar blendet ihren Hintergrund über den dokumentierten Modifier `toolbarBackgroundVisibility` gezielt aus. Der Scripting-App-Import und das iPhone-Rendering sind nicht unabhängig getestet.
 
-Downloads, Offline-Wiedergabe, echte Provider, dauerhafte Speicherung und dynamische Plugins sind in 0.5.0 bewusst nicht enthalten. Der frühere 0.3.0-Download-Prototyp war ein Vorgriff auf spätere Arbeit; die Download-Manager-Integration kommt erst nach dem Aufbau und Testen der App-Shell, Datenverträge, statischen Registry und Storage-Grenzen wieder auf die Roadmap.
+Die dunkle Katalogoberfläche bietet lokales Titelmotiv, Inhaltsschienen und zwölf lokale Demo-Einträge. Home, Entdecken, Suche, Feeds, Merkliste und Info verwenden lokale Fixture-Inhalte für Medien, Artikel und Termine. Entity-Liste, Suche, Feed und Details laufen über Capability-Prüfungen; Explore, Suche, Feeds und Merkliste haben unabhängige Inhaltstypfilter. Explore zeigt pro Typ die Zahl der Demo-Einträge und wendet den gewählten Filter auf die gesamte Ergebnisliste an, ohne den Suchfilter zu verändern; leere Ergebnisse lassen sich auf alle Inhalte zurücksetzen. Die Merkliste zeigt pro Typ die Trefferzahl, erhält beim Filtern die Merkreihenfolge und bietet für leere Filter eine Rückkehr zu allen gespeicherten Inhalten. Das ändert weder den privaten Storage-Schlüssel noch das Schema der gespeicherten Entity-IDs. Lokale Detailvorschläge bleiben nachvollziehbar. Umfang und mögliche Sitzungs-Fallbacks der Merkliste werden offengelegt; vollständige Entities und Medien werden nicht gespeichert. Das AniWorld-Plugin ist ein deaktiviertes Skelett ohne Live-Abfragen.
+
+Version 0.5.14 ist als [GitHub-Prerelease veröffentlicht](https://github.com/chronoshash/UNIVERSE-APP/releases/tag/v0.5.14). PR #23 wurde nach `main` gemergt (`6071ca1cae18a78a2966a90da8c87ae5fca545b1`). Das 159.517 Byte große Paket wurde nach dem Merge unabhängig über die GitHub Contents API aus `main` geladen, byteweise mit dem lokalen Build verglichen und per ZIP-CRC sowie Manifestversion `0.5.14` geprüft. SHA-256: `e2188455f63c117bf990884d46ea92caa3f2ddfc092aaed87bd76450c5dc1603`. Es gibt keinen Release-Asset-Anhang; die Release-Notizen verlinken auf das unabhängig geprüfte Paket in `main`. Diese statischen Prüfungen belegen weder Scripting-App-Import noch native Darstellung, Storage-Persistenz oder iPhone-Laufzeit.
+
+Vollständige Entity-Repositories/Migrationen, Offline-Wiedergabe, echte Provider und dynamische Plugins bleiben bewusst außerhalb der aktuellen Foundation. Der frühere 0.3.0-Download-Prototyp war ein Vorgriff auf spätere Arbeit; ein Download-/Playback-Manager kommt erst nach dem Aufbau und Testen der App-Shell, Datenverträge, statischen Registry und Storage-Grenzen wieder auf die Roadmap. Die Nutzerbestätigung der 0.5.6-Breitenlösung ist dokumentiert, wurde aber nicht unabhängig am Gerät nachgetestet.
 
 Das Script ist **noch nicht in der Scripting-App importiert oder auf einem iPhone ausgeführt**. API-Zugriff im installierten Build, ein mögliches Pro-Erfordernis, Darstellung, Lifecycle und Laufzeit sind unbestätigt. Die UI nutzt nur lokale Beispieldaten und behauptet keine echten Provider-Ergebnisse. Es gibt keinen AniWorld-Resolver und keine Webseiten-/Playlist-Extraktion oder Umgehung von Zugriffsbeschränkungen.
 
@@ -22,12 +26,12 @@ Das Script ist **noch nicht in der Scripting-App importiert oder auf einem iPhon
 
 ## Scripting-Projekt
 
-Quellcode liegt in `scripting/UNIVERSE/`; das Paket ist `UNIVERSE.scripting`. Nach **jeder** Änderung an Script-Quellen oder dem im Paket enthaltenen README neu bauen:
+Quellcode liegt in `scripting/UNIVERSE/`; das Paket ist `UNIVERSE.scripting`. [Paket aus dem GitHub-Repository herunterladen](UNIVERSE.scripting) · [GitHub-Releases ansehen](https://github.com/chronoshash/UNIVERSE-APP/releases). Nach **jeder** Änderung an Script-Quellen oder dem im Paket enthaltenen README neu bauen:
 
 ```sh
 python3 tools/build_scripting_package.py
 ```
 
-Das Paket enthält `script.json`, `index.tsx`, `README.md` und `assets/hero.jpg`. Lokale ZIP-, Asset-/Quellenparitäts-, Manifest-, Capability- und TSX-Stummeltyp-Prüfungen sind in [TESTING.md](TESTING.md) dokumentiert. Statische Prüfungen ersetzen keinen Import-/iPhone-Test.
+Das Paket enthält `script.json`, `index.tsx`, `README.md`, `assets/hero.jpg` und `plugins/aniworld/plugin.json`. Lokale ZIP-, Asset-/Quellenparitäts-, Manifest-, Capability- und TSX-Stummeltyp-Prüfungen sind in [TESTING.md](TESTING.md) dokumentiert. Statische Prüfungen ersetzen keinen Import-/iPhone-Test.
 
 Sora inspirierte allgemeine Navigation-/Suchideen, nicht die Implementierung. Kein Sora-Code, keine Assets und keine Sora-Abhängigkeit sind enthalten. Scripting-Pro-Zugang, Xcode, Backend, dynamische Fremdcodeausführung und Hintergrund-Dauerprozesse werden nicht vorausgesetzt.
