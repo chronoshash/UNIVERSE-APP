@@ -102,6 +102,13 @@ def validate_sources() -> tuple[dict, str, bytes]:
             "Info screen must expose the measured widths for on-device overflow diagnosis")
     require('maxWidth: "infinity"' not in code,
             "layout must not contain unbounded max-width frames")
+    require('const [exploreFilterIndex, setExploreFilterIndex] = useState(0)' in code
+            and 'const exploreResults = listedEntities.filter(entity => matchesFilter(entity, exploreFilter))' in code
+            and 'const exploreFilterCounts = CONTENT_FILTERS.map(filter => listedEntities.filter(entity => matchesFilter(entity, filter)).length)' in code
+            and 'exploreResults.map((entity, index) => compactCard(entity, index, contentWidth))' in code
+            and 'Keine Inhalte in „{exploreFilter}“' in code
+            and 'action={() => setExploreFilterIndex(0)}' in code,
+            "Explore must apply its independent type filter to the complete catalog and recover from empty results")
     require('const [feedFilterIndex, setFeedFilterIndex] = useState(0)' in code
             and 'const visibleFeedItems = feedItems.filter(entity => matchesFilter(entity, feedFilter))' in code
             and 'visibleFeedItems.map((entity, index) => compactCard(entity, index, contentWidth))' in code,
