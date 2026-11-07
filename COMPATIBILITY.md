@@ -1,6 +1,6 @@
 # UNIVERSE — Scripting-Kompatibilität
 
-**Stand: 2026-11-07 · aktuelle Version: `.scripting` 0.5.13 (GitHub-Prerelease).** Die Merkliste besitzt Inhaltstypfilter, Trefferzahlen und einen Rückweg aus leeren Filteransichten; ihre private Speicherung geordneter IDs bleibt unverändert. Der Stand nutzt die dokumentierte native TabView-/Tab-API mit `useObservable`, fünf literal-typisierten Primärbereichen und separatem Info-Zugang. `toolbarBackgroundVisibility` blendet den nativen Tab-Bar-Hintergrund aus; `RootScreen` aus einem Literal-Tupel plus typisiertem Helper erhält die Auswahl-Union und adressiert den gemeldeten Typfehler auf Quelltextebene. Die Merkliste speichert nur geordnete IDs im standardmäßig privaten Scripting-`Storage`, mit begrenzter Validierung und sichtbarem Session-Fallback. Der offizielle Dokumentationsvertrag wurde geprüft, aber Import und Persistenz sind nicht auf dem iPhone getestet. Der gemeldete TypeScript-Fehler wurde nicht in der installierten App reproduziert. Cross-Type-Discovery und die vom Nutzer bestätigte 0.5.6-Breitenlösung bleiben erhalten. Statische lokale Checks bestanden; App-Import, iPhone-Runtime, APIs im installierten Build und möglicher Pro-Zugriff sind offen.
+**Stand: 2026-11-07 · aktuelle Version: `.scripting` 0.5.14 (GitHub-Prerelease).** Die Merkliste besitzt Inhaltstypfilter, Trefferzahlen und einen Rückweg aus leeren Filteransichten; ihre private Speicherung geordneter IDs bleibt unverändert. Explore hat davon unabhängigen Filterzustand, pro Typ gezählte Katalogergebnisse und filtert die vollständige Liste, ohne Search zu verändern. Der Stand nutzt die dokumentierte native TabView-/Tab-API mit `useObservable`, fünf literal-typisierten Primärbereichen und separatem Info-Zugang. `toolbarBackgroundVisibility` blendet den nativen Tab-Bar-Hintergrund aus; `RootScreen` aus einem Literal-Tupel plus typisiertem Helper erhält die Auswahl-Union und adressiert den gemeldeten Typfehler auf Quelltextebene. Die Merkliste speichert nur geordnete IDs im standardmäßig privaten Scripting-`Storage`, mit begrenzter Validierung und sichtbarem Session-Fallback. Der offizielle Dokumentationsvertrag wurde geprüft, aber Import und Persistenz sind nicht auf dem iPhone getestet. Der gemeldete TypeScript-Fehler wurde nicht in der installierten App reproduziert. Cross-Type-Discovery und die vom Nutzer bestätigte 0.5.6-Breitenlösung bleiben erhalten. Statische lokale Checks bestanden; App-Import, iPhone-Runtime, APIs im installierten Build und möglicher Pro-Zugriff sind offen.
 
 ## Aktueller Funktionsumfang und Grenzen
 
@@ -8,7 +8,8 @@
 - Entity-Liste, Suche, Feed und Detailzugriff werden nur aufgerufen, wenn der statisch eingetragene Demo-Provider die jeweilige Capability deklariert.
 - Die Merkliste speichert geordnete Entity-IDs über `Storage.get/set` im privaten Script-Bereich; bei Storage-Fehlern/ungültigem Wert bleibt die UI sitzungsgebunden und zeigt einen Hinweis.
 - 0.5.13 filtert die Merkliste getrennt nach Medien, Artikeln und Terminen, zählt die Treffer pro Typ und bietet bei einem leeren Filter eine Rückkehr zu allen gespeicherten Inhalten; relative Merkreihenfolge und Storage-Schema bleiben erhalten.
-- Der 0.5.13-Arbeitsstand enthält weder `DownloadManager`, `AVPlayer`, Netzwerkzugriffe, einen echten Provider, vollständige Entity-Persistenz noch dynamische Plugins; das Hero-Bild wird lokal aus dem Paket geladen.
+- 0.5.14 filtert in Explore die komplette Katalogliste, zählt die Treffer pro Inhaltstyp und hält diese Auswahl unabhängig von Search; bei null Ergebnissen ist die Rückkehr zu allen Inhalten verfügbar.
+- Der 0.5.14-Arbeitsstand enthält weder `DownloadManager`, `AVPlayer`, Netzwerkzugriffe, einen echten Provider, vollständige Entity-Persistenz noch dynamische Plugins; das Hero-Bild wird lokal aus dem Paket geladen.
 - 0.5.6 bindet Root-Navigation, Karten und alle horizontalen Scrollbereiche an eine abgerundete Viewportbreite und aktiviert Clipping; der Nutzer bestätigt nun, dass die Breite funktioniert. 0.5.7 ergänzte unabhängige Inhaltstypfilter im Feed und lokale Ähnlichkeitsvorschläge auf Detailseiten. 0.5.8 behält diese Cross-Type-Flows bei und ersetzt die Chip-Hauptnavigation durch native Tabs; diese Flows sind vom Projekt nicht auf dem iPhone verifiziert.
 - Der Downloader aus Version 0.3.0 ist historisch und wurde aus der aktuellen Basis entfernt. Er kommt erst nach App-Shell-, Datenmodell-, Provider-, Storage- und Geräte-Gates zurück.
 - Keine Scripting-Pro-Funktion als Voraussetzung oder Fallback; kein Xcode-Projekt, Backend, Background-Worker oder dynamischer Fremdcode.
@@ -26,7 +27,7 @@ Die Quellenarchive liefern die Markdown-Ausgangsseiten. Für die native Navigati
 
 ## APIs der Foundation — dokumentiert, aber nicht auf dem Gerät bestätigt
 
-| API | Verwendung im 0.5.13-Arbeitsstand | Offener Nachweis |
+| API | Verwendung im 0.5.14-Arbeitsstand | Offener Nachweis |
 |---|---|---|
 | `Navigation.present`, `NavigationStack`, `ScrollView`, `LazyHStack` | Script-Präsentation, vertikaler Screen und horizontale Katalog-Rails | Import, Scrollverhalten, Lifecycle auf iPhone |
 | `Button`, `Text`, `TextField`, `HStack`, `VStack`, `ZStack`, `Spacer` | Navigation, Filter, Karten, Suche und Inhaltshierarchie | Rendern, Touch-Ziele, Barrierefreiheit, Tastatur |
@@ -41,13 +42,13 @@ Der Katalogstatus „nicht als Pro markiert“ wäre kein Beweis, dass ein API i
 
 ## Typcheck, Paket und Reichweite der lokalen Checks
 
-TypeScript 5.8.3 hat den 0.5.13-`index.tsx`-Quelltext mit `tsc --noEmit --strict` und lokalen, temporären Platzhalterdeklarationen für `scripting` erfolgreich geprüft; darin sind `TabView.selection` und `Tab.value` als `RootScreen` modelliert. Das prüft TSX-/Quelltextkonsistenz gegen diesen Testvertrag, **nicht** gegen echte Scripting-Typen oder den App-Runtime. Das Paket (159.223 Byte, SHA-256 `cd55edeaf0bcd998ab332b7f1ff873924f198d7b9d473401416fb9714a45c061`) wurde nach Merge von PR #21 unabhängig über die GitHub Contents API von `main` abgerufen, bytegleich verglichen und mit Manifestversion 0.5.13 sowie ZIP-CRC bestätigt. Release [v0.5.13](https://github.com/chronoshash/UNIVERSE-APP/releases/tag/v0.5.13) hat keinen Asset-Anhang und verlinkt auf das geprüfte Paket in `main`; Details stehen in `TESTING.md`.
+TypeScript 5.8.3 hat den 0.5.14-`index.tsx`-Quelltext mit `tsc --noEmit --strict` und lokalen, temporären Platzhalterdeklarationen für `scripting` erfolgreich geprüft; darin sind `TabView.selection` und `Tab.value` als `RootScreen` modelliert. Das prüft TSX-/Quelltextkonsistenz gegen diesen Testvertrag, **nicht** gegen echte Scripting-Typen oder den App-Runtime. Das Paket (159.517 Byte, SHA-256 `e2188455f63c117bf990884d46ea92caa3f2ddfc092aaed87bd76450c5dc1603`) wurde nach Merge von PR #23 unabhängig über die GitHub Contents API von `main` abgerufen, bytegleich verglichen und mit Manifestversion 0.5.14 sowie ZIP-CRC bestätigt. Release [v0.5.14](https://github.com/chronoshash/UNIVERSE-APP/releases/tag/v0.5.14) hat keinen Asset-Anhang und verlinkt auf das geprüfte Paket in `main`; Details stehen in `TESTING.md`.
 
 Das Paket wird von `tools/build_scripting_package.py` erstellt und enthält `script.json`, `index.tsx`, `README.md`, `assets/hero.jpg` sowie das inaktive `plugins/aniworld/plugin.json`. Es ist lokal auf CRC, Dateiliste, Manifest, Byte-Parität und deterministischen Build geprüft. Das `.scripting`-ZIP-Format ist hier eine Paketkonvention, keine durch einen erfolgreichen Scripting-Import bestätigte Kompatibilitätszusage.
 
-## Zurückgestellte Download-/Player-APIs (nicht Teil des 0.5.13-Arbeitsstands)
+## Zurückgestellte Download-/Player-APIs (nicht Teil des 0.5.14-Arbeitsstands)
 
-In der offiziellen `DownloadManager`-Doku steht, dass diese globale API für Main-App-Scripts vorgesehen ist; explizite Ziele müssen lokale absolute Pfade sein, fehlende Elternordner werden beim Veröffentlichen angelegt und vorhandene Dateien werden nicht überschrieben. Die Seiten für `FileManager`, `AVPlayer` und `VideoPlayer` wurden für den früheren 0.3.0-Versuch gelesen. Das belegt weder Pro-Freiheit noch den API-Stand des installierten iPhones. Keine dieser APIs ist im aktuellen 0.5.13-Arbeitsstand aufgerufen.
+In der offiziellen `DownloadManager`-Doku steht, dass diese globale API für Main-App-Scripts vorgesehen ist; explizite Ziele müssen lokale absolute Pfade sein, fehlende Elternordner werden beim Veröffentlichen angelegt und vorhandene Dateien werden nicht überschrieben. Die Seiten für `FileManager`, `AVPlayer` und `VideoPlayer` wurden für den früheren 0.3.0-Versuch gelesen. Das belegt weder Pro-Freiheit noch den API-Stand des installierten iPhones. Keine dieser APIs ist im aktuellen 0.5.14-Arbeitsstand aufgerufen.
 
 Falls ein Manager später nach Abschluss der Foundation-Gates wieder gebaut wird, gelten weiterhin nur nutzerbereitgestellte direkte HTTP(S)-Dateilinks, Rechte-/Token-Hinweise und explizite Nutzeraktionen. Keine Webseiten-/Playlist-/Stream-Extraktion, kein DRM-/Login-/CAPTCHA-Bypass. Dateiendung beweist weder Videoinhalt noch Codec.
 
@@ -56,7 +57,7 @@ Falls ein Manager später nach Abschluss der Foundation-Gates wieder gebaut wird
 | Frage | Nachweis | Status |
 |---|---|---|
 | installierte Scripting- und iOS-Version / kostenloser UI-API-Zugriff | App-Version, Geräte-Einstellungen und Test auf Ziel-iPhone | Offen |
-| 0.5.13-Paket importierbar und startfähig | Import und Test der nativen Fünf-Tab-Shell einschließlich transparenter Tab-Bar | Offen |
+| 0.5.14-Paket importierbar und startfähig | Import und Test der nativen Fünf-Tab-Shell einschließlich transparenter Tab-Bar | Offen |
 | Merkliste-/Storage-Verhalten | privaten Storage über Neustarts, direkte Entfernung, invaliden Wert und Session-Fallback testen | Offen |
 | Native Tab-Navigation, Suche, Typfilter, Demo-Feed und Detailnavigation | manuelle iPhone-Prüfung, Tastatur-/Lifecycle-Fälle | Offen |
 | Dark Mode, VoiceOver, Dynamic Type, Safe Areas | iPhone-Testprotokoll/Screenshots | Offen |
