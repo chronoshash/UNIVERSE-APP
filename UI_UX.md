@@ -2,7 +2,7 @@
 
 ## Produkt und globale Navigation
 
-Langfristiges Ziel von UNIVERSE ist ein persönlicher Web-Content-Hub; das aktuelle Produkt ist bewusst noch kein solcher All-in-one-Hub und keine Anime- oder Streaming-App. Das eigenständige Scripting-MVP konzentriert sich auf eine einfache Offline-Videobibliothek. Erst wenn weitere Quellen/Capabilities tatsächlich gebaut und getestet sind, werden zusätzliche globale Bereiche ergänzt:
+Langfristiges Ziel von UNIVERSE ist ein persönlicher Web-Content-Hub. Die Foundation 0.5.0 ist eine bewusst begrenzte, lokale Demo-Katalogoberfläche — keine echte Streaming- oder Anime-App. Sie zeigt Medien, Artikel und Termine in einer gemeinsamen, capability-gesteuerten Shell; Live-Provider, Wiedergabe und persistente Daten fehlen weiterhin.
 
 | Bereich | Aufgabe |
 |---|---|
@@ -30,9 +30,9 @@ Generische Entity-Detailseite zeigt gemeinsame Attribute plus Quellenprovenienz.
 
 Feeds markieren Herkunft und Aktualisierungszeit. Kalender vereinigt Termine, hält Zeitzone/ganztägig auseinander und verknüpft Events mit Entities. Eine Collection kann beliebige Typen mischen. Providerdaten und persönliche Notizen bleiben getrennt.
 
-## Aktueller Basis-Flow (0.4.0)
+## Aktueller Basis-Flow (0.5.0)
 
-Die App startet mit einer klaren Home-Ansicht und einer überall erreichbaren Navigation für Home, Entdecken, Suche, Feeds, Merkliste und Info. Entdecken filtert den lokalen Beispielkatalog nach Inhaltstyp. Die gemeinsame Suche findet Medien, Artikel und Termine in einer Sitzung und zeigt Titel, Kategorie, Kurzbeschreibung, Quelle und Abrufdatum. Ein chronologischer Fixture-Feed führt dieselben Einträge zusammen. Details bewahren die Herkunft. „Merken“ fügt einen Eintrag zur aktuellen Script-Sitzung hinzu; die UI verspricht ausdrücklich keine dauerhafte Speicherung.
+Home nutzt ein dunkles, kinematisches Layout mit markantem UNIVERSE-Header, horizontaler Navigation, einem breiten Featured-Panel mit eigens erstelltem lokalem Artwork und horizontalen Inhaltsschienen. Poster-Karten visualisieren die lokalen Fixture-Titel; Chips filtern Medien, Artikel und Termine. Suche, Feed und Detailansicht teilen dieselben Entities und halten Quellenherkunft sichtbar. „Merken“ gilt nur für die aktuelle Script-Sitzung. Das Design übernimmt allgemeine Katalogmuster, keine Netflix-/Sora-Markenmittel, Assets oder Implementierung.
 
 Es gibt keine Netzwerkabfragen oder echten Provider. Der DownloadManager ist nicht Teil dieser Basis; die frühere 0.3.0-Downloader-Version ist historisch und wird erst nach den Core-/Storage-/Device-Gates wieder relevant.
 
@@ -45,4 +45,4 @@ Es gibt keine Netzwerkabfragen oder echten Provider. Der DownloadManager ist nic
 - Veraltete Daten sichtbar kennzeichnen; keine Endlosschleifen bei Laden.
 - Nutzerbestätigung/Undo für Löschen und Zusammenführen.
 
-Die aktuelle `UNIVERSE.scripting`-Datei ist die Foundation 0.4.0: eine einfache deutsche App-Shell mit lokaler Demoquelle, capability-gesteuerter Entity-Liste/Suche/Feed/Details, Inhaltsherkunft, Detailansicht und sitzungsgebundener Merkliste. Sie verspricht weder Live-Daten noch persistente Speicherung. DownloadManager, echte Provider und Playback fehlen absichtlich, bis die Basis und Gerätekompatibilität stehen. Navigation und gemischte Inhaltssuche sind durch Sora-UX-Ideen inspiriert; kein Sora-Code wurde übernommen (siehe `SORA_RESEARCH.md`). Scripting-Import, API-Zugriff und Bedienbarkeit wurden nicht auf einem iPhone getestet.
+Die aktuelle `UNIVERSE.scripting`-Datei ist die Foundation 0.5.0: eine dunkle, visuell ausgebaute deutsche Katalog-Shell mit lokalem Hero-Artwork, horizontalen Rails, Poster-Karten, lokaler Demoquelle und capability-gesteuerter Entity-Liste/Suche/Feed/Details. Sie verspricht weder Live-Daten noch persistente Speicherung. DownloadManager, echte Provider und Playback fehlen absichtlich, bis die Basis und Gerätekompatibilität stehen. Navigation und gemischte Inhaltssuche sind durch Sora-UX-Ideen inspiriert; kein Sora-Code wurde übernommen (siehe `SORA_RESEARCH.md`). Scripting-Import, API-Zugriff und Bedienbarkeit wurden nicht auf einem iPhone getestet.

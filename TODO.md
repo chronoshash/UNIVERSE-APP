@@ -1,6 +1,6 @@
 # UNIVERSE — TODO
 
-Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. Der aktuelle Produktstand ist `.scripting` 0.4.0: erst die Shell, noch kein Download-Manager.
+Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. Der aktuelle Produktstand ist `.scripting` 0.5.0: visuell ausgebaute Katalog-Shell, weiterhin kein Download-Manager.
 
 ## Verbindliches Qualitätsgate vor jeder Verifizierung und Dokumentation
 
@@ -14,14 +14,14 @@ Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2
 ## P0 — Scripting-Kompatibilität und aktueller Shell-Import
 
 - [ ] Auf dem Ziel-iPhone Scripting-App-/iOS-Version und tatsächlich verfügbaren Funktionsumfang der Shell-APIs protokollieren. API-Doku oder App-Store-Preis beweisen keinen kostenlosen Zugriff.
-- [ ] Version 0.4.0 `UNIVERSE.scripting` importieren und Home, Entdecken, Suche, Feeds, Merkliste, Info und Detailnavigation testen.
+- [ ] Version 0.5.0 `UNIVERSE.scripting` importieren und Home, Hero-Asset, Katalog-Rails, Suche, Feeds, Merkliste, Info und Detailnavigation testen.
 - [ ] Dark Mode, VoiceOver, Dynamic Type, Safe Areas, Tastatur, Touch-Ziele und Lifecycle prüfen.
-- [x] 0.4.0-Paket lokal gebaut: ZIP-CRC, Root-Dateien/Manifest, Byte-Parität, deterministischer Doppelbuild und TSX-Quelltextcheck mit temporären Scripting-Stubs bestanden. Das ersetzt keinen App-Import- oder Laufzeittest; Details in `TESTING.md`.
+- [x] 0.5.0-Paket lokal gebaut: ZIP-CRC, Manifest/Dateiliste, Asset- und Byte-Parität, deterministischer Doppelbuild, Validator und TSX-Quelltextcheck mit temporären Scripting-Stubs bestanden. Das ersetzt keinen App-Import- oder Laufzeittest; Details in `TESTING.md`.
 - [ ] Alle vier erzeugten Scripting-`llms.txt`-/`llms-full.txt`-Dokumente vollständig lesen. Offizielle Quellarchive und relevante API-Seiten sind geprüft; vollständige Chunk-Lektüre bleibt offen.
 
 ## P1 — Foundation zuerst
 
-- [x] App-Shell 0.4.0: Home, Entdecken, Suche, Feeds, Merkliste, Info und Detailansicht.
+- [x] App-Shell 0.5.0: Home, Entdecken, Suche, Feeds, Merkliste, Info und Detailansicht; lokales Hero-Motiv, Katalog-Rails und Poster-Karten.
 - [x] Statisch gebündelter Demo-Provider mit expliziter Capability-Liste; Suche, Feed und Details werden über diese Liste geroutet. Keine dynamischen Imports oder Netzwerkabfragen.
 - [x] Lokale Fixture-Entities für Medien, Artikel und Termine mit sichtbarer Quellenherkunft; Suche über mehrere Typen und einfache Filter.
 - [x] Merkliste als sitzungsgebundener UI-State; keine falsche Zusage persistenter Speicherung.
@@ -54,7 +54,7 @@ Danach darf separat geplant werden: nur nutzerbereitgestellte direkte HTTP(S)-Da
 ## Sora-Referenz — nur UX, keine Codeübernahme
 
 - Die Analyse von [Sora, Commit `28f55f3d273b0dd32338e564324054287e500ff9`](https://github.com/cranci1/Sora/tree/28f55f3d273b0dd32338e564324054287e500ff9) steht in `SORA_RESEARCH.md`.
-- 0.4.0 übernimmt nur allgemeine UX-Ideen: erkennbare globale Bereiche, eine durchsuchbare Bibliothek und Quellenherkunft. Kein Code, keine Assets, keine Lizenztexte oder Abhängigkeit wurden übertragen.
+- 0.5.0 nutzt allgemeine Content-Discovery- und Katalog-UX-Muster. Kein Sora-Code, Sora-Asset, Markenbestandteil, Lizenztext oder Abhängigkeit wurde übertragen.
 - Sora-Module, HLS-/Streamlogik, Tracking, Custom Player und Background-Download-Verhalten sind nicht Teil von UNIVERSE.
 
 ## REA-Referenz

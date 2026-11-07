@@ -1,13 +1,13 @@
 # UNIVERSE — Scripting-Kompatibilität
 
-**Stand: 2026-11-07 · aktuelle Basis: `.scripting` 0.4.0.** Version 0.4.0 ist eine lokale App-Shell mit Demo-Fixtures und statischer Capability-Registry. Sie wurde lokal gebaut, aber nicht in die Scripting-App importiert oder auf einem iPhone ausgeführt. Verfügbarkeit der UI-APIs im installierten Build, Pro-Zugriff, Darstellung und Lifecycle sind offen.
+**Stand: 2026-11-07 · aktuelle Basis: `.scripting` 0.5.0.** Version 0.5.0 ist eine lokale Katalog-Shell mit Demo-Fixtures, statischer Capability-Registry und gebündeltem Hero-Artwork. Sie wurde lokal gebaut, aber nicht in die Scripting-App importiert oder auf einem iPhone ausgeführt. Verfügbarkeit der UI-APIs im installierten Build, Pro-Zugriff, Darstellung und Lifecycle sind offen.
 
 ## Aktueller Funktionsumfang und Grenzen
 
-- Home, Entdecken, Suche, Feeds, Merkliste und Detailansicht zeigen ausschließlich lokal gebündelte Beispieldaten.
+- Home, Entdecken, Suche, Feeds, Merkliste und Detailansicht zeigen lokale Beispieldaten und das mitgelieferte illustrative Hero-Artwork.
 - Entity-Liste, Suche, Feed und Detailzugriff werden nur aufgerufen, wenn der statisch eingetragene Demo-Provider die jeweilige Capability deklariert.
 - Merkliste ist ausschließlich UI-State der aktuellen Script-Sitzung; es wird keine Persistenz behauptet.
-- Version 0.4.0 enthält weder `DownloadManager`, `AVPlayer`, Netzwerkzugriffe, einen echten Provider noch dynamische Plugins.
+- Version 0.5.0 enthält weder `DownloadManager`, `AVPlayer`, Netzwerkzugriffe, einen echten Provider noch dynamische Plugins; das Hero-Bild wird lokal aus dem Paket geladen.
 - Der Downloader aus Version 0.3.0 ist historisch und wurde aus der aktuellen Basis entfernt. Er kommt erst nach App-Shell-, Datenmodell-, Provider-, Storage- und Geräte-Gates zurück.
 - Keine Scripting-Pro-Funktion als Voraussetzung oder Fallback; kein Xcode-Projekt, Backend, Background-Worker oder dynamischer Fremdcode.
 
@@ -24,10 +24,11 @@ Die Quellenarchive liefern die Markdown-Ausgangsseiten. **Alle vier generierten 
 
 ## APIs der Foundation — dokumentiert, aber nicht auf dem Gerät bestätigt
 
-| API | Verwendung in 0.4.0 | Offener Nachweis |
+| API | Verwendung in 0.5.0 | Offener Nachweis |
 |---|---|---|
-| `Navigation.present`, `NavigationStack`, `List`, `Section` | Präsentation der Script-UI, Navigation und Bereiche | Import, Darstellung, Lifecycle auf iPhone |
-| `Button`, `Text`, `TextField`, `HStack`, `VStack` | Aktionen, Inhalte, Suche und Navigation | Rendern, Barrierefreiheit, Tastatur, Dynamic Type |
+| `Navigation.present`, `NavigationStack`, `ScrollView`, `LazyHStack` | Script-Präsentation, vertikaler Screen und horizontale Katalog-Rails | Import, Scrollverhalten, Lifecycle auf iPhone |
+| `Button`, `Text`, `TextField`, `HStack`, `VStack`, `ZStack`, `Spacer` | Navigation, Filter, Karten, Suche und Inhaltshierarchie | Rendern, Touch-Ziele, Barrierefreiheit, Tastatur |
+| `Image`, `RoundedRectangle`, `Path` | SF-Symbol-Icons, Kartenflächen und lokales Hero-Bild aus `Script.directory` | gebündelten Asset-Pfad, Zuschnitt und Darstellung am Gerät |
 | `useState` | Navigation, Suchfeld, Filter und sitzungsgebundene Merkliste | tatsächlicher Hook-/Runtime-Zugriff in installierter Version |
 
 Der Katalogstatus „nicht als Pro markiert“ wäre kein Beweis, dass ein API im kostenlosen Nutzer-Build zugänglich ist. Der aktuelle Shell-Import und tatsächlicher kostenloser Zugriff müssen am Zielgerät geprüft werden.
@@ -36,11 +37,11 @@ Der Katalogstatus „nicht als Pro markiert“ wäre kein Beweis, dass ein API i
 
 TypeScript 5.8.3 hat `index.tsx` mit lokalen, temporären Platzhalterdeklarationen für `scripting` erfolgreich geprüft. Das prüft TSX-Syntax und Quelltext gegen die Platzhalter, **nicht** gegen echte Scripting-Typen oder den App-Runtime. Details und Paket-Hash stehen in `TESTING.md`.
 
-Das Paket wird von `tools/build_scripting_package.py` erstellt und enthält am ZIP-Root `script.json`, `index.tsx` und `README.md`. Es ist lokal auf CRC, Dateiliste, Manifest, Byte-Parität und deterministischen Build geprüft. Das `.scripting`-ZIP-Format ist hier eine Paketkonvention, keine durch einen erfolgreichen Scripting-Import bestätigte Kompatibilitätszusage.
+Das Paket wird von `tools/build_scripting_package.py` erstellt und enthält `script.json`, `index.tsx`, `README.md` sowie `assets/hero.jpg`. Es ist lokal auf CRC, Dateiliste, Manifest, Byte-Parität und deterministischen Build geprüft. Das `.scripting`-ZIP-Format ist hier eine Paketkonvention, keine durch einen erfolgreichen Scripting-Import bestätigte Kompatibilitätszusage.
 
-## Zurückgestellte Download-/Player-APIs (nicht Teil von 0.4.0)
+## Zurückgestellte Download-/Player-APIs (nicht Teil von 0.5.0)
 
-In der offiziellen `DownloadManager`-Doku steht, dass diese globale API für Main-App-Scripts vorgesehen ist; explizite Ziele müssen lokale absolute Pfade sein, fehlende Elternordner werden beim Veröffentlichen angelegt und vorhandene Dateien werden nicht überschrieben. Die Seiten für `FileManager`, `AVPlayer` und `VideoPlayer` wurden für den früheren 0.3.0-Versuch gelesen. Das belegt weder Pro-Freiheit noch den API-Stand des installierten iPhones. Keine dieser APIs ist in der aktuellen Version 0.4.0 aufgerufen.
+In der offiziellen `DownloadManager`-Doku steht, dass diese globale API für Main-App-Scripts vorgesehen ist; explizite Ziele müssen lokale absolute Pfade sein, fehlende Elternordner werden beim Veröffentlichen angelegt und vorhandene Dateien werden nicht überschrieben. Die Seiten für `FileManager`, `AVPlayer` und `VideoPlayer` wurden für den früheren 0.3.0-Versuch gelesen. Das belegt weder Pro-Freiheit noch den API-Stand des installierten iPhones. Keine dieser APIs ist in der aktuellen Version 0.5.0 aufgerufen.
 
 Falls ein Manager später nach Abschluss der Foundation-Gates wieder gebaut wird, gelten weiterhin nur nutzerbereitgestellte direkte HTTP(S)-Dateilinks, Rechte-/Token-Hinweise und explizite Nutzeraktionen. Keine Webseiten-/Playlist-/Stream-Extraktion, kein DRM-/Login-/CAPTCHA-Bypass. Dateiendung beweist weder Videoinhalt noch Codec.
 
@@ -49,7 +50,7 @@ Falls ein Manager später nach Abschluss der Foundation-Gates wieder gebaut wird
 | Frage | Nachweis | Status |
 |---|---|---|
 | installierte Scripting- und iOS-Version / kostenloser UI-API-Zugriff | App-Version, Geräte-Einstellungen und Test auf Ziel-iPhone | Offen |
-| 0.4.0-Paket importierbar und startfähig | Import und Shell-/Navigationstest | Offen |
+| 0.5.0-Paket importierbar und startfähig | Import und Shell-/Navigationstest | Offen |
 | Merkliste-/Storage-Verhalten | Persistenz bleibt absichtlich nicht implementiert; Storage API vor Nutzung testen | Offen |
 | Suche, Typfilter, Demo-Feed und Detailnavigation | manuelle iPhone-Prüfung, Tastatur-/Lifecycle-Fälle | Offen |
 | Dark Mode, VoiceOver, Dynamic Type, Safe Areas | iPhone-Testprotokoll/Screenshots | Offen |

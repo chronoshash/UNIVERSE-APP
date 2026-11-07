@@ -1,7 +1,7 @@
 {
   "name": "UNIVERSE",
-  "description": "A local-first Scripting app shell for exploring, searching, and saving mixed content from static fixtures.",
-  "version": "0.4.0",
+  "description": "A cinematic local-first content discovery shell with capability-gated demo media, articles, and events.",
+  "version": "0.5.0",
   "icon": "globe",
   "color": "#7C5CFF",
   "entry": "index.tsx",

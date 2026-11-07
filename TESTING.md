@@ -2,16 +2,16 @@
 
 ## Grundsatz
 
-Statische Prüfungen ersetzen keinen Import- oder Laufzeittest in der installierten Scripting-App auf dem iPhone. API-/Pro-Verfügbarkeit wird nur nach Gerätetest bestätigt. Aktueller Scope: lokale Foundation 0.4.0; der DownloadManager ist zurückgestellt.
+Statische Prüfungen ersetzen keinen Import- oder Laufzeittest in der installierten Scripting-App auf dem iPhone. API-/Pro-Verfügbarkeit wird nur nach Gerätetest bestätigt. Aktueller Scope: lokale Foundation 0.5.0 mit gebündeltem Hero-Artwork; der DownloadManager ist zurückgestellt.
 
-## Lokale Checks — Foundation 0.4.0
+## Lokale Checks — Foundation 0.5.0
 
 - Paket nach Änderungen an Script oder Paket-README neu mit `python3 tools/build_scripting_package.py` gebaut.
-- ZIP-CRC, Root-Dateiliste (`script.json`, `index.tsx`, `README.md`), Manifest-Version, Byte-Parität und reproduzierbarer Doppelbuild geprüft.
+- ZIP-CRC, Dateiliste (`script.json`, `index.tsx`, `README.md`, `assets/hero.jpg`), Manifest-Version, Byte-Parität einschließlich Artwork und reproduzierbarer Doppelbuild geprüft.
 - `python3 tools/validate_scripting_foundation.py` bestanden: statische Manifest-/App-Versions-Parität, Capability-Union und Gates, Provider-Operationen, eindeutige IDs, Fixture-Provenienz/ISO-Daten sowie Paketparität. Das ist ein Quelltextvertragstest, kein App-Runtime-Test.
 - Statische Assertions: kein `DownloadManager`, kein `AVPlayer` und keine Netzwerkquelle.
 - TypeScript 5.8.3 `tsc --noEmit` mit temporären Scripting-Platzhalterdeklarationen bestanden. Das prüft Syntax/TSX, nicht die echten Scripting-API-Typen oder das App-Runtime.
-- Finales Paket 0.4.0: 5.298 Byte, SHA-256 `b7a3b23595918bccb97eb7109a419b226af5b820d745956e1b0e28abeae41d6f`.
+- Finales Paket 0.5.0: 155.503 Byte, SHA-256 `e2d27f9753290b725cbd207109fd4fdc17582766f376749e752c37933344d1c4`.
 - Keine Scripting-App-Import-, iPhone-, Bedienbarkeits- oder Laufzeittests ausgeführt.
 
 Diese Checks beweisen weder Scripting-Kompatibilität noch API-Freigabe im kostenlosen Build oder tatsächliche Gerätefunktion.
@@ -32,7 +32,7 @@ Vor Live-Provider oder persistenter Speicherung: statische Registry-/Manifestval
 
 ## Download-/Offline-Tests — erst nach Foundation-Gates
 
-Der Manager ist **nicht** Teil der aktuellen Version 0.4.0. Diese Tests sind nur für eine spätere, separat freigegebene Version vorgesehen: direkte erlaubte HTTPS-Testdatei, Eingabevalidierung, WLAN/Foreground-Lifecycle, Queue-Wiederaufnahme, Speicherfehler, Dateilöschung, Flugmodus-Playback und Codec-/Tonverhalten. Keine DRM-, Login-, CAPTCHA-, Playlist- oder Zugriffsbeschränkungen umgehen.
+Der Manager ist **nicht** Teil der aktuellen Version 0.5.0. Diese Tests sind nur für eine spätere, separat freigegebene Version vorgesehen: direkte erlaubte HTTPS-Testdatei, Eingabevalidierung, WLAN/Foreground-Lifecycle, Queue-Wiederaufnahme, Speicherfehler, Dateilöschung, Flugmodus-Playback und Codec-/Tonverhalten. Keine DRM-, Login-, CAPTCHA-, Playlist- oder Zugriffsbeschränkungen umgehen.
 
 ## Release-Blocker
 

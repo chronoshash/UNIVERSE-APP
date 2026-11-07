@@ -10,7 +10,7 @@ from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "scripting" / "UNIVERSE"
 OUTPUT = ROOT / "UNIVERSE.scripting"
-FILES = ("script.json", "index.tsx", "README.md")
+FILES = ("script.json", "index.tsx", "README.md", "assets/hero.jpg")
 
 
 def main() -> None:

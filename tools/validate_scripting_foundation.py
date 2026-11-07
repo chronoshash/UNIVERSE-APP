@@ -12,7 +12,7 @@ from zipfile import ZipFile
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "scripting" / "UNIVERSE"
 PACKAGE = ROOT / "UNIVERSE.scripting"
-PACKAGE_FILES = ("script.json", "index.tsx", "README.md")
+PACKAGE_FILES = ("script.json", "index.tsx", "README.md", "assets/hero.jpg")
 CAPABILITY_OPERATIONS = {
     "entity.list": "listEntities",
     "search.local": "search",
@@ -46,7 +46,10 @@ def validate_sources() -> tuple[dict, str, bytes]:
     code_bytes = (SOURCE / "index.tsx").read_bytes()
     code = code_bytes.decode("utf-8")
     readme_bytes = (SOURCE / "README.md").read_bytes()
+    hero_art = SOURCE / "assets" / "hero.jpg"
 
+    require(hero_art.is_file(), "local hero artwork is required")
+    require('Path.join(Script.directory, "assets/hero.jpg")' in code, "hero artwork must be loaded from the packaged local asset")
     require(manifest.get("name") == "UNIVERSE", "manifest name must be UNIVERSE")
     require(manifest.get("entry") == "index.tsx", "manifest entry must be index.tsx")
     require(manifest.get("runInApp") is True, "manifest runInApp must be true")
@@ -118,6 +121,7 @@ def validate_package(manifest: dict, code: str, readme_bytes: bytes) -> None:
         "script.json": (SOURCE / "script.json").read_bytes(),
         "index.tsx": code.encode("utf-8"),
         "README.md": readme_bytes,
+        "assets/hero.jpg": (SOURCE / "assets" / "hero.jpg").read_bytes(),
     }
     with ZipFile(PACKAGE) as archive:
         require(archive.testzip() is None, "package ZIP CRC check failed")
