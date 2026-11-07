@@ -1,10 +1,12 @@
-# UNIVERSE Scripting foundation · 0.5.12
+# UNIVERSE Scripting foundation · 0.5.13
 
-Version 0.5.12 continues the Foundation work from 0.5.11. It keeps the native five-tab navigation, literal `Tab` destinations, and a `RootScreen` union derived from one constant tuple. The `asRootScreen` helper supplies the full union to `useObservable`, avoiding a narrowed selection type. The documented `toolbarBackgroundVisibility` modifier still hides the native `tabBar` background. These source-level choices address the reported selection type mismatch; it has not been independently reproduced against the installed Scripting app declarations. The actual transparent appearance also remains unverified on an iPhone.
+Version 0.5.13 continues the Foundation work from 0.5.12. It retains the native five-tab navigation, literal `Tab` destinations, and a `RootScreen` union derived from one constant tuple. The `asRootScreen` helper supplies the full union to `useObservable`, avoiding a narrowed selection type. The documented `toolbarBackgroundVisibility` modifier still hides the native `tabBar` background. These source-level choices address the reported selection type mismatch; it has not been independently reproduced against the installed Scripting app declarations. The actual transparent appearance remains unverified on an iPhone.
 
-The Library now uses the documented private `Storage` key-value domain for a small ordered list of entity IDs, under `universe.library.entity-ids.v1`. It does not save full entities, personal notes, media, or shared-domain values. Stored input is bounded to 500 IDs (256 characters each), validated and de-duplicated before use. If private storage is unavailable or the saved value is invalid, the app falls back to session-only state and shows a warning; failed writes leave the prior list visible. The Scripting documentation says writes are persisted asynchronously. Import, storage persistence, and recovery behavior still need testing in the installed app.
+The Library uses the documented private `Storage` key-value domain for a small ordered list of entity IDs, under `universe.library.entity-ids.v1`. It does not save full entities, personal notes, media, or shared-domain values. Stored input is bounded to 500 IDs (256 characters each), validated, and de-duplicated before use. If private storage is unavailable or the saved value is invalid, the app falls back to session-only state and shows a warning; failed writes leave the prior list visible. The Scripting documentation says writes are persisted asynchronously. Import, storage persistence, and recovery behavior still need testing in the installed app.
 
-Saved items render in the order they were added, and the Library shows its count and current storage scope. The 0.5.6 viewport/content-width layout (which the user reports now works), cross-type foundation, 0.5.7 feed filters, local detail suggestions, direct Library removal, five native tabs, and transparent-background request are retained.
+The Library now has separate content-type filters for all items, media, articles, and events. Each filter displays its matching saved-item count; filtering preserves save order. If a non-empty Library has no items for the selected type, a clear empty state offers a one-tap return to all items. The genuinely empty Library continues to guide users toward Explore. Direct removal remains available beside each saved item. These are presentation changes only: the private storage key, bounded ordered-ID value, and entity schema are unchanged.
+
+The 0.5.6 viewport/content-width layout (which the user reports now works), cross-type foundation, 0.5.7 feed filters, local detail suggestions, direct Library removal, five native tabs, and transparent-background request are retained.
 
 All content remains bundled demo fixtures. There are no live providers, network requests, dynamic plugins, downloads, or video playback. AniWorld remains a disabled scaffold.
 
@@ -14,6 +16,7 @@ All content remains bundled demo fixtures. There are no live providers, network 
 - A shared literal screen tuple and corresponding `RootScreen` union with a type-inferred observable selection.
 - Transparent native tab-bar background using the documented `toolbarBackgroundVisibility` modifier.
 - An explicitly private, persistent Scripting Storage value containing ordered Library entity IDs only, with bounded/validated loading, session fallback, visible scope/count, and direct removal.
+- Separate Library content-type filters with per-filter counts, order-preserving results, and an empty-filter recovery action.
 - Info/settings reachable from a top-level button.
 - Local demo media, articles, and events with visible source attribution.
 - Capability-gated entity listing, cross-type search, feed listing, and detail lookup.

@@ -122,13 +122,17 @@ def validate_sources() -> tuple[dict, str, bytes]:
             and 'shared: true' not in code,
             "Library persistence must validate bounded IDs and remain in the script-private storage domain")
     require('const savedEntities = libraryState.entityIds\n    .map(id => listedEntities.find(entity => entity.id === id))' in code
-            and 'Reihenfolge nach dem Merken' in code
+            and 'const visibleSavedEntities = savedEntities.filter(entity => matchesFilter(entity, libraryFilter))' in code
             and 'privater Scripting-Speicher' in code
             and 'Button title="Aus Merkliste entfernen"' in code
             and 'action={() => toggleSaved(entity.id)}' in code,
             "Library must retain save order, disclose storage scope, and support direct removal")
-    require(code.count('CONTENT_FILTERS.map((filter, index) => <Button') == 3,
-            "Explore, Search, and Feeds must each expose the shared content-type filters")
+    require(code.count('CONTENT_FILTERS.map((filter, index) => <Button') == 4
+            and 'const visibleSavedEntities = savedEntities.filter(entity => matchesFilter(entity, libraryFilter))' in code
+            and 'const libraryFilterCounts = CONTENT_FILTERS.map(filter => savedEntities.filter(entity => matchesFilter(entity, filter)).length)' in code
+            and 'action={() => setLibraryFilterIndex(index)}' in code
+            and 'Alle Inhalte anzeigen' in code,
+            "Explore, Search, Feeds, and Library must expose the shared type filters and a recoverable empty state")
     require('entity.id !== selectedEntity.id && (entity.category === selectedEntity.category || entity.typeId === selectedEntity.typeId)' in code
             and 'contentRail("Ähnliche Demo-Inhalte", relatedItems, contentWidth' in code,
             "detail recommendations must be local, related by category/type, and labeled as demo content")

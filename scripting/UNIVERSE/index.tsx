@@ -62,7 +62,7 @@ type StaticProvider = {
   getEntity: (id: string) => UniverseEntity | undefined
 }
 
-const APP_VERSION = "0.5.12"
+const APP_VERSION = "0.5.13"
 const LIBRARY_STORAGE_KEY = "universe.library.entity-ids.v1"
 const MAX_STORED_LIBRARY_ITEMS = 500
 const MAX_STORED_LIBRARY_ID_LENGTH = 256
@@ -282,6 +282,7 @@ function UniverseApp() {
   const [searchText, setSearchText] = useState("")
   const [searchFilterIndex, setSearchFilterIndex] = useState(0)
   const [feedFilterIndex, setFeedFilterIndex] = useState(0)
+  const [libraryFilterIndex, setLibraryFilterIndex] = useState(0)
   const [libraryState, setLibraryState] = useState<LibraryState>(initialLibraryState)
   const [selectedEntityId, setSelectedEntityId] = useState("")
 
@@ -302,6 +303,9 @@ function UniverseApp() {
   const savedEntities = libraryState.entityIds
     .map(id => listedEntities.find(entity => entity.id === id))
     .filter((entity): entity is UniverseEntity => entity !== undefined)
+  const libraryFilter = CONTENT_FILTERS[libraryFilterIndex]
+  const visibleSavedEntities = savedEntities.filter(entity => matchesFilter(entity, libraryFilter))
+  const libraryFilterCounts = CONTENT_FILTERS.map(filter => savedEntities.filter(entity => matchesFilter(entity, filter)).length)
   const selectedEntity = PROVIDERS
     .filter(provider => provider.capabilities.includes("entity.details"))
     .map(provider => provider.getEntity(selectedEntityId))
@@ -621,8 +625,18 @@ function UniverseApp() {
 
                 {pageScreen === "library" && <>
                   {sectionHeading("Deine Merkliste", "Für später")}
-                  <Text font="subheadline" foregroundStyle="#B7B8C5">{savedEntities.length} Einträge · Reihenfolge nach dem Merken · {libraryState.scope === "private" ? "privater Scripting-Speicher" : "nur für diese Script-Sitzung"}.</Text>
+                  <Text font="subheadline" foregroundStyle="#B7B8C5">{visibleSavedEntities.length} angezeigt · {savedEntities.length} gespeichert · {libraryState.scope === "private" ? "privater Scripting-Speicher" : "nur für diese Script-Sitzung"}.</Text>
                   {libraryState.storageError && <Text font="caption" foregroundStyle="#FDBA74">{libraryState.storageError}</Text>}
+                  {savedEntities.length > 0 && <ScrollView axes="horizontal" scrollIndicator="never" frame={{ width: contentWidth }} clipped scrollClipDisabled={false}>
+                    <LazyHStack spacing={8}>
+                      {CONTENT_FILTERS.map((filter, index) => <Button
+                        key={filter}
+                        title={`${filter} · ${libraryFilterCounts[index]}`}
+                        buttonStyle={libraryFilterIndex === index ? "borderedProminent" : "bordered"}
+                        action={() => setLibraryFilterIndex(index)}
+                      />)}
+                    </LazyHStack>
+                  </ScrollView>}
                   {savedEntities.length === 0
                     ? <VStack alignment="leading" spacing={10} padding={20} frame={{ width: contentWidth }} background={
                         <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
@@ -632,10 +646,19 @@ function UniverseApp() {
                         <Text font="subheadline" foregroundStyle="#B7B8C5">Entdecke einen Titel und tippe auf das Merken-Symbol.</Text>
                         <Button title="Inhalte entdecken" systemImage="sparkles" buttonStyle="borderedProminent" action={() => navigateTo("explore")} />
                       </VStack>
-                    : <VStack alignment="leading" spacing={12}>{savedEntities.map((entity, index) => <VStack key={entity.id} alignment="leading" spacing={6}>
-                        {compactCard(entity, index, contentWidth)}
-                        <Button title="Aus Merkliste entfernen" systemImage="bookmark.slash" buttonStyle="plain" action={() => toggleSaved(entity.id)} />
-                      </VStack>)}</VStack>}
+                    : visibleSavedEntities.length === 0
+                      ? <VStack alignment="leading" spacing={10} padding={20} frame={{ width: contentWidth }} background={
+                          <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
+                        }>
+                          <Image systemName="line.3.horizontal.decrease.circle" frame={{ width: 34, height: 34 }} foregroundStyle="#9C8BFF" />
+                          <Text font="headline" fontWeight="bold" foregroundStyle="white">Keine Einträge in „{libraryFilter}“</Text>
+                          <Text font="subheadline" foregroundStyle="#B7B8C5">Deine gespeicherten Inhalte sind in einem anderen Bereich.</Text>
+                          <Button title="Alle Inhalte anzeigen" systemImage="line.3.horizontal.decrease.circle" buttonStyle="borderedProminent" action={() => setLibraryFilterIndex(0)} />
+                        </VStack>
+                      : <VStack alignment="leading" spacing={12}>{visibleSavedEntities.map((entity, index) => <VStack key={entity.id} alignment="leading" spacing={6}>
+                          {compactCard(entity, index, contentWidth)}
+                          <Button title="Aus Merkliste entfernen" systemImage="bookmark.slash" buttonStyle="plain" action={() => toggleSaved(entity.id)} />
+                        </VStack>)}</VStack>}
                 </>}
 
                 {pageScreen === "settings" && <>
