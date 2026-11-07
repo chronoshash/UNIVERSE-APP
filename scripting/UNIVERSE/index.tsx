@@ -1,5 +1,6 @@
 import {
   Button,
+  GeometryReader,
   HStack,
   Image,
   LazyHStack,
@@ -51,7 +52,7 @@ type StaticProvider = {
   getEntity: (id: string) => UniverseEntity | undefined
 }
 
-const APP_VERSION = "0.5.3"
+const APP_VERSION = "0.5.4"
 const CONTENT_FILTERS: ContentFilter[] = ["Alle", "Medien", "Artikel", "Termine"]
 const NAV_ITEMS: { id: RootScreen; label: string; symbol: string }[] = [
   { id: "home", label: "Start", symbol: "house.fill" },
@@ -423,184 +424,191 @@ function UniverseApp() {
 
   return (
     <NavigationStack>
-      <ScrollView navigationTitle={pageTitle} navigationBarTitleDisplayMode="inline" background="#080A12" frame={{ maxWidth: "infinity" }}>
-        <VStack alignment="leading" spacing={22} padding={{ horizontal: 18, top: 14, bottom: 34 }} frame={{ maxWidth: "infinity" }} background="#080A12">
-          <HStack alignment="center" spacing={10} frame={{ maxWidth: "infinity" }}>
-            <ZStack frame={{ width: 42, height: 42 }}>
-              <RoundedRectangle cornerRadius={14} frame={{ width: 42, height: 42 }} fill={{
-                gradient: [
-                  { color: "#8B5CF6", location: 0 },
-                  { color: "#4F46E5", location: 1 },
-                ],
-                startPoint: { x: 0, y: 0 },
-                endPoint: { x: 1, y: 1 },
-              }} />
-              <Image systemName="circle.hexagongrid.fill" frame={{ width: 22, height: 22 }} foregroundStyle="white" />
-            </ZStack>
-            <VStack alignment="leading" spacing={1}>
-              <Text font="title" fontWeight="black" foregroundStyle="white" kerning={1.2}>UNIVERSE</Text>
-              <Text font="caption2" fontWeight="medium" foregroundStyle="#999BAD" kerning={1.1}>DEIN CONTENT-HUB</Text>
-            </VStack>
-            <Spacer />
-            <Button title="Suchen" systemImage="magnifyingglass" buttonStyle="bordered" buttonBorderShape="circle" action={() => navigateTo("search")} />
-          </HStack>
+      <GeometryReader>
+        {(proxy) => {
+          const viewportWidth = Math.max(1, proxy.size.width)
+          return (
+            <ScrollView navigationTitle={pageTitle} navigationBarTitleDisplayMode="inline" background="#080A12" frame={{ width: viewportWidth }} clipped>
+              <VStack alignment="leading" spacing={22} padding={{ horizontal: 18, top: 14, bottom: 34 }} frame={{ width: viewportWidth }} background="#080A12">
+                <HStack alignment="center" spacing={10} frame={{ maxWidth: "infinity" }}>
+                  <ZStack frame={{ width: 42, height: 42 }}>
+                    <RoundedRectangle cornerRadius={14} frame={{ width: 42, height: 42 }} fill={{
+                      gradient: [
+                        { color: "#8B5CF6", location: 0 },
+                        { color: "#4F46E5", location: 1 },
+                      ],
+                      startPoint: { x: 0, y: 0 },
+                      endPoint: { x: 1, y: 1 },
+                    }} />
+                    <Image systemName="circle.hexagongrid.fill" frame={{ width: 22, height: 22 }} foregroundStyle="white" />
+                  </ZStack>
+                  <VStack alignment="leading" spacing={1}>
+                    <Text font="title" fontWeight="black" foregroundStyle="white" kerning={1.2}>UNIVERSE</Text>
+                    <Text font="caption2" fontWeight="medium" foregroundStyle="#999BAD" kerning={1.1}>DEIN CONTENT-HUB</Text>
+                  </VStack>
+                  <Spacer />
+                  <Button title="Suchen" systemImage="magnifyingglass" buttonStyle="bordered" buttonBorderShape="circle" action={() => navigateTo("search")} />
+                </HStack>
 
-          <VStack spacing={8} frame={{ maxWidth: "infinity" }}>
-            {[0, 2, 4].map(start => <HStack key={`navigation-row-${start}`} spacing={8} frame={{ maxWidth: "infinity" }}>
-              {NAV_ITEMS.slice(start, start + 2).map(navigationChip)}
-            </HStack>)}
-          </VStack>
-
-          {screen === "home" && <>
-            {heroEntity && featuredCard(heroEntity)}
-            {contentRail("Weiter entdecken", mediaItems, "Dein nächstes Kapitel")}
-            {contentRail("Lesestoff & Perspektiven", articleItems, "Aus dem Wissensstrom")}
-            {contentRail("Themen & Termine", eventItems, "Im Blick behalten")}
-            <VStack alignment="leading" spacing={9} padding={16} frame={{ maxWidth: "infinity" }} background={
-              <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
-            }>
-              <Text font="headline" fontWeight="bold" foregroundStyle="white">Alles an einem Ort.</Text>
-              <Text font="subheadline" foregroundStyle="#B7B8C5">UNIVERSE verbindet Medien, Artikel und Termine. Diese Vorschau verwendet ausschließlich lokale Demo-Inhalte.</Text>
-              <Button title="Katalog öffnen" systemImage="square.grid.2x2.fill" buttonStyle="borderedProminent" action={() => navigateTo("explore")} />
-            </VStack>
-          </>}
-
-          {screen === "explore" && <>
-            {sectionHeading("Finde deine nächste Welt", "Der Katalog")}
-            <Text font="subheadline" foregroundStyle="#B7B8C5">Stöbere durch gemischte Inhalte. Alle Einträge sind Beispiele, keine Live-Empfehlungen.</Text>
-            <ScrollView axes="horizontal" scrollIndicator="never" frame={{ maxWidth: "infinity" }}>
-              <LazyHStack spacing={8}>
-                {CONTENT_FILTERS.map((filter, index) => <Button
-                  key={filter}
-                  title={filter}
-                  buttonStyle={searchFilterIndex === index ? "borderedProminent" : "bordered"}
-                  action={() => setSearchFilterIndex(index)}
-                />)}
-              </LazyHStack>
-            </ScrollView>
-            {contentRail("Beliebt im Demo-Katalog", listedEntities.filter(entity => matchesFilter(entity, currentFilter)), "Ausgewählt")}
-            {contentRail("Alle Inhalte", listedEntities, "Die ganze Sammlung")}
-          </>}
-
-          {screen === "search" && <>
-            {sectionHeading("Wonach suchst du?", "Die Suche")}
-            <TextField
-              title="Inhalte suchen"
-              value={searchText}
-              onChanged={setSearchText}
-              prompt="Titel, Thema oder Quelle"
-            />
-            <ScrollView axes="horizontal" scrollIndicator="never" frame={{ maxWidth: "infinity" }}>
-              <LazyHStack spacing={8}>
-                {CONTENT_FILTERS.map((filter, index) => <Button
-                  key={filter}
-                  title={filter}
-                  buttonStyle={searchFilterIndex === index ? "borderedProminent" : "bordered"}
-                  action={() => setSearchFilterIndex(index)}
-                />)}
-              </LazyHStack>
-            </ScrollView>
-            {searchText.length > 0 && <Button title="Suche leeren" systemImage="xmark.circle" buttonStyle="plain" action={() => setSearchText("")} />}
-            <Text font="caption" foregroundStyle="#999BAD">{searchResults.length} Treffer im lokalen Demo-Katalog</Text>
-            {searchResults.length === 0
-              ? <VStack alignment="leading" spacing={10} padding={20} frame={{ maxWidth: "infinity" }} background={
-                  <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
-                }>
-                  <Image systemName="sparkle.magnifyingglass" frame={{ width: 34, height: 34 }} foregroundStyle="#9C8BFF" />
-                  <Text font="headline" fontWeight="bold" foregroundStyle="white">Nichts gefunden</Text>
-                  <Text font="subheadline" foregroundStyle="#B7B8C5">Ändere den Suchbegriff oder wähle einen anderen Inhaltstyp.</Text>
+                <VStack spacing={8} frame={{ maxWidth: "infinity" }}>
+                  {[0, 2, 4].map(start => <HStack key={`navigation-row-${start}`} spacing={8} frame={{ maxWidth: "infinity" }}>
+                    {NAV_ITEMS.slice(start, start + 2).map(navigationChip)}
+                  </HStack>)}
                 </VStack>
-              : <VStack alignment="leading" spacing={10}>
-                  {searchResults.map(compactCard)}
-                </VStack>}
-          </>}
 
-          {screen === "feeds" && <>
-            {sectionHeading("Neu im Hub", "Chronologischer Überblick")}
-            <Text font="subheadline" foregroundStyle="#B7B8C5">Ein gemeinsamer Zeitstrahl für unterschiedliche Inhaltstypen.</Text>
-            {feedItems.map(compactCard)}
-          </>}
+                {screen === "home" && <>
+                  {heroEntity && featuredCard(heroEntity)}
+                  {contentRail("Weiter entdecken", mediaItems, "Dein nächstes Kapitel")}
+                  {contentRail("Lesestoff & Perspektiven", articleItems, "Aus dem Wissensstrom")}
+                  {contentRail("Themen & Termine", eventItems, "Im Blick behalten")}
+                  <VStack alignment="leading" spacing={9} padding={16} frame={{ maxWidth: "infinity" }} background={
+                    <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
+                  }>
+                    <Text font="headline" fontWeight="bold" foregroundStyle="white">Alles an einem Ort.</Text>
+                    <Text font="subheadline" foregroundStyle="#B7B8C5">UNIVERSE verbindet Medien, Artikel und Termine. Diese Vorschau verwendet ausschließlich lokale Demo-Inhalte.</Text>
+                    <Button title="Katalog öffnen" systemImage="square.grid.2x2.fill" buttonStyle="borderedProminent" action={() => navigateTo("explore")} />
+                  </VStack>
+                </>}
 
-          {screen === "library" && <>
-            {sectionHeading("Deine Merkliste", "Für später")}
-            <Text font="subheadline" foregroundStyle="#B7B8C5">Gespeichert wird nur für die aktuelle Script-Sitzung.</Text>
-            {savedEntities.length === 0
-              ? <VStack alignment="leading" spacing={10} padding={20} frame={{ maxWidth: "infinity" }} background={
-                  <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
-                }>
-                  <Image systemName="bookmark" frame={{ width: 34, height: 34 }} foregroundStyle="#9C8BFF" />
-                  <Text font="headline" fontWeight="bold" foregroundStyle="white">Deine Sammlung beginnt hier</Text>
-                  <Text font="subheadline" foregroundStyle="#B7B8C5">Entdecke einen Titel und tippe auf das Merken-Symbol.</Text>
-                  <Button title="Inhalte entdecken" systemImage="sparkles" buttonStyle="borderedProminent" action={() => navigateTo("explore")} />
-                </VStack>
-              : <VStack alignment="leading" spacing={10}>{savedEntities.map(compactCard)}</VStack>}
-          </>}
+                {screen === "explore" && <>
+                  {sectionHeading("Finde deine nächste Welt", "Der Katalog")}
+                  <Text font="subheadline" foregroundStyle="#B7B8C5">Stöbere durch gemischte Inhalte. Alle Einträge sind Beispiele, keine Live-Empfehlungen.</Text>
+                  <ScrollView axes="horizontal" scrollIndicator="never" frame={{ maxWidth: "infinity" }}>
+                    <LazyHStack spacing={8}>
+                      {CONTENT_FILTERS.map((filter, index) => <Button
+                        key={filter}
+                        title={filter}
+                        buttonStyle={searchFilterIndex === index ? "borderedProminent" : "bordered"}
+                        action={() => setSearchFilterIndex(index)}
+                      />)}
+                    </LazyHStack>
+                  </ScrollView>
+                  {contentRail("Beliebt im Demo-Katalog", listedEntities.filter(entity => matchesFilter(entity, currentFilter)), "Ausgewählt")}
+                  {contentRail("Alle Inhalte", listedEntities, "Die ganze Sammlung")}
+                </>}
 
-          {screen === "settings" && <>
-            {sectionHeading("Ein Hub. Viele Quellen.", "Über das Projekt")}
-            <Text font="subheadline" foregroundStyle="#B7B8C5">UNIVERSE sortiert unterschiedliche Inhaltstypen in einer gemeinsamen, nachvollziehbaren Oberfläche.</Text>
-            <VStack alignment="leading" spacing={12} padding={16} frame={{ maxWidth: "infinity" }} background={
-              <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
-            }>
-              <Text font="headline" fontWeight="bold" foregroundStyle="white">Aktive Basis · {APP_VERSION}</Text>
-              <Text font="caption" foregroundStyle="#A6A7B6">Nur statische Registry und lokale Fixtures. Keine Netzwerkabfragen und keine dauerhafte Speicherung.</Text>
-              {PROVIDERS.map(provider => <VStack key={provider.id} alignment="leading" spacing={4} padding={{ top: 8 }} frame={{ maxWidth: "infinity" }}>
-                <Text font="subheadline" fontWeight="semibold" foregroundStyle="white">{provider.name}</Text>
-                <Text font="caption" foregroundStyle="#A6A7B6">ID: {provider.id} · Typ: {provider.kind}</Text>
-                <Text font="caption" foregroundStyle="#A6A7B6">Capabilities: {provider.capabilities.join(" · ")}</Text>
-              </VStack>)}
-            </VStack>
-            <VStack alignment="leading" spacing={8} padding={16} frame={{ maxWidth: "infinity" }} background={
-              <RoundedRectangle cornerRadius={20} fill="rgba(112,71,235,0.14)" />
-            }>
-              <Text font="headline" fontWeight="bold" foregroundStyle="white">Foundation vor Features</Text>
-              <Text font="subheadline" foregroundStyle="#C6C2D8">Echte Provider, Konten, dauerhafte Bibliothek und Wiedergabe werden erst nach den Daten-, Storage- und Geräteprüfungen ergänzt.</Text>
-            </VStack>
-            <VStack alignment="leading" spacing={8} padding={16} frame={{ maxWidth: "infinity" }} background={
-              <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
-            }>
-              <Text font="headline" fontWeight="bold" foregroundStyle="white">Plugin-Verbindungen</Text>
-              <Text font="subheadline" fontWeight="semibold" foregroundStyle="white">{ANIWORLD_PLUGIN.name} · {ANIWORLD_PLUGIN.status}</Text>
-              <Text font="caption" foregroundStyle="#A6A7B6">{ANIWORLD_PLUGIN.host} · keine aktiven Capabilities</Text>
-              <Text font="caption" foregroundStyle="#A6A7B6">{ANIWORLD_PLUGIN.description}</Text>
-            </VStack>
-          </>}
+                {screen === "search" && <>
+                  {sectionHeading("Wonach suchst du?", "Die Suche")}
+                  <TextField
+                    title="Inhalte suchen"
+                    value={searchText}
+                    onChanged={setSearchText}
+                    prompt="Titel, Thema oder Quelle"
+                  />
+                  <ScrollView axes="horizontal" scrollIndicator="never" frame={{ maxWidth: "infinity" }}>
+                    <LazyHStack spacing={8}>
+                      {CONTENT_FILTERS.map((filter, index) => <Button
+                        key={filter}
+                        title={filter}
+                        buttonStyle={searchFilterIndex === index ? "borderedProminent" : "bordered"}
+                        action={() => setSearchFilterIndex(index)}
+                      />)}
+                    </LazyHStack>
+                  </ScrollView>
+                  {searchText.length > 0 && <Button title="Suche leeren" systemImage="xmark.circle" buttonStyle="plain" action={() => setSearchText("")} />}
+                  <Text font="caption" foregroundStyle="#999BAD">{searchResults.length} Treffer im lokalen Demo-Katalog</Text>
+                  {searchResults.length === 0
+                    ? <VStack alignment="leading" spacing={10} padding={20} frame={{ maxWidth: "infinity" }} background={
+                        <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
+                      }>
+                        <Image systemName="sparkle.magnifyingglass" frame={{ width: 34, height: 34 }} foregroundStyle="#9C8BFF" />
+                        <Text font="headline" fontWeight="bold" foregroundStyle="white">Nichts gefunden</Text>
+                        <Text font="subheadline" foregroundStyle="#B7B8C5">Ändere den Suchbegriff oder wähle einen anderen Inhaltstyp.</Text>
+                      </VStack>
+                    : <VStack alignment="leading" spacing={10}>
+                        {searchResults.map(compactCard)}
+                      </VStack>}
+                </>}
 
-          {screen === "detail" && selectedEntity && <>
-            <ZStack alignment="bottomLeading" frame={{ maxWidth: "infinity", height: 260 }}>
-              <RoundedRectangle cornerRadius={22} frame={{ maxWidth: "infinity", height: 260 }} fill={{
-                gradient: [
-                  { color: POSTER_THEMES[0].top, location: 0 },
-                  { color: POSTER_THEMES[0].bottom, location: 1 },
-                ],
-                startPoint: { x: 0, y: 0 },
-                endPoint: { x: 1, y: 1 },
-              }} />
-              <Image systemName={contentSymbol(selectedEntity)} frame={{ maxWidth: "infinity", height: 260 }} foregroundStyle="rgba(255,255,255,0.22)" />
-              <VStack alignment="leading" spacing={8} padding={18} frame={{ maxWidth: "infinity", alignment: "leading" }}>
-                <Text font="caption" fontWeight="bold" foregroundStyle="#D3C8FF">{typeLabel(selectedEntity.typeId).toUpperCase()} · {selectedEntity.category.toUpperCase()}</Text>
-                <Text font="largeTitle" fontWeight="black" foregroundStyle="white" lineLimit={3}>{selectedEntity.title}</Text>
-                <Text font="caption" foregroundStyle="#C1C2D0">DEMO-INHALT · KEINE LIVE-QUELLE</Text>
+                {screen === "feeds" && <>
+                  {sectionHeading("Neu im Hub", "Chronologischer Überblick")}
+                  <Text font="subheadline" foregroundStyle="#B7B8C5">Ein gemeinsamer Zeitstrahl für unterschiedliche Inhaltstypen.</Text>
+                  {feedItems.map(compactCard)}
+                </>}
+
+                {screen === "library" && <>
+                  {sectionHeading("Deine Merkliste", "Für später")}
+                  <Text font="subheadline" foregroundStyle="#B7B8C5">Gespeichert wird nur für die aktuelle Script-Sitzung.</Text>
+                  {savedEntities.length === 0
+                    ? <VStack alignment="leading" spacing={10} padding={20} frame={{ maxWidth: "infinity" }} background={
+                        <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
+                      }>
+                        <Image systemName="bookmark" frame={{ width: 34, height: 34 }} foregroundStyle="#9C8BFF" />
+                        <Text font="headline" fontWeight="bold" foregroundStyle="white">Deine Sammlung beginnt hier</Text>
+                        <Text font="subheadline" foregroundStyle="#B7B8C5">Entdecke einen Titel und tippe auf das Merken-Symbol.</Text>
+                        <Button title="Inhalte entdecken" systemImage="sparkles" buttonStyle="borderedProminent" action={() => navigateTo("explore")} />
+                      </VStack>
+                    : <VStack alignment="leading" spacing={10}>{savedEntities.map(compactCard)}</VStack>}
+                </>}
+
+                {screen === "settings" && <>
+                  {sectionHeading("Ein Hub. Viele Quellen.", "Über das Projekt")}
+                  <Text font="subheadline" foregroundStyle="#B7B8C5">UNIVERSE sortiert unterschiedliche Inhaltstypen in einer gemeinsamen, nachvollziehbaren Oberfläche.</Text>
+                  <VStack alignment="leading" spacing={12} padding={16} frame={{ maxWidth: "infinity" }} background={
+                    <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
+                  }>
+                    <Text font="headline" fontWeight="bold" foregroundStyle="white">Aktive Basis · {APP_VERSION}</Text>
+                    <Text font="caption" foregroundStyle="#A6A7B6">Nur statische Registry und lokale Fixtures. Keine Netzwerkabfragen und keine dauerhafte Speicherung.</Text>
+                    {PROVIDERS.map(provider => <VStack key={provider.id} alignment="leading" spacing={4} padding={{ top: 8 }} frame={{ maxWidth: "infinity" }}>
+                      <Text font="subheadline" fontWeight="semibold" foregroundStyle="white">{provider.name}</Text>
+                      <Text font="caption" foregroundStyle="#A6A7B6">ID: {provider.id} · Typ: {provider.kind}</Text>
+                      <Text font="caption" foregroundStyle="#A6A7B6">Capabilities: {provider.capabilities.join(" · ")}</Text>
+                    </VStack>)}
+                  </VStack>
+                  <VStack alignment="leading" spacing={8} padding={16} frame={{ maxWidth: "infinity" }} background={
+                    <RoundedRectangle cornerRadius={20} fill="rgba(112,71,235,0.14)" />
+                  }>
+                    <Text font="headline" fontWeight="bold" foregroundStyle="white">Foundation vor Features</Text>
+                    <Text font="subheadline" foregroundStyle="#C6C2D8">Echte Provider, Konten, dauerhafte Bibliothek und Wiedergabe werden erst nach den Daten-, Storage- und Geräteprüfungen ergänzt.</Text>
+                  </VStack>
+                  <VStack alignment="leading" spacing={8} padding={16} frame={{ maxWidth: "infinity" }} background={
+                    <RoundedRectangle cornerRadius={20} fill="rgba(255,255,255,0.055)" />
+                  }>
+                    <Text font="headline" fontWeight="bold" foregroundStyle="white">Plugin-Verbindungen</Text>
+                    <Text font="subheadline" fontWeight="semibold" foregroundStyle="white">{ANIWORLD_PLUGIN.name} · {ANIWORLD_PLUGIN.status}</Text>
+                    <Text font="caption" foregroundStyle="#A6A7B6">{ANIWORLD_PLUGIN.host} · keine aktiven Capabilities</Text>
+                    <Text font="caption" foregroundStyle="#A6A7B6">{ANIWORLD_PLUGIN.description}</Text>
+                  </VStack>
+                </>}
+
+                {screen === "detail" && selectedEntity && <>
+                  <ZStack alignment="bottomLeading" frame={{ maxWidth: "infinity", height: 260 }}>
+                    <RoundedRectangle cornerRadius={22} frame={{ maxWidth: "infinity", height: 260 }} fill={{
+                      gradient: [
+                        { color: POSTER_THEMES[0].top, location: 0 },
+                        { color: POSTER_THEMES[0].bottom, location: 1 },
+                      ],
+                      startPoint: { x: 0, y: 0 },
+                      endPoint: { x: 1, y: 1 },
+                    }} />
+                    <Image systemName={contentSymbol(selectedEntity)} frame={{ maxWidth: "infinity", height: 260 }} foregroundStyle="rgba(255,255,255,0.22)" />
+                    <VStack alignment="leading" spacing={8} padding={18} frame={{ maxWidth: "infinity", alignment: "leading" }}>
+                      <Text font="caption" fontWeight="bold" foregroundStyle="#D3C8FF">{typeLabel(selectedEntity.typeId).toUpperCase()} · {selectedEntity.category.toUpperCase()}</Text>
+                      <Text font="largeTitle" fontWeight="black" foregroundStyle="white" lineLimit={3}>{selectedEntity.title}</Text>
+                      <Text font="caption" foregroundStyle="#C1C2D0">DEMO-INHALT · KEINE LIVE-QUELLE</Text>
+                    </VStack>
+                  </ZStack>
+                  <Text font="subheadline" foregroundStyle="#E0E0E8">{selectedEntity.summary}</Text>
+                  <VStack alignment="leading" spacing={8} padding={16} frame={{ maxWidth: "infinity" }} background={
+                    <RoundedRectangle cornerRadius={18} fill="rgba(255,255,255,0.055)" />
+                  }>
+                    <Text font="headline" fontWeight="bold" foregroundStyle="white">Herkunft</Text>
+                    <Text font="subheadline" foregroundStyle="#C1C2D0">{selectedEntity.source.providerName} · {selectedEntity.source.providerId}</Text>
+                    <Text font="caption" foregroundStyle="#999BAD">Veröffentlicht: {formatDate(selectedEntity.publishedAt)} · Abgerufen: {formatDate(selectedEntity.source.retrievedAt)}</Text>
+                  </VStack>
+                  <Button
+                    title={savedIds.includes(selectedEntity.id) ? "Aus Merkliste entfernen" : "Für später merken"}
+                    systemImage={savedIds.includes(selectedEntity.id) ? "bookmark.fill" : "bookmark"}
+                    buttonStyle="borderedProminent"
+                    action={() => toggleSaved(selectedEntity.id)}
+                  />
+                  <Button title="Zur vorherigen Ansicht" systemImage="arrow.left" buttonStyle="plain" action={() => setScreen(returnScreen)} />
+                </>}
               </VStack>
-            </ZStack>
-            <Text font="subheadline" foregroundStyle="#E0E0E8">{selectedEntity.summary}</Text>
-            <VStack alignment="leading" spacing={8} padding={16} frame={{ maxWidth: "infinity" }} background={
-              <RoundedRectangle cornerRadius={18} fill="rgba(255,255,255,0.055)" />
-            }>
-              <Text font="headline" fontWeight="bold" foregroundStyle="white">Herkunft</Text>
-              <Text font="subheadline" foregroundStyle="#C1C2D0">{selectedEntity.source.providerName} · {selectedEntity.source.providerId}</Text>
-              <Text font="caption" foregroundStyle="#999BAD">Veröffentlicht: {formatDate(selectedEntity.publishedAt)} · Abgerufen: {formatDate(selectedEntity.source.retrievedAt)}</Text>
-            </VStack>
-            <Button
-              title={savedIds.includes(selectedEntity.id) ? "Aus Merkliste entfernen" : "Für später merken"}
-              systemImage={savedIds.includes(selectedEntity.id) ? "bookmark.fill" : "bookmark"}
-              buttonStyle="borderedProminent"
-              action={() => toggleSaved(selectedEntity.id)}
-            />
-            <Button title="Zur vorherigen Ansicht" systemImage="arrow.left" buttonStyle="plain" action={() => setScreen(returnScreen)} />
-          </>}
-        </VStack>
-      </ScrollView>
+            </ScrollView>
+          )
+        }}
+      </GeometryReader>
     </NavigationStack>
   )
 }

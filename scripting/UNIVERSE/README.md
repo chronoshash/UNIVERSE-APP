@@ -1,6 +1,6 @@
-# UNIVERSE Scripting foundation · 0.5.3
+# UNIVERSE Scripting foundation · 0.5.4
 
-Version 0.5.3 fixes a width-ordering bug visible on device: horizontal padding had been added after the maximum-width frame, making the padded root and cards wider than their viewport. Padding now sits inside the width constraint on the root, navigation chips, compact cards, featured overlay, and information panels. The top navigation remains a two-column grid, the local showcase has twelve demo entries, and the null-safe child and literal-preserving gradient color fixes are retained. Device layout still needs rechecking.
+Version 0.5.3's padding/frame correction did not resolve the user's reported full-screen horizontal overflow. Version 0.5.4 adds a stronger, viewport-measured constraint: a `GeometryReader` inside the navigation stack supplies the available width to both the vertical `ScrollView` and its root content frame, and the outer scroll view is clipped to its bounds. Horizontal content rails remain intentionally scrollable. This is a targeted correction attempt, not a verified device fix; import and iPhone rendering still need to be checked. The two-column navigation, twelve local demo entries, null-safe optional JSX children, and literal-preserving gradient colors are retained.
 
 The interface uses a statically bundled fixture provider and an original local hero image in `assets/hero.jpg`, loaded from `Script.directory`. It makes no live provider calls or network requests.
 

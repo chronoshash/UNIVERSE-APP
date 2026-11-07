@@ -1,6 +1,6 @@
 # UNIVERSE — TODO
 
-Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. Der aktuelle Produktstand ist `.scripting` 0.5.3: visuell ausgebaute Katalog-Shell, weiterhin kein Download-Manager.
+Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. Der aktuelle Produktstand ist `.scripting` 0.5.4: visuell ausgebaute Katalog-Shell mit einem neuen, noch nicht geräteverifizierten Viewport-Breitenversuch; weiterhin kein Download-Manager.
 
 ## Verbindliches Qualitätsgate vor jeder Verifizierung und Dokumentation
 
@@ -14,14 +14,15 @@ Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2
 ## P0 — Scripting-Kompatibilität und aktueller Shell-Import
 
 - [ ] Auf dem Ziel-iPhone Scripting-App-/iOS-Version und tatsächlich verfügbaren Funktionsumfang der Shell-APIs protokollieren. API-Doku oder App-Store-Preis beweisen keinen kostenlosen Zugriff.
-- [ ] Version 0.5.3 `UNIVERSE.scripting` importieren und Home, Hero-Asset, Katalog-Rails, Suche, Feeds, Merkliste, Info, Detailnavigation sowie die Breite auf einem schmalen iPhone prüfen.
+- [ ] Version 0.5.4 `UNIVERSE.scripting` importieren und Home, Hero-Asset, Katalog-Rails, Suche, Feeds, Merkliste, Info, Detailnavigation sowie die Breite auf einem schmalen iPhone prüfen; insbesondere die frühere links/rechts überlaufende Gesamtoberfläche.
 - [ ] Dark Mode, VoiceOver, Dynamic Type, Safe Areas, Tastatur, Touch-Ziele und Lifecycle prüfen.
 - [x] 0.5.3-Paket lokal gebaut: ZIP-CRC, Manifest/Dateiliste, Asset- und Byte-Parität, deterministischer Doppelbuild, Validator und TSX-Quelltextcheck mit temporären Scripting-Stubs bestanden. Das ersetzt keinen App-Import- oder Laufzeittest; Details in `TESTING.md`.
+- [x] 0.5.4-Paket lokal gebaut: GeometryReader-Viewport-Assertions, ZIP-/Manifest-/Quellenparität, deterministischer Doppelbuild, Validator, Python-Kompilierung, `git diff --check` und TypeScript 5.8.3 mit temporären, nicht offiziellen Scripting-Stubs bestanden. Import, Rendering und iPhone-Breite bleiben offen; Details in `TESTING.md`.
 - [ ] Alle vier erzeugten Scripting-`llms.txt`-/`llms-full.txt`-Dokumente vollständig lesen. Offizielle Quellarchive und relevante API-Seiten sind geprüft; vollständige Chunk-Lektüre bleibt offen.
 
 ## P1 — Foundation zuerst
 
-- [x] App-Shell 0.5.3: Home, Entdecken, Suche, Feeds, Merkliste, Info und Detailansicht; lokales Hero-Motiv, zweispaltige Navigation, zwölf Demo-Fixtures, Katalog-Rails und Poster-Karten.
+- [x] App-Shell 0.5.4: Home, Entdecken, Suche, Feeds, Merkliste, Info und Detailansicht; lokales Hero-Motiv, zweispaltige Navigation, zwölf Demo-Fixtures, Katalog-Rails und Poster-Karten. Der neue viewport-gemessene Breitenversuch benötigt weiterhin einen iPhone-Test.
 - [x] Statisch gebündelter Demo-Provider mit expliziter Capability-Liste; Suche, Feed und Details werden über diese Liste geroutet. Keine dynamischen Imports oder Netzwerkabfragen.
 - [x] Lokale Fixture-Entities für Medien, Artikel und Termine mit sichtbarer Quellenherkunft; Suche über mehrere Typen und einfache Filter.
 - [x] Merkliste als sitzungsgebundener UI-State; keine falsche Zusage persistenter Speicherung.
