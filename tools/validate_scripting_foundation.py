@@ -69,7 +69,12 @@ def validate_sources() -> tuple[dict, str, bytes]:
     require(f'const APP_VERSION = "{manifest["version"]}"' in code, "manifest and app versions differ")
     require("<GeometryReader>" in code and "Math.max(1, proxy.size.width)" in code,
             "root layout must derive its width from the available GeometryReader viewport")
-    require('frame={{ width: viewportWidth }} clipped' in code,
+    geometry_position = code.index("<GeometryReader>")
+    navigation_position = code.find('<NavigationStack frame={{ width: viewportWidth }}>')
+    scroll_position = code.find('<ScrollView navigationTitle=', navigation_position)
+    require(geometry_position < navigation_position < scroll_position,
+            "GeometryReader must measure the presentation before NavigationStack and ScrollView are laid out")
+    require('frame={{ width: viewportWidth }} clipped scrollClipDisabled={false}' in code,
             "outer vertical scroll view must be width-bound to and clipped at the measured viewport")
     require('padding={{ horizontal: 18, top: 14, bottom: 34 }} frame={{ width: viewportWidth }}' in code,
             "root content must use the measured viewport width with its padding inside that frame")
