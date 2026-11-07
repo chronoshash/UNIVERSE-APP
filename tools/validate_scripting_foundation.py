@@ -67,8 +67,12 @@ def validate_sources() -> tuple[dict, str, bytes]:
     require(manifest.get("permissions") is None, "foundation manifest must not request permissions")
     require(manifest.get("version") is not None, "manifest version is required")
     require(f'const APP_VERSION = "{manifest["version"]}"' in code, "manifest and app versions differ")
-    require('padding={{ horizontal: 18, top: 14, bottom: 34 }} frame={{ maxWidth: "infinity" }}' in code,
-            "root content padding must remain inside its maximum-width frame")
+    require("<GeometryReader>" in code and "Math.max(1, proxy.size.width)" in code,
+            "root layout must derive its width from the available GeometryReader viewport")
+    require('frame={{ width: viewportWidth }} clipped' in code,
+            "outer vertical scroll view must be width-bound to and clipped at the measured viewport")
+    require('padding={{ horizontal: 18, top: 14, bottom: 34 }} frame={{ width: viewportWidth }}' in code,
+            "root content must use the measured viewport width with its padding inside that frame")
     require('padding={{ horizontal: 13, vertical: 9 }} frame={{ maxWidth: "infinity" }}' in code,
             "navigation-chip padding must remain inside its maximum-width frame")
     require('padding={12} frame={{ maxWidth: "infinity" }}' in code,

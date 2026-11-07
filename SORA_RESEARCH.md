@@ -20,7 +20,7 @@ Das Referenz-Repository weist im Root eine GPL-3.0-Lizenz aus; die README nennt 
 
 ## Was UNIVERSE davon übernimmt — nur als UX-Idee
 
-Die Korrektur der Umsetzungsreihenfolge ist wichtig: Downloads/Player sind in UNIVERSE nicht die Basis. Version 0.4.0 legte zuerst kleine, risikoarme Shell-Grundlagen; 0.5.3 adressiert den gemeldeten Viewport-Überlauf in der Katalogdarstellung:
+Die Korrektur der Umsetzungsreihenfolge ist wichtig: Downloads/Player sind in UNIVERSE nicht die Basis. Version 0.4.0 legte zuerst kleine, risikoarme Shell-Grundlagen; Version 0.5.4 reagiert auf die Rückmeldung, dass der erste 0.5.3-Layoutversuch den gemeldeten Viewport-Überlauf nicht beseitigte. Sie bindet den vertikalen Scrollbereich und Root-Inhalt an die gemessene `GeometryReader`-Breite; ein erfolgreicher Gerätetest steht noch aus:
 
 1. Eine stets sichtbare, reduzierte Navigation macht Home, Entdecken, Suche, Feeds, Merkliste und Info erreichbar.
 2. Eine einzige Suche filtert mehrere Fixture-Inhaltstypen; Ergebnisse zeigen Quelle und Abrufdatum.
