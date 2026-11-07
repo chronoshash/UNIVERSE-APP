@@ -1,6 +1,6 @@
 # UNIVERSE — TODO
 
-Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. UNIVERSE 0.5.8 ist als GitHub-Prerelease veröffentlicht; PR #11 wurde am 2026-11-07 bei `959321b362eee3d9eb40a2c99dc6098dc6cf69b9` in `main` gemergt. Das dortige Paket wurde nach dem Merge unabhängig heruntergeladen und bytegeprüft. Die lokale Cross-Type-Foundation aus 0.5.7 (Suche, typgefilterter Feed, Detailvorschläge) bleibt erhalten. Keine Live-Provider, Downloads oder Wiedergabe; App-Import und Gerätetest sind offen.
+Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. UNIVERSE 0.5.8 ist als GitHub-Prerelease veröffentlicht und unabhängig geprüft. Der aktive 0.5.9-Entwicklungsstand reagiert auf den vom Nutzer gemeldeten `RootScreen`-Typfehler und ergänzt direktes Entfernen aus der sitzungsgebundenen Merkliste. Die Cross-Type-Foundation bleibt erhalten. Keine Live-Provider, Downloads oder Wiedergabe; Scripting-App-Import und Gerätetest sind offen.
 
 ## Verbindliches Qualitätsgate vor jeder Verifizierung und Dokumentation
 
@@ -14,7 +14,7 @@ Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2
 ## P0 — Scripting-Kompatibilität und aktueller Shell-Import
 
 - [ ] Auf dem Ziel-iPhone Scripting-App-/iOS-Version und tatsächlich verfügbaren Funktionsumfang der Shell-APIs protokollieren. API-Doku oder App-Store-Preis beweisen keinen kostenlosen Zugriff.
-- [ ] Version 0.5.8 `UNIVERSE.scripting` nach Veröffentlichung auf dem Ziel-iPhone importieren; native fünf Tabs, Info-Zugang, Tab-/Detail-Rücknavigation, Feedfilter, Detailvorschläge, Accessibility und Lifecycle am Gerät prüfen. Der Nutzer bestätigt die 0.5.6-Breite; Regressionstest bleibt sinnvoll.
+- [ ] Version 0.5.9 `UNIVERSE.scripting` nach Veröffentlichung auf dem Ziel-iPhone importieren; native fünf Tabs, Info-Zugang, Tab-/Detail-Rücknavigation, Merkliste-Entfernen, Feedfilter, Detailvorschläge, Accessibility und Lifecycle am Gerät prüfen. Der Nutzer bestätigt die 0.5.6-Breite; Regressionstest bleibt sinnvoll.
 - [ ] Dark Mode, VoiceOver, Dynamic Type, Safe Areas, Tastatur, Touch-Ziele und Lifecycle prüfen.
 - [x] 0.5.3-Paket lokal gebaut: ZIP-CRC, Manifest/Dateiliste, Asset- und Byte-Parität, deterministischer Doppelbuild, Validator und TSX-Quelltextcheck mit temporären Scripting-Stubs bestanden. Das ersetzt keinen App-Import- oder Laufzeittest; Details in `TESTING.md`.
 - [x] 0.5.4-Paket lokal gebaut: GeometryReader-Viewport-Assertions, ZIP-/Manifest-/Quellenparität, deterministischer Doppelbuild, Validator, Python-Kompilierung, `git diff --check` und TypeScript 5.8.3 mit temporären, nicht offiziellen Scripting-Stubs bestanden. Import, Rendering und iPhone-Breite bleiben offen; Details in `TESTING.md`.
@@ -27,7 +27,8 @@ Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2
 
 ## P1 — Foundation zuerst
 
-- [x] App-Shell 0.5.8 (Arbeitsstand): Home, Entdecken, Suche, typgefilterte Feeds, Merkliste, Info und Detailansicht; fünf native Haupttabs, zwölf Demo-Fixtures und lokale Related-Content-Schiene in Details. Nutzer bestätigt die Breitenlösung; neue Flows brauchen weiterhin den iPhone-Test.
+- [x] App-Shell 0.5.8 (veröffentlicht): Home, Entdecken, Suche, typgefilterte Feeds, Merkliste, Info und Detailansicht; fünf native Haupttabs, zwölf Demo-Fixtures und lokale Related-Content-Schiene in Details.
+- [x] 0.5.9 Foundation-Folgearbeit lokal umgesetzt und geprüft: explizit typisierte native Tab-Auswahl als Reaktion auf den Nutzerbericht sowie direktes Entfernen gespeicherter Elemente aus der sitzungsgebundenen Merkliste. Validator/Paketparität, deterministischer Doppelbuild, TypeScript 5.8.3 mit temporären API-Stubs, Python-Kompilierung und `git diff --check` bestanden. Noch nicht veröffentlicht; Scripting-App-Import und iPhone-Test bleiben offen.
 - [x] Statisch gebündelter Demo-Provider mit expliziter Capability-Liste; Suche, Feed und Details werden über diese Liste geroutet. Keine dynamischen Imports oder Netzwerkabfragen.
 - [x] Discovery-Ausbau 0.5.7: unabhängige Typfilter im chronologischen Feed und lokale Detailvorschläge nach gleicher Kategorie oder gleichem Typ; Demo-Regel in der UI offengelegt.
 - [x] Lokale Fixture-Entities für Medien, Artikel und Termine mit sichtbarer Quellenherkunft; Suche über mehrere Typen und einfache Filter.

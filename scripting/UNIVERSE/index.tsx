@@ -23,8 +23,8 @@ import {
 
 type ContentType = "media.video" | "news.article" | "event.release"
 type ContentFilter = "Alle" | "Medien" | "Artikel" | "Termine"
-type AppScreen = "home" | "explore" | "search" | "feeds" | "library" | "settings" | "detail"
-type RootScreen = Exclude<AppScreen, "settings" | "detail">
+type RootScreen = "home" | "explore" | "search" | "feeds" | "library"
+type AppScreen = RootScreen | "settings" | "detail"
 
 type SourceRecord = {
   providerId: string
@@ -55,7 +55,7 @@ type StaticProvider = {
   getEntity: (id: string) => UniverseEntity | undefined
 }
 
-const APP_VERSION = "0.5.8"
+const APP_VERSION = "0.5.9"
 const CONTENT_FILTERS: ContentFilter[] = ["Alle", "Medien", "Artikel", "Termine"]
 const NAV_ITEMS: { id: RootScreen; label: string; symbol: string }[] = [
   { id: "home", label: "Start", symbol: "house.fill" },
@@ -236,7 +236,7 @@ function formatDate(value: string): string {
 }
 
 function UniverseApp() {
-  const selectedTab = useObservable<RootScreen>("home")
+  const selectedTab = useObservable("home" as RootScreen)
   const [screen, setScreen] = useState<AppScreen>("home")
   const [returnScreen, setReturnScreen] = useState<RootScreen>("home")
   const [settingsReturnTab, setSettingsReturnTab] = useState<RootScreen>("home")
@@ -571,7 +571,10 @@ function UniverseApp() {
                         <Text font="subheadline" foregroundStyle="#B7B8C5">Entdecke einen Titel und tippe auf das Merken-Symbol.</Text>
                         <Button title="Inhalte entdecken" systemImage="sparkles" buttonStyle="borderedProminent" action={() => navigateTo("explore")} />
                       </VStack>
-                    : <VStack alignment="leading" spacing={10}>{savedEntities.map((entity, index) => compactCard(entity, index, contentWidth))}</VStack>}
+                    : <VStack alignment="leading" spacing={12}>{savedEntities.map((entity, index) => <VStack key={entity.id} alignment="leading" spacing={6}>
+                        {compactCard(entity, index, contentWidth)}
+                        <Button title="Aus Merkliste entfernen" systemImage="bookmark.slash" buttonStyle="plain" action={() => toggleSaved(entity.id)} />
+                      </VStack>)}</VStack>}
                 </>}
 
                 {pageScreen === "settings" && <>
