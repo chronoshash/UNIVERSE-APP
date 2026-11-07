@@ -20,13 +20,13 @@ Das Referenz-Repository weist im Root eine GPL-3.0-Lizenz aus; die README nennt 
 
 ## Was UNIVERSE davon übernimmt — nur als UX-Idee
 
-Für das kleine, bereits abgegrenzte Offline-MVP wurden bewusst wenige, risikoarme Verbesserungen umgesetzt:
+Die Korrektur der Umsetzungsreihenfolge ist wichtig: Downloads/Player sind in UNIVERSE nicht die Basis. Version 0.4.0 setzt zuerst nur kleine, risikoarme Shell-Ideen um:
 
-1. Die Startansicht nennt jetzt direkt den tatsächlichen Nutzen und zeigt drei klare Wege: Video hinzufügen, Mediathek öffnen, Downloads ansehen. Nicht implementierte Versprechen wie News, Kalender oder allgemeine Webquellen sind aus der Startansicht entfernt.
-2. Downloads lassen sich nach dem eingegebenen Titel durchsuchen.
-3. Die Offline-Mediathek bietet Titelsuche und einen einfachen Kategorienfilter. Leere Kategorien werden ausgeblendet; leere bzw. erfolglose Suchzustände erklären den nächsten Schritt.
-4. Die vorhandene Trennung zwischen Downloadwarteschlange und abgeschlossener lokaler Mediathek bleibt erhalten. Der Prototyp bekommt dafür weder eine neue Runtime noch zusätzliche Dienste oder Berechtigungen.
+1. Eine stets sichtbare, reduzierte Navigation macht Home, Entdecken, Suche, Feeds, Merkliste und Info erreichbar.
+2. Eine einzige Suche filtert mehrere Fixture-Inhaltstypen; Ergebnisse zeigen Quelle und Abrufdatum.
+3. Ein gemeinsamer chronologischer Feed und eine Detailansicht verwenden dieselben Entities.
+4. Ein statischer capability-gesteuerter Demo-Provider zeigt den späteren Integrationspunkt, ohne dynamischen Code, Netzwerk oder Plugin-Installation.
 
-Bewusst **nicht** übernommen oder ergänzt wurden Soras Modul-/Plugin-Ausführung, HLS-/Stream-Auflösung, Tracker-/Metadaten-Integrationen, ein komplexer Custom Player, Background-Download-Versprechen oder weitreichende Netzwerkfreigaben. UNIVERSE akzeptiert weiterhin nur vom Nutzer bereitgestellte direkte HTTPS-Dateilinks mit MP4/M4V/MOV-Endung. URL-Endung ist keine Inhalts- oder Codecprüfung; Rechte, Login-Schranken und DRM werden nicht umgangen.
+Die frühere 0.3.0-Version experimentierte vorzeitig mit einer Downloadwarteschlange. Sie ist historisch, wurde aus der neuen 0.4.0-Basis entfernt und ist kein Architekturfundament. Ein DownloadManager kommt erst nach App-Shell-, Entity-/Source-Vertrags-, Provider-Registry-, Storage- und Scripting-Geräte-Gates auf die Roadmap.
 
-„Continue Watching“ bleibt vorerst eine mögliche spätere Idee: Eine verlässliche Fortschritts-/Resume-Persistenz ist für die hier verwendete Scripting-Laufzeit nicht nachgewiesen. Ebenso ist die neue Suche/Filterung nur anhand des Quellcodes statisch geprüft; Import, iPhone-UI und Laufzeit müssen noch getestet werden.
+Bewusst **nicht** übernommen wurden Soras Modul-/Plugin-Ausführung, HLS-/Stream-Auflösung, Tracker-/Metadaten-Integrationen, Custom Player, Background-Download-Versprechen oder weitreichende Netzwerkfreigaben. „Continue Watching“ bleibt ebenfalls später: verlässliche Fortschritts-/Resume-Persistenz ist nicht nachgewiesen. Auch die neue Basis ist bisher nur statisch geprüft; Import, iPhone-UI und Laufzeit fehlen.

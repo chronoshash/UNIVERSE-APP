@@ -1,35 +1,33 @@
 # UNIVERSE
 
-**Speichern. Wiederfinden. Offline ansehen.**
+**Eine Oberfläche. Viele Inhaltstypen.**
 
-UNIVERSE soll eine einfache, persönliche Medienbibliothek werden. Das aktuell eigenständige `.scripting`-MVP bleibt bewusst kleiner: Nutzer geben einen direkten HTTPS-Videodateilink und Titel ein, ordnen ihn einer Kategorie zu und können abgeschlossene, lokal vorhandene Dateien in der Mediathek finden und abspielen. Downloads und Mediathek bieten Titelsuche; die Mediathek kann zusätzlich nach Kategorie gefiltert werden.
+UNIVERSE ist ein persönlicher Hub für unterschiedliche Webinhalte. **Die aktuelle Basis ist zuerst die App-Shell, nicht der Download-Manager.** Version 0.4.0 bündelt Home, Entdecken, Suche, Feeds, Merkliste und Info. Eine statische, capability-geprüfte Demoquelle speist lokale Fixture-Inhalte für Medien, Artikel und Termine; Entity-Liste, Suche, Feed und Details laufen durch passende Capability-Prüfungen und zeigen Quellenherkunft. Es gibt keine Live-Abfragen. Merklisteinträge gelten nur während der Script-Sitzung.
 
-Das Script ist **noch nicht in der Scripting-App importiert oder auf einem iPhone ausgeführt**. Verfügbarkeit der verwendeten APIs im installierten Scripting-Build (einschließlich eines möglichen Pro-Erfordernisses), Import, Darstellung und Laufzeit sind unbestätigt. Die Endung MP4/M4V/MOV beweist weder Videoinhalt noch Codec-Kompatibilität. UNIVERSE löst keine Streams aus AniWorld oder anderen Webseiten auf, lädt keine Playlists und umgeht weder DRM noch Zugriffsbeschränkungen.
+Downloads, Offline-Wiedergabe, echte Provider, dauerhafte Speicherung und dynamische Plugins sind in 0.4.0 bewusst nicht enthalten. Der frühere 0.3.0-Download-Prototyp war ein Vorgriff auf spätere Arbeit; die Download-Manager-Integration kommt erst nach dem Aufbau und Testen der App-Shell, Datenverträge, statischen Registry und Storage-Grenzen wieder auf die Roadmap.
+
+Das Script ist **noch nicht in der Scripting-App importiert oder auf einem iPhone ausgeführt**. API-Zugriff im installierten Build, ein mögliches Pro-Erfordernis, Darstellung, Lifecycle und Laufzeit sind unbestätigt. Die UI nutzt nur lokale Beispieldaten und behauptet keine echten Provider-Ergebnisse. Es gibt keinen AniWorld-Resolver und keine Webseiten-/Playlist-Extraktion oder Umgehung von Zugriffsbeschränkungen.
 
 ## Projekt-Dokumentation
 
-- [UI_UX.md](UI_UX.md) — Produktziel und aktueller Offline-MVP-Flow
-- [SORA_RESEARCH.md](SORA_RESEARCH.md) — UX-/Architekturbetrachtung der Referenz; keine Codeübernahme
-- [ARCHITECTURE.md](ARCHITECTURE.md) — Zielplattform-Schichten und aktuelle Prototypgrenze
-- [PLUGIN_SYSTEM.md](PLUGIN_SYSTEM.md) — geplante Capability-Verträge und Sicherheitsgrenze
-- [DATA_MODEL.md](DATA_MODEL.md) — vorgeschlagene Entitäten, Quellenherkunft und Beziehungen
+- [UI_UX.md](UI_UX.md) — Zielnavigation und tatsächlicher Basis-Flow
+- [SORA_RESEARCH.md](SORA_RESEARCH.md) — UX-/Architekturbetrachtung; keine Codeübernahme
+- [ARCHITECTURE.md](ARCHITECTURE.md) — Lieferstufen und aktuelle Foundation
+- [PLUGIN_SYSTEM.md](PLUGIN_SYSTEM.md) — statische Capability-Registry und spätere Verträge
+- [DATA_MODEL.md](DATA_MODEL.md) — Entwurf und Status der lokalen Fixture-Daten
 - [COMPATIBILITY.md](COMPATIBILITY.md) — Scripting-API-Recherche und offene Gerätechecks
-- [TESTING.md](TESTING.md) — reproduzierbare lokale Prüfungen und iPhone-Testplan
-- [TODO.md](TODO.md) — priorisierte Arbeit und verbindliches Review-Gate
+- [TESTING.md](TESTING.md) — lokale Prüfungen und iPhone-Testplan
+- [TODO.md](TODO.md) — Reihenfolge, Gates und bewusst zurückgestellte Downloads
 - [AGENTS.md](AGENTS.md) — Repository-Workflow und Sicherheitsregeln
 
 ## Scripting-Projekt
 
-Quellcode liegt in `scripting/UNIVERSE/`; das zugehörige Paket ist `UNIVERSE.scripting`. Nach **jeder** Änderung an Script-Quellen oder dem im Paket enthaltenen README neu bauen:
+Quellcode liegt in `scripting/UNIVERSE/`; das Paket ist `UNIVERSE.scripting`. Nach **jeder** Änderung an Script-Quellen oder dem im Paket enthaltenen README neu bauen:
 
 ```sh
 python3 tools/build_scripting_package.py
 ```
 
-Das Paket enthält `script.json`, `index.tsx` und `README.md` am ZIP-Root. Die Queue ist auf Foreground und WLAN beschränkt und speichert Download-Aufgaben samt Quell-URL zur Wiederaufnahme. Keine vertraulichen Zugriffstoken in URLs einfügen. Nur Inhalte offline speichern, für die eine entsprechende Berechtigung besteht.
+Das Paket enthält `script.json`, `index.tsx` und `README.md` am ZIP-Root. Die Versionsdatei ist im GitHub-Repository abgelegt; lokale ZIP-, Manifest-, Quellenparitäts- und TSX-Stummeltyp-Prüfungen sind in [TESTING.md](TESTING.md) dokumentiert. Statische Prüfungen ersetzen keinen Import-/iPhone-Test.
 
-AniWorld ist lediglich ein optionaler externer Link. Kein Scripting-Pro-Zugang, Xcode-Projekt, Backend, dynamische Fremdcodeausführung oder dauerhaft laufender Hintergrundprozess wird vorausgesetzt. Das Script hat keine Sora-Abhängigkeit; Sora diente ausschließlich als UX-Referenz.
-
-## Lokale Prüfungen
-
-Lokale Paket-/ZIP-Prüfungen und ihre genauen Grenzen sind in [TESTING.md](TESTING.md) dokumentiert. Statische Prüfungen beweisen keinen App-Import und keinen iPhone-Laufzeiterfolg.
+Sora inspirierte allgemeine Navigation-/Suchideen, nicht die Implementierung. Kein Sora-Code, keine Assets und keine Sora-Abhängigkeit sind enthalten. Scripting-Pro-Zugang, Xcode, Backend, dynamische Fremdcodeausführung und Hintergrund-Dauerprozesse werden nicht vorausgesetzt.

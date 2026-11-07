@@ -99,9 +99,11 @@ Beispiel einer deklarativen Contribution:
 - Lifecycle: `discovered → validated → enabled → activated → degraded/failed → deactivated`.
 - Fehler, Timeout und Abbruch bleiben pro Plugin isoliert. Deaktivieren beendet zukünftige Provideraufrufe, behält Nutzerdaten standardmäßig. Entfernen und Löschen sind getrennte bestätigte Aktionen.
 
-## Abgrenzung: aktueller Download-Prototyp
+## Aktuelle Foundation und Download-Reihenfolge
 
-Die Direktdatei-Downloadwarteschlange in `scripting/UNIVERSE/index.tsx` ist ein eigenständiger App-Prototyp, kein Plugin und kein implementierter `media.open`-Adapter. Sie nimmt eine nutzerbereitgestellte HTTPS-URL entgegen und prüft eine Dateiendung; sie extrahiert keine Website-Streams und umgeht keine Zugriffskontrollen. Das Plugin-Vertragsmodell bleibt geplant.
+Version 0.4.0 enthält eine einzige statische Fixture-Quelle mit expliziten Capabilities für Entity-Liste, lokale Suche, Feed und Detailzugriff. Diese Registry ist noch kein Manifest-Validator und kein Drittanbieter-Plugin-System; Providerfunktionen sind fest im App-Code gebündelt.
+
+Der frühere 0.3.0-Direktdatei-DownloadManager war ein eigenständiger Vorgriff, kein Plugin und kein implementierter `media.open`-Adapter. Er ist nicht Teil der 0.4.0-Basis. Eine Download-Integration darf erst wieder beginnen, nachdem Shell, Datenverträge, statische Providerprüfung, Storage-Grenzen und Scripting-Gerätekompatibilität stehen. Weiterhin keine Webseiten-/Playlist-Extraktion oder Zugriffsschutzumgehung.
 
 ## Sicherheitsgrenze und späteres SDK
 

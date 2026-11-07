@@ -30,9 +30,11 @@ Generische Entity-Detailseite zeigt gemeinsame Attribute plus Quellenprovenienz.
 
 Feeds markieren Herkunft und Aktualisierungszeit. Kalender vereinigt Termine, hält Zeitzone/ganztägig auseinander und verknüpft Events mit Entities. Eine Collection kann beliebige Typen mischen. Providerdaten und persönliche Notizen bleiben getrennt.
 
-## Aktueller Offline-MVP-Flow
+## Aktueller Basis-Flow (0.4.0)
 
-`Video hinzufügen` nimmt eine nutzerbereitgestellte HTTPS-URL, einen Titel und eine feste Kategorie an. Die Downloads-Ansicht zeigt Queue-Zustand, Fortschritt, Pause/Fortsetzen/Abbrechen und Entfernen und kann nach dem eingegebenen Titel suchen. Abgeschlossene Dateien werden nur dann in der Offline-Mediathek gruppiert, wenn der erwartete lokale Pfad vorhanden ist; dort gibt es Titelsuche, einen einfachen Kategorienfilter und keine leeren Kategorien. Von der Mediathek öffnet der Player den lokalen Pfad. Löschen ist mit einer zweiten Aktion bestätigt. Die Oberfläche erklärt WLAN-/Foreground-Verhalten, URL-Token-Risiko und Rechteverantwortung. URL-Endung und AVPlayer-Fehler sind keine vollständige Validierung des entfernten Inhalts.
+Die App startet mit einer klaren Home-Ansicht und einer überall erreichbaren Navigation für Home, Entdecken, Suche, Feeds, Merkliste und Info. Entdecken filtert den lokalen Beispielkatalog nach Inhaltstyp. Die gemeinsame Suche findet Medien, Artikel und Termine in einer Sitzung und zeigt Titel, Kategorie, Kurzbeschreibung, Quelle und Abrufdatum. Ein chronologischer Fixture-Feed führt dieselben Einträge zusammen. Details bewahren die Herkunft. „Merken“ fügt einen Eintrag zur aktuellen Script-Sitzung hinzu; die UI verspricht ausdrücklich keine dauerhafte Speicherung.
+
+Es gibt keine Netzwerkabfragen oder echten Provider. Der DownloadManager ist nicht Teil dieser Basis; die frühere 0.3.0-Downloader-Version ist historisch und wird erst nach den Core-/Storage-/Device-Gates wieder relevant.
 
 ## Stil, Barrierefreiheit, Zustände
 
@@ -43,4 +45,4 @@ Feeds markieren Herkunft und Aktualisierungszeit. Kalender vereinigt Termine, h�
 - Veraltete Daten sichtbar kennzeichnen; keine Endlosschleifen bei Laden.
 - Nutzerbestätigung/Undo für Löschen und Zusammenführen.
 
-Die aktuelle `UNIVERSE.scripting`-Datei ist ein begrenzter, eigenständiger Prototyp mit einer auf Deutsch klaren Startansicht, direktem Video-Download, suchbarer Downloadwarteschlange, suchbarer und nach Kategorie filterbarer Offline-Mediathek sowie lokalem Player. Kategorien sind Anime, Filme, Serien und Sonstiges; leere Kategorien werden verborgen. Der Nutzer muss eine HTTPS-Datei-URL und einen Titel eingeben; die Dateiendung wird auf MP4/M4V/MOV geprüft, aber weder Antwortinhalt noch Codec vorab verifiziert. Die Queue ist foreground-only und Wi-Fi-only. Das ist kein AniWorld-Resolver: der AniWorld-Link öffnet nur die externe Website. Die Scripting-Laufzeit, API-Verfügbarkeit und Bedienbarkeit wurden hier nicht auf einem iPhone getestet. Die Ideen zu Suche/Trennung von Queue und Library sind von Sora inspiriert; kein Sora-Code wurde übernommen (siehe `SORA_RESEARCH.md`).
+Die aktuelle `UNIVERSE.scripting`-Datei ist die Foundation 0.4.0: eine einfache deutsche App-Shell mit lokaler Demoquelle, capability-gesteuerter Entity-Liste/Suche/Feed/Details, Inhaltsherkunft, Detailansicht und sitzungsgebundener Merkliste. Sie verspricht weder Live-Daten noch persistente Speicherung. DownloadManager, echte Provider und Playback fehlen absichtlich, bis die Basis und Gerätekompatibilität stehen. Navigation und gemischte Inhaltssuche sind durch Sora-UX-Ideen inspiriert; kein Sora-Code wurde übernommen (siehe `SORA_RESEARCH.md`). Scripting-Import, API-Zugriff und Bedienbarkeit wurden nicht auf einem iPhone getestet.

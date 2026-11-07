@@ -1,81 +1,71 @@
 # UNIVERSE — TODO
 
-Priorität: **P0** blockiert Architektur/Funktion, **P1** MVP, **P2** spätere Erweiterung. Dieses Dokument enthält nur noch offene Arbeit; ein Haken wird erst nach einem nachvollziehbaren Nachweis gesetzt.
+Priorität: **P0** blockiert Foundation/Kompatibilität, **P1** Foundation, **P2** spätere Erweiterungen. Der aktuelle Produktstand ist `.scripting` 0.4.0: erst die Shell, noch kein Download-Manager.
 
 ## Verbindliches Qualitätsgate vor jeder Verifizierung und Dokumentation
 
-- [ ] Vor **jedem** Test/Build/Package-Check und vor **jeder** Änderung an README, Architektur-, Kompatibilitäts-, Test- oder Release-Dokumentation den gesamten aktuellen Projektcode zeilenweise lesen: alle App-Quellen, Manifeste/Konfigurationen und Build-/Packaging-Skripte, nicht nur den zuletzt geänderten Ausschnitt.
-- [ ] Fehler, Sicherheits-/Datenrisiken, Edge Cases, unnötige Abhängigkeiten und konkrete Verbesserungen erfassen; Datenfluss, Fehlerpfade, öffentliche Verträge und Zusammenspiel mit der dokumentierten Architektur prüfen.
-- [ ] Verbesserungen, die in diesem Scope sicher und kompatibel sind, vor der Verifizierung anwenden; größere, nicht belegte oder riskante Änderungen als offene TODOs begründen statt still einzubauen.
-- [ ] Nach Codeänderungen die vollständige Code-Durchsicht wiederholen, dann gezielte Tests plus relevante Regressionen ausführen. Erst danach Testresultate und Dokumentation aktualisieren.
-- [ ] Bei jeder Änderung an Scripting-Quellen `UNIVERSE.scripting` mit dem dokumentierten Builder neu erzeugen und ZIP-/Manifest-/Quellen-Parität prüfen.
-- [ ] Tatsächliche statische Prüfungen, Tests und iPhone-Laufzeittests getrennt dokumentieren; nichts als bestanden markieren, was nicht ausgeführt wurde.
+- [ ] Vor **jedem** Test/Build/Package-Check und vor **jeder** Änderung an README, Architektur-, Kompatibilitäts-, Test- oder Release-Dokumentation den gesamten aktuellen Projektcode zeilenweise lesen: alle App-Quellen, Manifeste/Konfigurationen und Build-/Packaging-Skripte.
+- [ ] Fehler, Sicherheits-/Datenrisiken, Edge Cases, unnötige Abhängigkeiten und Datenflüsse prüfen; Architektur und öffentliche Verträge abgleichen.
+- [ ] Sichere, kompatible Verbesserungen vor der Verifizierung anwenden; unklare/riskante Erweiterungen begründet vertagen.
+- [ ] Nach Codeänderungen vollständige Code-Durchsicht wiederholen, passende Tests ausführen und danach erst Ergebnisse/Dokumentation aktualisieren.
+- [ ] Bei jeder Scripting-Quell- oder Paket-README-Änderung `UNIVERSE.scripting` neu bauen und ZIP-/Manifest-/Quellen-Parität prüfen.
+- [ ] Statische Checks, App-Import und iPhone-Laufzeittests getrennt angeben; nichts Ungetestetes als bestanden markieren.
 
-## P0 — Umgebung und Scripting-Prototyp
+## P0 — Scripting-Kompatibilität und aktueller Shell-Import
 
-- [ ] Auf dem Ziel-iPhone Scripting-App-Version, iOS-Version und tatsächlich kostenlosen Funktionsumfang der verwendeten Download-/Datei-/Player-APIs dokumentieren; Pro-Status nicht aus App-Preis oder API-Dokumentation ableiten.
-- [ ] `UNIVERSE.scripting` in der App importieren, öffnen und Home, Videoeingabe, Downloads, Mediathek, Offline-Player und externe AniWorld-Navigation testen; Ergebnis und Screenshot notieren.
-- [x] Paket-Export lokal reproduzierbar geprüft (2026-11-06): ZIP CRC, Root-Dateien/Manifest, Quellen-Parität und doppelter identischer Build-SHA-256 bestanden. Das ersetzt keinen Scripting-App-Importtest.
-- [ ] Verifizieren, dass statische Imports zwischen Projektdateien auf der Zielversion möglich sind; bis dahin keine Aufteilung der Runtime voraussetzen.
-- [ ] UI-/Navigation-, Dark-Mode-, VoiceOver-, Dynamic-Type-, Lifecycle- und Safe-Area-Checks ausführen.
-- [ ] Scripting-Pro-Ausschluss je geplantes API schriftlich belegen; nicht bestätigte Funktionen weglassen.
+- [ ] Auf dem Ziel-iPhone Scripting-App-/iOS-Version und tatsächlich verfügbaren Funktionsumfang der Shell-APIs protokollieren. API-Doku oder App-Store-Preis beweisen keinen kostenlosen Zugriff.
+- [ ] Version 0.4.0 `UNIVERSE.scripting` importieren und Home, Entdecken, Suche, Feeds, Merkliste, Info und Detailnavigation testen.
+- [ ] Dark Mode, VoiceOver, Dynamic Type, Safe Areas, Tastatur, Touch-Ziele und Lifecycle prüfen.
+- [x] 0.4.0-Paket lokal gebaut: ZIP-CRC, Root-Dateien/Manifest, Byte-Parität, deterministischer Doppelbuild und TSX-Quelltextcheck mit temporären Scripting-Stubs bestanden. Das ersetzt keinen App-Import- oder Laufzeittest; Details in `TESTING.md`.
+- [ ] Alle vier erzeugten Scripting-`llms.txt`-/`llms-full.txt`-Dokumente vollständig lesen. Offizielle Quellarchive und relevante API-Seiten sind geprüft; vollständige Chunk-Lektüre bleibt offen.
 
-## P1 — Begrenzter Offline-MVP
+## P1 — Foundation zuerst
 
-- [x] TSX-Prototyp: direkte HTTPS-URL, fester Kategorienordner (Anime/Filme/Serien/Sonstiges), persistente foreground-only/WLAN-only Queue, Status/Fortschritt/Pause/Fortsetzen/Abbrechen, Completed-Library und lokale AVPlayer-Ansicht implementiert.
-- [x] MVP-UX vereinfacht: klare deutsche Startaktionen, Titelsuche in Downloads und Mediathek, Kategorienfilter und keine leeren Mediathek-Gruppen. Statisch geprüft, iPhone-Bedienung bleibt offen.
-- [ ] Auf iPhone verifizieren: Queue nach erneutem Öffnen, Hintergrundpause, lokale Datei in korrektem Ordner, Flugmodus-Playback inkl. Ton/Codec, echte Fehler-/Lifecyclefälle.
-- [ ] Im Ziel-Build feststellen, ob DownloadManager/FileManager/AVPlayer ohne Pro zugänglich sind; bis dahin sind sie dokumentierte API-Kandidaten, nicht als kostenlos bestätigt.
-- [ ] Nutzertest: URL-Endungsfilter ist keine Content-Type-/Codec-Prüfung; falsche Antworten und Speicherknappheit klar behandeln.
-- [ ] URL-Aufbewahrung, Signed-URL-/Token-Risiko, Dateiverfügbarkeit und Queue-Wiederaufnahme auf Zielgerät prüfen.
-- [ ] Falls der Scope wächst: Untertitel/Metadaten, Speicherquota und weitere Dateitypen getrennt entwerfen; aktuell nicht implementiert.
+- [x] App-Shell 0.4.0: Home, Entdecken, Suche, Feeds, Merkliste, Info und Detailansicht.
+- [x] Statisch gebündelter Demo-Provider mit expliziter Capability-Liste; Suche, Feed und Details werden über diese Liste geroutet. Keine dynamischen Imports oder Netzwerkabfragen.
+- [x] Lokale Fixture-Entities für Medien, Artikel und Termine mit sichtbarer Quellenherkunft; Suche über mehrere Typen und einfache Filter.
+- [x] Merkliste als sitzungsgebundener UI-State; keine falsche Zusage persistenter Speicherung.
+- [ ] `manifest.json`-/Capability-Validierung und Provider-Vertragstests ergänzen, bevor ein zweiter Provider eingebaut wird.
+- [ ] Storage-Grenze und persistentes lokales Repository anhand der offiziellen API-Dokumentation und anschließend auf dem Gerät prüfen.
+- [ ] Modell für `Entity`, `SourceRecord`, FeedItem und Relations festlegen; Provenienz und Datenaufbewahrung in Tests absichern.
+- [ ] Providerfehler-/Lade-/Offlinezustände und Telemetrie-/Logpolicy definieren; partielle Ergebnisse dürfen erfolgreiche Provider nicht verdecken.
+- [ ] Nach Foundation- und Gerätegates einen lokalen RSS/Atom-Fixture-Provider als ersten realen Adapter ergänzen; Netzwerk-/Domainregeln vorher festlegen.
 
-## P1 — Plattformkern
+## P2 — DownloadManager und Offline-Wiedergabe (bewusst zurückgestellt)
 
-- [ ] App-Shell: Home / Explore / Search / Feeds / Library plus Settings.
-- [ ] Capability-/Manifest-Validator und feste, statische Plugin-Registry.
-- [ ] Fehler- und Logmodell, Permission-/Domainpolicy und sauberer Plugin-Lifecycle.
-- [ ] Universal Entity, SourceRecord, Relations, FeedItem, Collections und Migrationen implementieren.
-- [ ] Suche aggregiert passende Provider, zeigt Herkunft und behandelt partielle Fehler.
-- [ ] Home UI Contributions auf feste Renderer-Allowlist begrenzen; Nutzerwahl für Sektionen.
-- [ ] Fixture-Provider plus RSS/Atom-Provider als erste Integration; Tests siehe `TESTING.md`.
+Version 0.3.0 war ein vorzeitiger Downloader-Prototyp. Sie bleibt als historische GitHub-Version erhalten, ist aber **nicht** die aktuelle Basis. In 0.4.0 wurde der DownloadManager entfernt, damit zuerst die Plattformgrundlagen stehen.
 
-## P1 — AniWorld-Quellenplugin (Nutzerreferenzen geprüft)
+Erst wieder anfangen, wenn alle folgenden Gates erfüllt sind:
 
-- [ ] Use-case präzisieren: nur externe AniWorld-Navigation? Suche/Metadaten? Episoden? Keine Downloaderfunktion im ersten Schritt.
-- [ ] Host/Redirect-Verhalten und aktuelle Nutzungs-/Rechtsbedingungen prüfen; Speicherung/Attribution/TTL dokumentieren.
-- [ ] Mit lokalen Fixtures arbeiten, bevor Live-Website-Abfragen implementiert werden.
-- [ ] Separates Plugin-Manifest für `aniworld.to`; v1 möglichst `source.search` und `source.details`/öffnen externer URL.
-- [ ] Bei Änderungen an Website-Struktur Providerfehler und Fallback auf die externe Website zeigen.
-- [ ] Geräteversuch unter kostenlosem Scripting-Build und explizitem Nutzeraufruf.
+- [ ] App-Shell auf dem Ziel-iPhone importiert und navigierbar getestet.
+- [ ] Entity-/Source-/Library-Verträge und bestätigte Storage-Grenze vorhanden.
+- [ ] Capability-/Provider-Verträge und Fehlerzustände getestet.
+- [ ] Download-/Datei-/Player-APIs im tatsächlichen Scripting-Build und ohne unbestätigte Pro-Annahme verifiziert.
+- [ ] Rechte-, Token-, Speicher-, Lösch- und Lifecycle-Verhalten für direkte Dateien spezifiziert.
 
-### Referenzanalyse, keine Codeübernahme
+Danach darf separat geplant werden: nur nutzerbereitgestellte direkte HTTP(S)-Datei-URLs, erlaubte Inhalte/Dateitypen, explizite Aktion; keine Webseiten-/Playlist-/Stream-Extraktion und keine DRM-/Login-/CAPTCHA- oder Zugriffsschutzumgehung. Foreground-only, wenn nicht anders auf Zielgeräten bestätigt.
 
-- [AniWorld-Downloader](https://github.com/phoenixthrush/AniWorld-Downloader), geprüft auf `models` Commit `ba6231b` am 2026-11-06: Python ≥3.11 Desktop-/Web-UI/CLI, mit optionalen externen Komponenten wie FFmpeg, mpv, Docker/Playwright. Zeigt konzeptionell Provider-/Serien-/Staffel-/Episodenmodelle und umfangreiche Fixtures/Tests. Das ist nicht direkt die Architektur oder Laufzeit von Scripting auf iOS.
-- Das Repository weist MIT-Lizenz aus; dieser Prototyp kopiert keinen Quellcode. Eine spätere Übernahme muss Copyright-/Lizenztext beilegen und die betroffenen Stellen separat prüfen.
-- AniWorld-Downloader listet diverse Stream-Hoster, Download-/Playback-Funktionen und CAPTCHA-bezogene Funktionalität. Diese stehen **nicht** im initialen UNIVERSE-Plugin-Scope. Keine DRM-/Zugriffsschutz-/CAPTCHA-Umgehung und keine Behauptung, dass Inhalte rechtmäßig abrufbar seien.
+## P2 — Externe Quellen, darunter AniWorld
 
-## Sora-UX-Referenz, keine Codeübernahme
+- [ ] Use-case und Host-/Redirect-/Rechtsbedingungen definieren. Erst lokale Fixtures; danach höchstens erlaubte Metadaten oder externe Navigation.
+- [ ] Keine Downloaderfunktion, Stream-Auflösung oder Zugriffsschutzumgehung aus AniWorld-Webseiten.
+- [ ] Quelle soll als expliziter Provider mit Attribution, Fehler-/TTL-Verhalten und Nutzeraufruf eingebunden werden, erst nach Foundation- und iPhone-Gates.
 
-- Die gezielte Analyse von [Sora, Commit `28f55f3d273b0dd32338e564324054287e500ff9`](https://github.com/cranci1/Sora/tree/28f55f3d273b0dd32338e564324054287e500ff9) ist in [SORA_RESEARCH.md](SORA_RESEARCH.md) dokumentiert. Übernommen wurden nur allgemeine UX-Ideen (auffindbare Queue/Library, Suche und Gruppierung); kein Code, keine Assets und keine Abhängigkeit.
-- Soras SwiftUI-/Xcode-/Modul-/Tracking-/HLS-Architektur ist kein passender oder freigegebener Scripting-Baustein. Resume-Fortschritt bleibt offen, bis dafür eine geeignete Scripting-Persistenz nachgewiesen ist.
+## Sora-Referenz — nur UX, keine Codeübernahme
 
-## P2 — Erweiterungen (nicht voraussetzen)
-
-- [ ] Weitere Source-/Metadata-/Feed-Plugins nach erfolgreichem SDK-/Contract-Test.
-- [ ] Event-/Release-Kalender und Cross-Plugin-Entity-Matching mit expliziter Confidence.
-- [ ] Breitere Media-/Download-Integration nur für erlaubte direkte Dateien, nach Rechte-/Lizenz-/Pro-/iPhone-Test; keine AniWorld-Streamauflösung.
-- [ ] Plugin Store/Install/Update erst nach nachweisbarer Sandbox, Signaturen, Review und Rollback.
-- [ ] AI/semantische Suche/Automationen nur nach eigener Datenschutz-, Kosten- und Runtime-Entscheidung.
+- Die Analyse von [Sora, Commit `28f55f3d273b0dd32338e564324054287e500ff9`](https://github.com/cranci1/Sora/tree/28f55f3d273b0dd32338e564324054287e500ff9) steht in `SORA_RESEARCH.md`.
+- 0.4.0 übernimmt nur allgemeine UX-Ideen: erkennbare globale Bereiche, eine durchsuchbare Bibliothek und Quellenherkunft. Kein Code, keine Assets, keine Lizenztexte oder Abhängigkeit wurden übertragen.
+- Sora-Module, HLS-/Streamlogik, Tracking, Custom Player und Background-Download-Verhalten sind nicht Teil von UNIVERSE.
 
 ## REA-Referenz
 
-- [Morluto REA: deutsches README](https://github.com/morluto/rea/blob/main/docs/readme/README_de.md), geprüft bis Commit `fdc4e39` am 2026-11-06: REA ist ein MCP/CLI-Toolkit für evidenzbasierte Reverse-Engineering-Analysen von Binärdateien, Anwendungen und Web-Laufzeitverhalten. Es verlangt rechtmäßige Analyse eigener Software bzw. mit Genehmigung und führt Runtime-Tests im Auftrag mit entsprechenden Auswirkungen aus.
-- Derzeit gibt es hier nur lesbaren Quellcode und kein zu analysierendes Binärartefakt. REA wurde daher weder installiert noch ausgeführt; README-/Skill-Tooling nicht als Abhängigkeit hinzufügen.
-- [ ] Bei späterer Analyse eines eigenen, autorisierten Binär-/Laufzeit-Artefakts REA nur dann einsetzen, wenn die konkrete Frage mit Quellcode/Tests nicht beantwortet werden kann; jede Schlussfolgerung mit Evidence und Unknowns dokumentieren.
+- [Morluto REA: deutsches README](https://github.com/morluto/rea/blob/main/docs/readme/README_de.md), geprüft bis Commit `fdc4e39` am 2026-11-06: REA ist ein MCP/CLI-Toolkit für evidenzbasierte Reverse-Engineering-Analysen.
+- Für den aktuellen Quellcode gibt es kein autorisiertes Binärartefakt. REA wurde nicht installiert oder ausgeführt.
+- [ ] Später nur bei eigener, autorisierter Binär-/Laufzeitanalyse verwenden, wenn der Quellcode die konkrete Frage nicht beantwortet.
 
 ## Release Gate
 
-- [ ] `TESTING.md`-Checks abgeschlossen, Ziel-iPhone und Scripting-/iOS-Version festgehalten.
-- [ ] Keine Scripting-Pro-Abhängigkeit.
-- [ ] Alle ungetesteten Funktionen/offenen Risiken in `COMPATIBILITY.md` sichtbar.
+- [ ] Shell auf Ziel-iPhone importiert und getestet; Scripting-/iOS-Version festgehalten.
+- [ ] Keine ungeprüfte Scripting-Pro-Abhängigkeit.
+- [ ] Datenmodell, Capability-Grenzen und alle offenen Risiken in `COMPATIBILITY.md` sichtbar.
+- [ ] DownloadManager nicht vor Abschluss der P1-Foundation-Gates wieder in die aktuelle Basis aufnehmen.

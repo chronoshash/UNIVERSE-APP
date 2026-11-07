@@ -4,7 +4,7 @@
 
 ## Status und Grenzen
 
-Dieses Dokument beschreibt die Zielarchitektur, nicht eine fertige Plattform. Geplante UNIVERSE-APIs sind keine vorhandenen Scripting-APIs. Der derzeitige Stand enthält ein eigenständiges Scripting-UI-Prototyp-Paket mit einer bewusst begrenzten, nutzerinitiierten HTTPS-Datei-Downloadwarteschlange, festen Offline-Kategorien und lokaler Videowiedergabe. Das ist **nicht** auf einem iPhone importiert oder ausgeführt worden; API-Verfügbarkeit im installierten Build und Pro-Zugriff sind offen. Die Downloadfunktion ist kein AniWorld-Plugin und extrahiert keine Streams. Keine Scripting-Pro-Funktion, kein externes Backend, kein Xcode-Projekt, kein dauerhafter Background-Worker und keine dynamische Fremdcode-Sandbox voraussetzen; siehe [Kompatibilität](COMPATIBILITY.md).
+Dieses Dokument beschreibt die Zielarchitektur, nicht eine fertige Plattform. Geplante UNIVERSE-APIs sind keine vorhandenen Scripting-APIs. Version 0.4.0 ist die zuerst gebaute App-Shell: Home, Explore, Search, Feeds, Library und Info mit einem statischen Fixture-Provider und lokalen Beispieldaten. Der frühere 0.3.0-Download-Prototyp ist ein historischer Vorgriff und nicht Teil der aktuellen Basis. Der neue Shell-Build ist **nicht** auf einem iPhone importiert oder ausgeführt worden; API-Verfügbarkeit im installierten Build und Pro-Zugriff sind offen. Keine Scripting-Pro-Funktion, kein externes Backend, kein Xcode-Projekt, kein dauerhafter Background-Worker und keine dynamische Fremdcode-Sandbox voraussetzen; siehe [Kompatibilität](COMPATIBILITY.md).
 
 ## Prinzipien
 
@@ -52,7 +52,7 @@ Globale Bereiche: **Home**, **Explore**, **Search**, **Feeds**, **Library**. Plu
 
 ### Tatsächlich implementierter Prototypumfang
 
-Die aktuelle TSX-Datei enthält Home, Video hinzufügen, Downloads, Offline-Mediathek und Player. Die Kategorie steckt im expliziten lokalen Zielpfad (`Documents/UNIVERSE/Offline/<Kategorie>/…`); Downloadstatus und Wiederaufnahme kommen aus einer persistenten Scripting-Downloadqueue, nicht aus dem geplanten UNIVERSE-Entity-/SQLite-Modell. Die Eingabe verlangt HTTPS und prüft nur die Dateiendung MP4/M4V/MOV. Queue ist foreground-only und Wi-Fi-only. Weitere Feeds, Such-/Metadata-Provider, Plugin-Laufzeit und AniWorld-Integration sind nicht implementiert. Siehe [Datenmodell](DATA_MODEL.md) und [Kompatibilität](COMPATIBILITY.md).
+Die aktuelle TSX-Datei implementiert die Shell-Basis mit Home, Entdecken, Suche, Feeds, sitzungsgebundener Merkliste, Info und Detailansicht. Ein fest gebündelter Fixture-Provider stellt lokale Demo-Entities bereit; Entity-Liste, Suche, Feed und Details werden jeweils nur über eine Capability-Allowlist aufgerufen. Quellenherkunft ist am Inhalt sichtbar. Es gibt noch keine echte externe Quelle, dauerhafte Speicherung, Datenbank oder Netzwerkfunktion. Der DownloadManager ist bewusst aus 0.4.0 herausgehalten und folgt erst nach den Foundation-Gates. Siehe [Datenmodell](DATA_MODEL.md), [Plugin-System](PLUGIN_SYSTEM.md) und [TODO.md](TODO.md).
 
 ## Daten und Qualität
 
@@ -66,6 +66,6 @@ Providerantworten bleiben als einzelne SourceRecords nachvollziehbar. Merge/Enti
 4. Universelle Entities, Provenienz, Relations, Collections und Migrationen.
 5. Capability-getriebener Composer mit festen Renderer-Templates.
 6. Suche, Feed und Kalender mit Fehlerisolation.
-7. Weitere Media-/Download-/Intelligence-Funktionen erst nach Rechts-, Lizenz-, API-Zugriffs- und Gerätetests; der aktuelle generische Direktdatei-Prototyp ersetzt diese Integrationen nicht.
+7. Download-/Media-/Intelligence-Funktionen erst nach Abschluss der Shell-, Daten-, Provider-, Storage- und Geräte-Gates. Der frühere Direktdatei-Download-Prototyp ist nicht Teil der aktuellen Basis.
 
 Erfolgskriterien und Gerätematrix: [TESTING.md](TESTING.md). Offene priorisierte Arbeiten: [TODO.md](TODO.md).

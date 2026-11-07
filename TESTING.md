@@ -2,45 +2,37 @@
 
 ## Grundsatz
 
-Statische Prüfungen ersetzen keinen Import- oder Laufzeittest in der installierten Scripting-App auf dem iPhone. Kein Test wird als bestanden dokumentiert, ohne tatsächlichen Nachweis. Keine Scripting-Pro-Abhängigkeit behaupten oder voraussetzen. Aktueller Stand: [COMPATIBILITY.md](COMPATIBILITY.md).
+Statische Prüfungen ersetzen keinen Import- oder Laufzeittest in der installierten Scripting-App auf dem iPhone. API-/Pro-Verfügbarkeit wird nur nach Gerätetest bestätigt. Aktueller Scope: lokale Foundation 0.4.0; der DownloadManager ist zurückgestellt.
 
-## Tatsächlich ausgeführte lokale Checks
+## Lokale Checks — Foundation 0.4.0
 
-**2026-11-06, Paket 0.3.0:**
-
-- `python3 tools/build_scripting_package.py` zweimal; beide Builds erzeugten dieselbe SHA-256-Datei: `cc1ac8d065d578df74167f677f21312d3a6950fe7911824a0633cc3f874b1585` (7.595 Byte).
-- Python `zipfile`: CRC-Test, exakte Root-Dateiliste und Reihenfolge (`script.json`, `index.tsx`, `README.md`), Manifest-JSON/Entry/Version 0.3.0 und Byte-Parität aller Paketdateien mit den Quellen bestanden.
-- Statische Quelltext-Assertions für Suchfelder, Kategorienfilter, direkte HTTPS-URL-Grenze, Foreground-/WLAN-Konfiguration und fehlende Sora-Runtime bestanden. Das ist kein Ausführungs- oder Verhaltenstest.
-- `git diff --check` bestanden.
-
-**2026-11-07, TSX-Quelltext:**
-
-- TypeScript 5.8.3 wurde temporär außerhalb des Repositories installiert. `tsc --noEmit` auf `index.tsx` mit lokalen Platzhalterdeklarationen für `scripting`, `DownloadManager`, `FileManager` und `AVPlayer` war erfolgreich. Das prüft TSX-Syntax und den Quelltext gegen diese Platzhalter, nicht gegen die echten Scripting-Typen oder das installierte Scripting-App-Runtime.
-- Keine Scripting-App-Import-, iPhone-, Download-, Bedienbarkeits- oder Playback-Laufzeittests ausgeführt.
+- Paket nach Änderungen an Script oder Paket-README neu mit `python3 tools/build_scripting_package.py` gebaut.
+- ZIP-CRC, Root-Dateiliste (`script.json`, `index.tsx`, `README.md`), Manifest-Version, Byte-Parität und reproduzierbarer Doppelbuild geprüft.
+- Statische Assertions: Capability-Gates für Entity-Liste, Suche, Feed und Details, lokaler Demo-Provider, kein `DownloadManager`, kein `AVPlayer` und keine Netzwerkquelle.
+- TypeScript 5.8.3 `tsc --noEmit` mit temporären Scripting-Platzhalterdeklarationen bestanden. Das prüft Syntax/TSX, nicht die echten Scripting-API-Typen oder das App-Runtime.
+- Finales Paket 0.4.0: 5.298 Byte, SHA-256 `b7a3b23595918bccb97eb7109a419b226af5b820d745956e1b0e28abeae41d6f`.
+- Keine Scripting-App-Import-, iPhone-, Bedienbarkeits- oder Laufzeittests ausgeführt.
 
 Diese Checks beweisen weder Scripting-Kompatibilität noch API-Freigabe im kostenlosen Build oder tatsächliche Gerätefunktion.
 
-## Zieltests: Download und Offline-Mediathek
+## Zieltests: Foundation auf dem iPhone
 
-Ausschließlich mit eigener oder sonst nachweisbar erlaubter direkter HTTPS-Testdatei testen; keine DRM-, Login-, CAPTCHA- oder Zugriffsbegrenzungen umgehen.
+1. **Import/Start:** `UNIVERSE.scripting` importieren; Scripting-App- und iOS-Version festhalten; Start in Home und Rückkehr nach erneuter Script-Ausführung prüfen.
+2. **Navigation:** Home, Entdecken, Suche, Feeds, Merkliste, Info und Detailansicht erreichen; Details aus Home/Feed/Suche öffnen und in die vorherige Ansicht zurückkehren.
+3. **Lokale Suche:** Titel, Kurzbeschreibung, Kategorie und Quelle suchen; Inhaltstypfilter wechseln; Filter aus Entdecken übernehmen; Suchtext leeren; Nulltrefferzustand testen.
+4. **Feed/Provenienz:** gemischte Demo-Inhalte chronologisch prüfen; Quelle und Abrufdatum in Karten und Details vergleichen; Demo-Inhalte nicht mit Live-Ergebnissen verwechseln.
+5. **Merkliste:** merken/entfernen, mehrere Items, Navigation währenddessen; nach Script-Neustart ist Verlust erwartbar und muss zur UI-Aussage passen.
+6. **Netzwerk:** beim Öffnen der Basis dürfen keine Provider-/Webanfragen ausgelöst werden.
+7. **iOS UX:** Dark Mode, Safe Areas, VoiceOver, Dynamic Type, Tastatur, Kontrast, Touch-Ziele und Lifecycle dokumentieren.
 
-1. **Import/Start:** `UNIVERSE.scripting` importieren, Home öffnen, alle Ansichten, Navigation und Fehlerhinweise ausprobieren. Titel-Suche in Downloads/Mediathek, Kategorienfilter, leere Treffer und ausgeblendete leere Gruppen prüfen. Scripting-App- und iOS-Version protokollieren; tatsächlichen kostenlosen API-Zugriff prüfen.
-2. **Eingabevalidierung:** gültige HTTPS-Datei mit `.mp4`/`.m4v`/`.mov`; ungültige URL; HTTP; URL-Benutzerinfo/Fragment; nicht unterstützte Endung; URL-Endung, deren Antwort kein Video ist; doppelter Link. Query-Token-Warnung beachten.
-3. **Queue/Lifecycle:** WLAN-only, Fortschritt, Pause/Fortsetzen, Abbrechen, Fehleranzeige, App in den Hintergrund stellen (Foreground-Transfer muss laut API-Konfiguration pausieren), App-Skript erneut öffnen und Queue-/Completed-Task-Wiederherstellung prüfen.
-4. **Organisation:** je eine erlaubte Testdatei in Anime/Filme/Serien/Sonstiges laden; Dateipfad und Anzeigegruppe kontrollieren; fehlende/manuell entfernte Datei darf nicht als offline verfügbar erscheinen.
-5. **Offline-Playback:** nach vollständigem Download Flugmodus einschalten, Datei nur aus Offline-Mediathek starten, Play/Pause, Ton, Codecfehler und Ende testen. Nicht aus dem ursprünglichen Netzwerkpfad abspielen.
-6. **Löschen:** zuerst Bestätigung, dann Queue-Eintrag und zugehörige lokale Datei entfernen; Abbrechen muss beides erhalten. Unbeteiligte Dateien dürfen nie entfernt werden.
-7. **Fehler-/Randfälle:** WLAN-Verlust, HTTP-Fehler, abgebrochene/unterbrochene Datei, Speicherknappheit, inkompatibler Codec, fehlende Datei und erneute Queue-Verbindung dokumentieren.
-8. **iOS UX:** Dark Mode, Safe Areas, VoiceOver, Dynamic Type, Tastatur, Einhandbedienung und Player-Lifecycle prüfen.
+## Provider-/Daten-Foundation — spätere Tests
 
-## Weitere Plattform- und Plugin-Zieltests
+Vor Live-Provider oder persistenter Speicherung: statische Registry-/Manifestvalidierung, Capability-allowlist, unbekannte Capability, doppelte IDs, Providerfehler, partielle Ergebnisse, Schemafehler, Datenprovenienz, Session-Neustart, Speichermigration und Lösch-/Exportpfade mit lokalen Fixtures prüfen.
 
-1. **Core-Vertrag:** Manifestfehler, doppelte Capability-IDs, nicht unterstützte API-Version, Plugin-Ausfall und Deaktivierung.
-2. **Data:** Entities, SourceRecords, Relations, `confidence`, Migration/Rollback, Duplikat- und Löschpfad.
-3. **Provider:** lokale Fixtures für valide, leere, falsche, geänderte und blockierte Antworten; Timeout/Abbruch/Redirect/Rate Limit.
-4. **Suche/Feed/UI:** gemischte Entity-Typen, partielle Providerfehler, unbekannter Renderer, Offline-/Leerzustände und sortierbares Dashboard.
-5. **AniWorld:** falls rechtlich und technisch freigegeben, zunächst nur externe Navigation und lokale öffentliche Metadaten-Fixtures. Live-Aufrufe sind separat freizugeben; keine CAPTCHA-/Access-Control-Umgehung oder Stream-Extraktion.
+## Download-/Offline-Tests — erst nach Foundation-Gates
+
+Der Manager ist **nicht** Teil der aktuellen Version 0.4.0. Diese Tests sind nur für eine spätere, separat freigegebene Version vorgesehen: direkte erlaubte HTTPS-Testdatei, Eingabevalidierung, WLAN/Foreground-Lifecycle, Queue-Wiederaufnahme, Speicherfehler, Dateilöschung, Flugmodus-Playback und Codec-/Tonverhalten. Keine DRM-, Login-, CAPTCHA-, Playlist- oder Zugriffsbeschränkungen umgehen.
 
 ## Release-Blocker
 
-Import oder Start scheitert; benötigte API ist nicht im tatsächlich verfügbaren Build enthalten; Downloads gefährden/überschreiben fremde Dateien; Queue-Status/Fehler werden verschleiert; Offline-Datei spielt im Flugmodus nicht oder UI behauptet das Gegenteil; unklare Rechte/Pro-Anforderung; Zugriffsbeschränkung wird umgangen; schwerer Accessibility-, Dark-Mode- oder Datenverlustfehler.
+Shell-Import oder Start scheitert; UI behauptet Live-Daten oder persistente Speicherung obwohl nicht vorhanden; Capability-Gates werden umgangen; API braucht unbestätigtes Pro; erheblicher Datenverlust-/Accessibility-/Lifecycle-Fehler; riskanter Zugriff oder unerlaubte Quelle.
