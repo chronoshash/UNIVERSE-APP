@@ -1,6 +1,6 @@
-# UNIVERSE Scripting foundation · 0.5.1
+# UNIVERSE Scripting foundation · 0.5.2
 
-Version 0.5.1 tightens the cinematic catalogue layout for narrow screens and fixes the Scripting color/conditional typing issues. The UI uses a dark featured story, horizontal content rails, illustrated poster cards, compact navigation chips, search, and content details.
+Version 0.5.2 replaces the top horizontal navigation strip with a two-column navigation grid, expands the local showcase to twelve demo entries, and retains the null-safe child and literal-preserving gradient color fixes. The UI uses a dark featured story, constrained horizontal content rails, illustrated poster cards, search, and content details. The narrower navigation layout reduces one source of horizontal overflow, but visual fit still requires an on-device check.
 
 The interface uses a statically bundled fixture provider and an original local hero image in `assets/hero.jpg`, loaded from `Script.directory`. It makes no live provider calls or network requests.
 

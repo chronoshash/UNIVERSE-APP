@@ -51,7 +51,7 @@ type StaticProvider = {
   getEntity: (id: string) => UniverseEntity | undefined
 }
 
-const APP_VERSION = "0.5.1"
+const APP_VERSION = "0.5.2"
 const CONTENT_FILTERS: ContentFilter[] = ["Alle", "Medien", "Artikel", "Termine"]
 const NAV_ITEMS: { id: RootScreen; label: string; symbol: string }[] = [
   { id: "home", label: "Start", symbol: "house.fill" },
@@ -140,6 +140,69 @@ const ENTITIES: UniverseEntity[] = [
     publishedAt: "2026-11-02T08:45:00Z",
     source: { providerId: "universe.demo", providerName: "UNIVERSE Demoquelle", retrievedAt: "2026-11-07T09:00:00Z" },
   },
+  {
+    id: "demo-media-003",
+    typeId: "media.video",
+    title: "Lichter über Kyoto",
+    summary: "Eine leise Demo-Reise durch eine Stadt zwischen Neon, Regen und Erinnerung.",
+    category: "Drama",
+    publishedAt: "2026-11-01T19:20:00Z",
+    source: { providerId: "universe.demo", providerName: "UNIVERSE Demoquelle", retrievedAt: "2026-11-07T09:00:00Z" },
+  },
+  {
+    id: "demo-media-004",
+    typeId: "media.video",
+    title: "Die letzte Umlaufbahn",
+    summary: "Ein Science-Fiction-Konzept für die lokale Vorschau, ohne echte Sendungsdaten.",
+    category: "Sci-Fi",
+    publishedAt: "2026-10-30T20:00:00Z",
+    source: { providerId: "universe.demo", providerName: "UNIVERSE Demoquelle", retrievedAt: "2026-11-07T09:00:00Z" },
+  },
+  {
+    id: "demo-media-005",
+    typeId: "media.video",
+    title: "Wilde Horizonte",
+    summary: "Ein dokumentarischer Demo-Titel über Landschaften und die Geschichten darin.",
+    category: "Natur",
+    publishedAt: "2026-10-28T16:45:00Z",
+    source: { providerId: "universe.demo", providerName: "UNIVERSE Demoquelle", retrievedAt: "2026-11-07T09:00:00Z" },
+  },
+  {
+    id: "demo-article-003",
+    typeId: "news.article",
+    title: "Die Kunst guter Empfehlungen",
+    summary: "Ein Beispieltext darüber, wie transparente Auswahl statt undurchsichtiger Rankings Vertrauen schafft.",
+    category: "Design",
+    publishedAt: "2026-10-31T10:00:00Z",
+    source: { providerId: "universe.demo", providerName: "UNIVERSE Demoquelle", retrievedAt: "2026-11-07T09:00:00Z" },
+  },
+  {
+    id: "demo-article-004",
+    typeId: "news.article",
+    title: "Ein persönliches digitales Archiv",
+    summary: "Ein lokaler Showcase-Eintrag für Sammlungen, Notizen und eigene Themenwelten.",
+    category: "Bibliothek",
+    publishedAt: "2026-10-27T08:30:00Z",
+    source: { providerId: "universe.demo", providerName: "UNIVERSE Demoquelle", retrievedAt: "2026-11-07T09:00:00Z" },
+  },
+  {
+    id: "demo-event-002",
+    typeId: "event.release",
+    title: "Design-Notizen: Hub im Wandel",
+    summary: "Ein fiktiver Termin zum Testen der gemeinsamen Event- und Medienansicht.",
+    category: "Community",
+    publishedAt: "2026-10-26T13:00:00Z",
+    source: { providerId: "universe.demo", providerName: "UNIVERSE Demoquelle", retrievedAt: "2026-11-07T09:00:00Z" },
+  },
+  {
+    id: "demo-event-003",
+    typeId: "event.release",
+    title: "Ein Abend für neue Ideen",
+    summary: "Ein weiteres erfundenes Datum, das ausschließlich die lokale Terminoberfläche illustriert.",
+    category: "Kultur",
+    publishedAt: "2026-10-24T18:00:00Z",
+    source: { providerId: "universe.demo", providerName: "UNIVERSE Demoquelle", retrievedAt: "2026-11-07T09:00:00Z" },
+  },
 ]
 
 function typeLabel(typeId: ContentType): string {
@@ -221,7 +284,7 @@ function UniverseApp() {
   function navigationChip(item: { id: RootScreen; label: string; symbol: string }) {
     const selected = screen === item.id || (screen === "detail" && returnScreen === item.id)
     return <Button key={item.id} buttonStyle="plain" action={() => navigateTo(item.id)}>
-      <HStack spacing={7} padding={{ horizontal: 13, vertical: 9 }} background={
+      <HStack spacing={7} frame={{ maxWidth: "infinity" }} padding={{ horizontal: 13, vertical: 9 }} background={
         <RoundedRectangle cornerRadius={18} fill={selected ? "#7047EB" : "rgba(255,255,255,0.07)"} />
       }>
         <Image systemName={item.symbol} frame={{ width: 15, height: 15 }} foregroundStyle={selected ? "white" : "#B5B6C6"} />
@@ -382,11 +445,11 @@ function UniverseApp() {
             <Button title="Suchen" systemImage="magnifyingglass" buttonStyle="bordered" buttonBorderShape="circle" action={() => navigateTo("search")} />
           </HStack>
 
-          <ScrollView axes="horizontal" scrollIndicator="never" frame={{ maxWidth: "infinity" }}>
-            <LazyHStack spacing={8}>
-              {NAV_ITEMS.map(navigationChip)}
-            </LazyHStack>
-          </ScrollView>
+          <VStack spacing={8} frame={{ maxWidth: "infinity" }}>
+            {[0, 2, 4].map(start => <HStack key={`navigation-row-${start}`} spacing={8} frame={{ maxWidth: "infinity" }}>
+              {NAV_ITEMS.slice(start, start + 2).map(navigationChip)}
+            </HStack>)}
+          </VStack>
 
           {screen === "home" && <>
             {heroEntity && featuredCard(heroEntity)}

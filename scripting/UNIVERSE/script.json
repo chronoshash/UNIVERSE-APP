@@ -1,7 +1,7 @@
 {
   "name": "UNIVERSE",
   "description": "A cinematic local-first content discovery shell with capability-gated demo media, articles, and events.",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "icon": "globe",
   "color": "#7C5CFF",
   "entry": "index.tsx",

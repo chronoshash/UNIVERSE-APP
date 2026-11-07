@@ -4,7 +4,7 @@
 
 ## Status und Grenzen
 
-Dieses Dokument beschreibt die Zielarchitektur, nicht eine fertige Plattform. Geplante UNIVERSE-APIs sind keine vorhandenen Scripting-APIs. Version 0.5.1 baut auf der Shell aus 0.4.0 auf und ergänzt eine dunkle Katalogoberfläche mit lokalem Hero-Artwork, horizontalen Rails und Poster-Karten. Home, Explore, Search, Feeds, Library und Info laufen weiterhin auf einem statischen Fixture-Provider mit lokalen Beispieldaten. Der frühere 0.3.0-Download-Prototyp ist ein historischer Vorgriff und nicht Teil der aktuellen Basis. Der neue Shell-Build ist **nicht** auf einem iPhone importiert oder ausgeführt worden; API-Verfügbarkeit im installierten Build und Pro-Zugriff sind offen. Keine Scripting-Pro-Funktion, kein externes Backend, kein Xcode-Projekt, kein dauerhafter Background-Worker und keine dynamische Fremdcode-Sandbox voraussetzen; siehe [Kompatibilität](COMPATIBILITY.md).
+Dieses Dokument beschreibt die Zielarchitektur, nicht eine fertige Plattform. Geplante UNIVERSE-APIs sind keine vorhandenen Scripting-APIs. Version 0.5.2 baut auf der Shell aus 0.4.0 auf und ergänzt eine dunkle Katalogoberfläche mit lokalem Hero-Artwork, zweispaltigen Navigationszeilen, zwölf lokalen Fixtures, horizontalen Rails und Poster-Karten. Home, Explore, Search, Feeds, Library und Info laufen weiterhin auf einem statischen Fixture-Provider mit lokalen Beispieldaten. Der frühere 0.3.0-Download-Prototyp ist ein historischer Vorgriff und nicht Teil der aktuellen Basis. Der neue Shell-Build ist **nicht** auf einem iPhone importiert oder ausgeführt worden; API-Verfügbarkeit im installierten Build und Pro-Zugriff sind offen. Keine Scripting-Pro-Funktion, kein externes Backend, kein Xcode-Projekt, kein dauerhafter Background-Worker und keine dynamische Fremdcode-Sandbox voraussetzen; siehe [Kompatibilität](COMPATIBILITY.md).
 
 ## Prinzipien
 
@@ -52,7 +52,7 @@ Globale Bereiche: **Home**, **Explore**, **Search**, **Feeds**, **Library**. Plu
 
 ### Tatsächlich implementierter Prototypumfang
 
-Die aktuelle TSX-Datei implementiert die Shell-Basis mit Home, Entdecken, Suche, Feeds, sitzungsgebundener Merkliste, Info und Detailansicht. Ein fest gebündelter Fixture-Provider stellt lokale Demo-Entities bereit; Entity-Liste, Suche, Feed und Details werden jeweils nur über eine Capability-Allowlist aufgerufen. Quellenherkunft ist am Inhalt sichtbar. Es gibt noch keine aktive externe Quelle, dauerhafte Speicherung, Datenbank oder Netzwerkfunktion. Das gebündelte AniWorld-Plugin-Skelett bleibt deaktiviert und hat keine Capabilities. Der DownloadManager ist bewusst aus 0.5.1 herausgehalten und folgt erst nach den Foundation-Gates. Siehe [Datenmodell](DATA_MODEL.md), [Plugin-System](PLUGIN_SYSTEM.md) und [TODO.md](TODO.md).
+Die aktuelle TSX-Datei implementiert die Shell-Basis mit Home, Entdecken, Suche, Feeds, sitzungsgebundener Merkliste, Info und Detailansicht. Ein fest gebündelter Fixture-Provider stellt lokale Demo-Entities bereit; Entity-Liste, Suche, Feed und Details werden jeweils nur über eine Capability-Allowlist aufgerufen. Quellenherkunft ist am Inhalt sichtbar. Es gibt noch keine aktive externe Quelle, dauerhafte Speicherung, Datenbank oder Netzwerkfunktion. Das gebündelte AniWorld-Plugin-Skelett bleibt deaktiviert und hat keine Capabilities. Der DownloadManager ist bewusst aus 0.5.2 herausgehalten und folgt erst nach den Foundation-Gates. Siehe [Datenmodell](DATA_MODEL.md), [Plugin-System](PLUGIN_SYSTEM.md) und [TODO.md](TODO.md).
 
 ## Daten und Qualität
 
