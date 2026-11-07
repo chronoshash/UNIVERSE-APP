@@ -1,8 +1,8 @@
-# UNIVERSE Scripting foundation · 0.5.4
+# UNIVERSE Scripting foundation · 0.5.5
 
-Version 0.5.3's padding/frame correction did not resolve the user's reported full-screen horizontal overflow. Version 0.5.4 adds a stronger, viewport-measured constraint: a `GeometryReader` inside the navigation stack supplies the available width to both the vertical `ScrollView` and its root content frame, and the outer scroll view is clipped to its bounds. Horizontal content rails remain intentionally scrollable. This is a targeted correction attempt, not a verified device fix; import and iPhone rendering still need to be checked. The two-column navigation, twelve local demo entries, null-safe optional JSX children, and literal-preserving gradient colors are retained.
+The user reports that the full UI still overflows horizontally after 0.5.4. The 0.5.4 `GeometryReader` was nested inside `NavigationStack`; 0.5.5 moves the reader to the presented root so it measures the presentation bounds first, then gives that exact width to `NavigationStack`, the vertical `ScrollView`, and root content. Scroll clipping is also explicitly kept enabled. Horizontal catalogue rails remain intentionally scrollable. This is another targeted correction attempt, not a verified device fix; import and iPhone rendering still need to be checked.
 
-The interface uses a statically bundled fixture provider and an original local hero image in `assets/hero.jpg`, loaded from `Script.directory`. It makes no live provider calls or network requests.
+The two-column navigation, twelve local demo entries, null-safe optional JSX children, and literal-preserving gradient colors are retained. The interface uses a statically bundled fixture provider and an original local hero image in `assets/hero.jpg`, loaded from `Script.directory`. It makes no live provider calls or network requests.
 
 ## Included
 

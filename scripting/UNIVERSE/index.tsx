@@ -52,7 +52,7 @@ type StaticProvider = {
   getEntity: (id: string) => UniverseEntity | undefined
 }
 
-const APP_VERSION = "0.5.4"
+const APP_VERSION = "0.5.5"
 const CONTENT_FILTERS: ContentFilter[] = ["Alle", "Medien", "Artikel", "Termine"]
 const NAV_ITEMS: { id: RootScreen; label: string; symbol: string }[] = [
   { id: "home", label: "Start", symbol: "house.fill" },
@@ -423,12 +423,12 @@ function UniverseApp() {
     : "Details"
 
   return (
-    <NavigationStack>
-      <GeometryReader>
-        {(proxy) => {
-          const viewportWidth = Math.max(1, proxy.size.width)
-          return (
-            <ScrollView navigationTitle={pageTitle} navigationBarTitleDisplayMode="inline" background="#080A12" frame={{ width: viewportWidth }} clipped>
+    <GeometryReader>
+      {(proxy) => {
+        const viewportWidth = Math.max(1, proxy.size.width)
+        return (
+          <NavigationStack frame={{ width: viewportWidth }}>
+            <ScrollView navigationTitle={pageTitle} navigationBarTitleDisplayMode="inline" background="#080A12" frame={{ width: viewportWidth }} clipped scrollClipDisabled={false}>
               <VStack alignment="leading" spacing={22} padding={{ horizontal: 18, top: 14, bottom: 34 }} frame={{ width: viewportWidth }} background="#080A12">
                 <HStack alignment="center" spacing={10} frame={{ maxWidth: "infinity" }}>
                   <ZStack frame={{ width: 42, height: 42 }}>
@@ -606,10 +606,10 @@ function UniverseApp() {
                 </>}
               </VStack>
             </ScrollView>
-          )
-        }}
-      </GeometryReader>
-    </NavigationStack>
+          </NavigationStack>
+        )
+      }}
+    </GeometryReader>
   )
 }
 

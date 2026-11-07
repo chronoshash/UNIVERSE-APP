@@ -1,14 +1,14 @@
 # UNIVERSE — Scripting-Kompatibilität
 
-**Stand: 2026-11-07 · aktuelle Basis: `.scripting` 0.5.4.** Version 0.5.4 ist eine lokale Katalog-Shell mit Demo-Fixtures, statischer Capability-Registry und gebündeltem Hero-Artwork. Sie wurde lokal gebaut, aber nicht in die Scripting-App importiert oder auf einem iPhone ausgeführt. Verfügbarkeit der UI-APIs im installierten Build, Pro-Zugriff, Darstellung und Lifecycle sind offen.
+**Stand: 2026-11-07 · aktuelle Basis: `.scripting` 0.5.5.** Version 0.5.5 ist eine lokale Katalog-Shell mit Demo-Fixtures, statischer Capability-Registry und gebündeltem Hero-Artwork. Sie wurde lokal gebaut, aber nicht in die Scripting-App importiert oder auf einem iPhone ausgeführt. Verfügbarkeit der UI-APIs im installierten Build, Pro-Zugriff, Darstellung und Lifecycle sind offen.
 
 ## Aktueller Funktionsumfang und Grenzen
 
 - Home, Entdecken, Suche, Feeds, Merkliste und Detailansicht zeigen lokale Beispieldaten und das mitgelieferte illustrative Hero-Artwork.
 - Entity-Liste, Suche, Feed und Detailzugriff werden nur aufgerufen, wenn der statisch eingetragene Demo-Provider die jeweilige Capability deklariert.
 - Merkliste ist ausschließlich UI-State der aktuellen Script-Sitzung; es wird keine Persistenz behauptet.
-- Version 0.5.4 enthält weder `DownloadManager`, `AVPlayer`, Netzwerkzugriffe, einen echten Provider noch dynamische Plugins; das Hero-Bild wird lokal aus dem Paket geladen.
-- Der gemeldete horizontale Überlauf blieb nach 0.5.3 laut Nutzer bestehen. 0.5.4 verwendet `GeometryReader`-Breite für vertikalen ScrollView und Root-Frame sowie Clipping am äußeren ScrollView. Das ist bis zum Import-/iPhone-Test unbestätigt.
+- Version 0.5.5 enthält weder `DownloadManager`, `AVPlayer`, Netzwerkzugriffe, einen echten Provider noch dynamische Plugins; das Hero-Bild wird lokal aus dem Paket geladen.
+- Der Nutzer meldet weiterhin Überlauf nach den 0.5.3- und 0.5.4-Versuchen. 0.5.5 hebt `GeometryReader` an den präsentierten Script-Root, setzt `NavigationStack`, vertikalen `ScrollView` und Root auf dieselbe Breite und aktiviert `scrollClipDisabled={false}` plus Clipping. Auch das ist bis zum Import-/iPhone-Test unbestätigt.
 - Der Downloader aus Version 0.3.0 ist historisch und wurde aus der aktuellen Basis entfernt. Er kommt erst nach App-Shell-, Datenmodell-, Provider-, Storage- und Geräte-Gates zurück.
 - Keine Scripting-Pro-Funktion als Voraussetzung oder Fallback; kein Xcode-Projekt, Backend, Background-Worker oder dynamischer Fremdcode.
 
@@ -25,12 +25,13 @@ Die Quellenarchive liefern die Markdown-Ausgangsseiten. **Alle vier generierten 
 
 ## APIs der Foundation — dokumentiert, aber nicht auf dem Gerät bestätigt
 
-| API | Verwendung in 0.5.4 | Offener Nachweis |
+| API | Verwendung in 0.5.5 | Offener Nachweis |
 |---|---|---|
 | `Navigation.present`, `NavigationStack`, `ScrollView`, `LazyHStack` | Script-Präsentation, vertikaler Screen und horizontale Katalog-Rails | Import, Scrollverhalten, Lifecycle auf iPhone |
 | `Button`, `Text`, `TextField`, `HStack`, `VStack`, `ZStack`, `Spacer` | Navigation, Filter, Karten, Suche und Inhaltshierarchie | Rendern, Touch-Ziele, Barrierefreiheit, Tastatur |
 | `Image`, `RoundedRectangle`, `Path` | SF-Symbol-Icons, Kartenflächen und lokales Hero-Bild aus `Script.directory` | gebündelten Asset-Pfad, Zuschnitt und Darstellung am Gerät |
-| `GeometryReader` | verfügbare Breite messen und an vertikalen Scrollbereich/Root-Frame binden | Typen, NavigationStack-Layout und Laufzeit auf dem iPhone |
+| `GeometryReader`, `frame` | Breite direkt am präsentierten Root messen und an `NavigationStack`, vertikalen Scrollbereich und Root-Frame binden | Typen, Präsentationsgröße, NavigationStack-Layout und Laufzeit auf dem iPhone |
+| `clipped`, `scrollClipDisabled` | äußeren vertikalen ScrollView innerhalb seiner Bounds halten | Bridge-Verhalten und horizontale Rails auf dem iPhone |
 | `useState` | Navigation, Suchfeld, Filter und sitzungsgebundene Merkliste | tatsächlicher Hook-/Runtime-Zugriff in installierter Version |
 
 Der Katalogstatus „nicht als Pro markiert“ wäre kein Beweis, dass ein API im kostenlosen Nutzer-Build zugänglich ist. Der aktuelle Shell-Import und tatsächlicher kostenloser Zugriff müssen am Zielgerät geprüft werden.
@@ -41,9 +42,9 @@ TypeScript 5.8.3 hat `index.tsx` mit lokalen, temporären Platzhalterdeklaration
 
 Das Paket wird von `tools/build_scripting_package.py` erstellt und enthält `script.json`, `index.tsx`, `README.md`, `assets/hero.jpg` sowie das inaktive `plugins/aniworld/plugin.json`. Es ist lokal auf CRC, Dateiliste, Manifest, Byte-Parität und deterministischen Build geprüft. Das `.scripting`-ZIP-Format ist hier eine Paketkonvention, keine durch einen erfolgreichen Scripting-Import bestätigte Kompatibilitätszusage.
 
-## Zurückgestellte Download-/Player-APIs (nicht Teil von 0.5.4)
+## Zurückgestellte Download-/Player-APIs (nicht Teil von 0.5.5)
 
-In der offiziellen `DownloadManager`-Doku steht, dass diese globale API für Main-App-Scripts vorgesehen ist; explizite Ziele müssen lokale absolute Pfade sein, fehlende Elternordner werden beim Veröffentlichen angelegt und vorhandene Dateien werden nicht überschrieben. Die Seiten für `FileManager`, `AVPlayer` und `VideoPlayer` wurden für den früheren 0.3.0-Versuch gelesen. Das belegt weder Pro-Freiheit noch den API-Stand des installierten iPhones. Keine dieser APIs ist in der aktuellen Version 0.5.4 aufgerufen.
+In der offiziellen `DownloadManager`-Doku steht, dass diese globale API für Main-App-Scripts vorgesehen ist; explizite Ziele müssen lokale absolute Pfade sein, fehlende Elternordner werden beim Veröffentlichen angelegt und vorhandene Dateien werden nicht überschrieben. Die Seiten für `FileManager`, `AVPlayer` und `VideoPlayer` wurden für den früheren 0.3.0-Versuch gelesen. Das belegt weder Pro-Freiheit noch den API-Stand des installierten iPhones. Keine dieser APIs ist in der aktuellen Version 0.5.5 aufgerufen.
 
 Falls ein Manager später nach Abschluss der Foundation-Gates wieder gebaut wird, gelten weiterhin nur nutzerbereitgestellte direkte HTTP(S)-Dateilinks, Rechte-/Token-Hinweise und explizite Nutzeraktionen. Keine Webseiten-/Playlist-/Stream-Extraktion, kein DRM-/Login-/CAPTCHA-Bypass. Dateiendung beweist weder Videoinhalt noch Codec.
 
@@ -52,7 +53,7 @@ Falls ein Manager später nach Abschluss der Foundation-Gates wieder gebaut wird
 | Frage | Nachweis | Status |
 |---|---|---|
 | installierte Scripting- und iOS-Version / kostenloser UI-API-Zugriff | App-Version, Geräte-Einstellungen und Test auf Ziel-iPhone | Offen |
-| 0.5.4-Paket importierbar und startfähig | Import und Shell-/Navigationstest | Offen |
+| 0.5.5-Paket importierbar und startfähig | Import und Shell-/Navigationstest | Offen |
 | Merkliste-/Storage-Verhalten | Persistenz bleibt absichtlich nicht implementiert; Storage API vor Nutzung testen | Offen |
 | Suche, Typfilter, Demo-Feed und Detailnavigation | manuelle iPhone-Prüfung, Tastatur-/Lifecycle-Fälle | Offen |
 | Dark Mode, VoiceOver, Dynamic Type, Safe Areas | iPhone-Testprotokoll/Screenshots | Offen |

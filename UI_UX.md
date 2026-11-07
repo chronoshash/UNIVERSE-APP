@@ -2,7 +2,7 @@
 
 ## Produkt und globale Navigation
 
-Langfristiges Ziel von UNIVERSE ist ein persönlicher Web-Content-Hub. Die Foundation 0.5.4 ist eine bewusst begrenzte, lokale Demo-Katalogoberfläche — keine echte Streaming- oder Anime-App. Sie zeigt Medien, Artikel und Termine in einer gemeinsamen, capability-gesteuerten Shell; Live-Provider, Wiedergabe und persistente Daten fehlen weiterhin.
+Langfristiges Ziel von UNIVERSE ist ein persönlicher Web-Content-Hub. Die Foundation 0.5.5 ist eine bewusst begrenzte, lokale Demo-Katalogoberfläche — keine echte Streaming- oder Anime-App. Sie zeigt Medien, Artikel und Termine in einer gemeinsamen, capability-gesteuerten Shell; Live-Provider, Wiedergabe und persistente Daten fehlen weiterhin.
 
 | Bereich | Aufgabe |
 |---|---|
@@ -30,7 +30,7 @@ Generische Entity-Detailseite zeigt gemeinsame Attribute plus Quellenprovenienz.
 
 Feeds markieren Herkunft und Aktualisierungszeit. Kalender vereinigt Termine, hält Zeitzone/ganztägig auseinander und verknüpft Events mit Entities. Eine Collection kann beliebige Typen mischen. Providerdaten und persönliche Notizen bleiben getrennt.
 
-## Aktueller Basis-Flow (0.5.4)
+## Aktueller Basis-Flow (0.5.5)
 
 Home nutzt ein dunkles, kinematisches Layout mit markantem UNIVERSE-Header, zweispaltigen Navigationszeilen, einem breiten Featured-Panel mit eigens erstelltem lokalem Artwork und horizontalen Inhaltsschienen. Zwölf lokale Fixture-Titel füllen die gestalteten Poster-Karten; Chips filtern Medien, Artikel und Termine. Suche, Feed und Detailansicht teilen dieselben Entities und halten Quellenherkunft sichtbar. „Merken“ gilt nur für die aktuelle Script-Sitzung. Das Design übernimmt allgemeine Katalogmuster, keine Netflix-/Sora-Markenmittel, Assets oder Implementierung.
 
@@ -45,4 +45,4 @@ Es gibt keine Netzwerkabfragen oder echten Provider. Der DownloadManager ist nic
 - Veraltete Daten sichtbar kennzeichnen; keine Endlosschleifen bei Laden.
 - Nutzerbestätigung/Undo für Löschen und Zusammenführen.
 
-Die aktuelle `UNIVERSE.scripting`-Datei ist die Foundation 0.5.4: eine dunkle, visuell ausgebaute deutsche Katalog-Shell mit lokalem Hero-Artwork, horizontalen Rails, zweispaltiger Navigation, zwölf Demo-Fixtures, Poster-Karten, lokaler Demoquelle, capability-gesteuerter Entity-Liste/Suche/Feed/Details und einem deaktivierten AniWorld-Plugin-Skelett ohne Netzwerkzugriff. Da der Nutzer meldete, dass 0.5.3 weiterhin links und rechts überläuft, bindet 0.5.4 den vertikalen Scrollbereich und dessen Root-Inhalt an die im NavigationStack gemessene `GeometryReader`-Breite; horizontale Rails bleiben intern scrollbar. Das ist ein gezielter Korrekturversuch, keine bestätigte Behebung: Import, API-Zugriff, Breitenverhalten und Bedienbarkeit müssen auf einem iPhone geprüft werden. Es gibt weder Live-Daten noch persistente Speicherung. DownloadManager, echte Provider und Playback fehlen absichtlich, bis Basis und Gerätekompatibilität stehen. Navigation und gemischte Inhaltssuche sind durch Sora-UX-Ideen inspiriert; kein Sora-Code wurde übernommen (siehe `SORA_RESEARCH.md`).
+Die aktuelle `UNIVERSE.scripting`-Datei ist die Foundation 0.5.5: eine dunkle deutsche Katalog-Shell mit lokalem Hero-Artwork, horizontalen Rails, zweispaltiger Navigation, zwölf Demo-Fixtures, Poster-Karten, capability-gesteuerter Entity-Liste/Suche/Feed/Details und einem deaktivierten AniWorld-Skelett ohne Netzwerkzugriff. Der Nutzer meldete, dass sowohl 0.5.3 als auch 0.5.4 weiterhin links und rechts ausbrechen. In 0.5.5 liegt `GeometryReader` daher direkt am präsentierten Script-Root und misst vor dem `NavigationStack`; NavigationStack, vertikaler ScrollView und Root-Inhalt erhalten dieselbe feste Breite, Scroll-Clipping ist explizit aktiv. Horizontale Rails bleiben absichtlich intern scrollbar. Dies ist ein weiterer gezielter Versuch, keine bestätigte Behebung: Import und Breite sind am iPhone zu prüfen. Es gibt weder Live-Daten noch persistente Speicherung. DownloadManager, echte Provider und Playback fehlen absichtlich, bis Basis und Gerätekompatibilität stehen. Navigation und gemischte Inhaltssuche sind durch Sora-UX-Ideen inspiriert; kein Sora-Code wurde übernommen (siehe `SORA_RESEARCH.md`).
