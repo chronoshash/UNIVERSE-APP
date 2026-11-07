@@ -2,11 +2,11 @@
 
 ## Ziele und Status
 
-Der Core soll verschiedene Webinhalte repräsentieren, ohne eine feste Anime-/Video-Typenliste vorauszusetzen. Version 0.5.6 führt das in 0.4.0 begonnene kleine lokale Modell aus `Entity`-ähnlichen Fixture-Einträgen, `typeId` und `SourceRecord`-Herkunft hinter einem statischen Provider fort. Plugins registrieren noch keine Typen. Das vollständige Modell bleibt **Entwurf**; konkrete Repository-/SQLite-Tabellen und Migrationen folgen nach dem iPhone-Capability-Test.
+Der Core soll verschiedene Webinhalte repräsentieren, ohne eine feste Anime-/Video-Typenliste vorauszusetzen. Version 0.5.7 führt das in 0.4.0 begonnene kleine lokale Modell aus `Entity`-ähnlichen Fixture-Einträgen, `typeId` und `SourceRecord`-Herkunft hinter einem statischen Provider fort. Plugins registrieren noch keine Typen. Das vollständige Modell bleibt **Entwurf**; konkrete Repository-/SQLite-Tabellen und Migrationen folgen nach dem iPhone-Capability-Test.
 
 ## Aktuelle Foundation und zurückgestellter Download-Prototyp
 
-Die aktuelle 0.5.6-Basis nutzt lokale Fixture-Entities mit stabilen IDs, Inhaltstypen, Kategorien und einem `SourceRecord`-ähnlichen Quellnachweis. Ein statischer Provider liefert Suche, Feed und Detailzugriff; die Merkliste lebt nur im UI-State der laufenden Script-Sitzung. Es gibt noch kein persistentes Repository und keine Migrationen.
+Die aktuelle 0.5.7-Basis nutzt lokale Fixture-Entities mit stabilen IDs, Inhaltstypen, Kategorien und einem `SourceRecord`-ähnlichen Quellnachweis. Ein statischer Provider liefert Suche, Feed und Detailzugriff; der Feed filtert die chronologischen Fixture-Einträge nach Typ. Detailvorschläge werden zur Laufzeit aus gleicher Kategorie oder gleichem Typ abgeleitet und sind keine persistierten `EntityRelation`-Datensätze. Die Merkliste lebt nur im UI-State der laufenden Script-Sitzung. Es gibt noch kein persistentes Repository und keine Migrationen.
 
 Der 0.3.0-Download-Prototyp liegt nur in der Git-Historie/älteren Version. Seine Queue-Snapshots sind nicht das Datenmodell des aktuellen Produkts. Der DownloadManager wird erst nach Shell-, Provider-, Storage- und Geräte-Gates wieder aufgenommen.
 

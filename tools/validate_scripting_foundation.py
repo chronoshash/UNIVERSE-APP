@@ -94,6 +94,15 @@ def validate_sources() -> tuple[dict, str, bytes]:
             "Info screen must expose the measured widths for on-device overflow diagnosis")
     require('maxWidth: "infinity"' not in code,
             "layout must not contain unbounded max-width frames")
+    require('const [feedFilterIndex, setFeedFilterIndex] = useState(0)' in code
+            and 'const visibleFeedItems = feedItems.filter(entity => matchesFilter(entity, feedFilter))' in code
+            and 'visibleFeedItems.map((entity, index) => compactCard(entity, index, contentWidth))' in code,
+            "chronological feed must apply the selected local content-type filter")
+    require(code.count('CONTENT_FILTERS.map((filter, index) => <Button') == 3,
+            "Explore, Search, and Feeds must each expose the shared content-type filters")
+    require('entity.id !== selectedEntity.id && (entity.category === selectedEntity.category || entity.typeId === selectedEntity.typeId)' in code
+            and 'contentRail("Ähnliche Demo-Inhalte", relatedItems, contentWidth' in code,
+            "detail recommendations must be local, related by category/type, and labeled as demo content")
 
     for token in FORBIDDEN_SOURCE_TOKENS:
         require(token not in code, f"deferred/network token present in app source: {token}")
